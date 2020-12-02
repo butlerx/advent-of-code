@@ -3,10 +3,10 @@ use std::io::Error;
 struct Rule {
     high: i64,
     low: i64,
-    letter: String,
+    letter: char,
 }
 
-fn parse_rule(rule: String) -> Rule {
+fn parse_rule(rule: &str) -> Rule {
     let rules: Vec<_> = rule.split_whitespace().map(|x| x.trim()).collect();
     let nums: Vec<_> = rules[0]
         .split("-")
@@ -15,7 +15,7 @@ fn parse_rule(rule: String) -> Rule {
     Rule {
         high: nums[1],
         low: nums[0],
-        letter: rules[1].to_string(),
+        letter: rules[1].chars().next().unwrap(),
     }
 }
 
@@ -24,25 +24,24 @@ fn valid_policy(policy: String, position: bool) -> bool {
         return false;
     }
     let policy_args: Vec<_> = policy.split(":").collect();
-    let rule = parse_rule(policy_args[0].to_string());
+    let rule = parse_rule(policy_args[0]);
     if position {
-        let letter = rule.letter.chars().next().unwrap();
         // the first char will be a space but index 0 doesnt exist so ignore
         let password = policy_args[1].chars().collect::<Vec<char>>();
-        let pos_1 = password[rule.low as usize] == letter;
-        let pos_2 = password[rule.high as usize] == letter;
+        let pos_1 = password[rule.low as usize] == rule.letter;
+        let pos_2 = password[rule.high as usize] == rule.letter;
         return (pos_1 || pos_2) && (pos_1 != pos_2);
     }
-    let count = policy_args[1].to_string().matches(&rule.letter).count();
+    let count = policy_args[1].matches(rule.letter).count();
     (rule.low as usize <= count) && (count <= rule.high as usize)
 }
 
 pub fn run(input: String, position: bool) -> Result<i64, Error> {
-    let count: Vec<_> = input
+    Ok(input
         .split("\n")
         .filter(|line| valid_policy(line.trim().parse::<String>().unwrap(), position))
-        .collect();
-    Ok(count.len() as i64)
+        .collect::<Vec<_>>()
+        .len() as i64)
 }
 
 #[cfg(test)]
@@ -51,9 +50,9 @@ mod tests {
 
     #[test]
     fn test_parse_rule() {
-        let input = "1-3 a".to_string();
+        let input = "1-3 a";
         let rule = parse_rule(input);
-        assert!(rule.low == 1 && rule.high == 3 && rule.letter == "a".to_string())
+        assert!(rule.low == 1 && rule.high == 3 && rule.letter == 'a')
     }
 
     #[test]
