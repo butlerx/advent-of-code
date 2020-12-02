@@ -55,13 +55,12 @@ fn find_2020_multiple_recurse(
 
 pub fn run(input: String, depth: i64) -> Result<i64, Error> {
     let expenses = parse_expense(input)?;
-    let multiple = find_2020_multiple(&expenses, depth)?;
-    Ok(multiple)
+    find_2020_multiple(&expenses, depth)
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{find_2020_multiple, parse_expense};
+    use super::*;
 
     #[test]
     fn test_parse_expense() {
