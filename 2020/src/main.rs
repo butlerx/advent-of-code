@@ -1,4 +1,5 @@
 mod day_one;
+mod day_two;
 mod input;
 
 use structopt::StructOpt;
@@ -16,7 +17,14 @@ enum Opt {
         num: i64,
     },
     /// Day Two,
-    DayTwo {},
+    DayTwo {
+        /// Input File
+        #[structopt(default_value = "day_two.txt", long)]
+        input: String,
+        /// Flag for position policy
+        #[structopt(short, long)]
+        position: bool,
+    },
 }
 
 fn main() {
@@ -25,7 +33,10 @@ fn main() {
             let day_one_input = input::read(input).unwrap();
             day_one::run(day_one_input, num - 1).unwrap()
         }
-        Opt::DayTwo {} => 0,
+        Opt::DayTwo { input, position } => {
+            let day_two_input = input::read(input).unwrap();
+            day_two::run(day_two_input, position).unwrap()
+        }
     };
     println!("results: {}", result);
 }
