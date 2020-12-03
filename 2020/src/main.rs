@@ -1,3 +1,4 @@
+mod day_four;
 mod day_one;
 mod day_three;
 mod day_two;
@@ -26,7 +27,7 @@ enum Opt {
         #[structopt(short, long)]
         position: bool,
     },
-    /// Day Three,
+    /// Day Three, calculate blocks in simple path
     DayThree {
         /// Input File
         #[structopt(default_value = "day_three.txt", long)]
@@ -35,6 +36,21 @@ enum Opt {
         right: i64,
         #[structopt(short, long)]
         down: i64,
+        /// Flag for part 1
+        #[structopt(long)]
+        part_one: bool,
+        /// Flag for part 2
+        #[structopt(long)]
+        part_two: bool,
+    },
+    /// Day Four,
+    DayFour {
+        /// Input File
+        #[structopt(default_value = "day_four.txt", long)]
+        input: String,
+        /// Flag for part 1
+        #[structopt(long)]
+        part_one: bool,
         /// Flag for part 2
         #[structopt(long)]
         part_two: bool,
@@ -55,13 +71,30 @@ fn main() {
             input,
             right,
             down,
+            part_one,
             part_two,
         } => {
             let day_three_input = input::read(input).unwrap();
-            if !part_two {
-                day_three::run(day_three_input, right, down).unwrap()
+            if part_one {
+                day_three::part_1(day_three_input).unwrap()
+            } else if part_two {
+                day_three::part_2(day_three_input).unwrap()
             } else {
-                day_three::run_multiply(day_three_input).unwrap()
+                day_three::run(day_three_input, right, down).unwrap()
+            }
+        }
+        Opt::DayFour {
+            input,
+            part_one,
+            part_two,
+        } => {
+            let day_four_input = input::read(input).unwrap();
+            if part_one {
+                day_four::part_1(day_four_input).unwrap()
+            } else if part_two {
+                day_four::part_2(day_four_input).unwrap()
+            } else {
+                day_four::run(day_four_input).unwrap()
             }
         }
     };

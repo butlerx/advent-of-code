@@ -22,7 +22,11 @@ pub fn run(input: String, right: i64, down: i64) -> Result<i64, Error> {
     Ok(num_tree)
 }
 
-pub fn run_multiply(input: String) -> Result<i64, Error> {
+pub fn part_1(input: String) -> Result<i64, Error> {
+    run(input.clone(), 3, 1)
+}
+
+pub fn part_2(input: String) -> Result<i64, Error> {
     Ok(run(input.clone(), 1, 1).unwrap()
         * run(input.clone(), 3, 1).unwrap()
         * run(input.clone(), 5, 1).unwrap()
@@ -46,8 +50,13 @@ mod tests {
 .#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#";
 
     #[test]
-    fn test_run_multiply() {
-        assert!(run_multiply(INPUT.to_string()).unwrap() == 336);
+    fn test_part_1() {
+        assert!(part_1(INPUT.to_string()).unwrap() == 7);
+    }
+
+    #[test]
+    fn test_part_2() {
+        assert!(part_2(INPUT.to_string()).unwrap() == 336);
     }
 
     #[test]
