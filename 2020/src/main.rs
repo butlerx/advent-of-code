@@ -23,9 +23,9 @@ enum Opt {
         /// Input File
         #[structopt(default_value = "day_two.txt", long)]
         input: String,
-        /// Flag for position policy
+        /// Flag for part two position policy
         #[structopt(short, long)]
-        position: bool,
+        part_two: bool,
     },
     /// Day Three, calculate blocks in simple path
     DayThree {
@@ -63,9 +63,13 @@ fn main() {
             let day_one_input = input::read(input).unwrap();
             day_one::run(day_one_input, num - 1).unwrap()
         }
-        Opt::DayTwo { input, position } => {
+        Opt::DayTwo { input, part_two } => {
             let day_two_input = input::read(input).unwrap();
-            day_two::run(day_two_input, position).unwrap()
+            if part_two {
+                day_two::part_2(day_two_input).unwrap()
+            } else {
+                day_two::part_1(day_two_input).unwrap()
+            }
         }
         Opt::DayThree {
             input,

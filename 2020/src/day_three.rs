@@ -23,7 +23,7 @@ pub fn run(input: String, right: i64, down: i64) -> Result<i64, Error> {
 }
 
 pub fn part_1(input: String) -> Result<i64, Error> {
-    run(input.clone(), 3, 1)
+    run(input, 3, 1)
 }
 
 pub fn part_2(input: String) -> Result<i64, Error> {
