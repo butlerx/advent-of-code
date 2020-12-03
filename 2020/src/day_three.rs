@@ -1,11 +1,11 @@
 use std::io::Error;
 
-pub fn run(input: String, right: i64, down: i64) -> Result<i64, Error> {
+pub fn run(input: String, right: usize, down: usize) -> Result<i64, Error> {
     let tree = '#';
     let (num_tree, _right_count) =
         input
             .lines()
-            .step_by(down as usize)
+            .step_by(down)
             .fold((0, 0), |(num_tree, right_count), line| {
                 let mut chars = line.chars();
                 let len = chars.clone().collect::<Vec<_>>().len();
@@ -16,7 +16,7 @@ pub fn run(input: String, right: i64, down: i64) -> Result<i64, Error> {
                         } else {
                             0
                         },
-                    (right_count + right as usize) % len,
+                    (right_count + right) % len,
                 )
             });
     Ok(num_tree)
