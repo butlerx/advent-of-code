@@ -27,11 +27,10 @@ pub fn part_1(input: String) -> Result<i64, Error> {
 }
 
 pub fn part_2(input: String) -> Result<i64, Error> {
-    Ok(run(input.clone(), 1, 1).unwrap()
-        * run(input.clone(), 3, 1).unwrap()
-        * run(input.clone(), 5, 1).unwrap()
-        * run(input.clone(), 7, 1).unwrap()
-        * run(input.clone(), 1, 2).unwrap())
+    Ok([(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
+        .iter()
+        .map(|&(right, down)| run(input.clone(), right, down).unwrap())
+        .product::<i64>())
 }
 
 #[cfg(test)]

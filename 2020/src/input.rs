@@ -17,6 +17,6 @@ mod tests {
     #[test]
     fn test_input() {
         let results = read("test.txt".to_string()).unwrap();
-        assert!(results.trim() == "test".to_string());
+        assert!(results == "test\n".to_string());
     }
 }
