@@ -1,21 +1,17 @@
 use regex::Regex;
 use std::io::Error;
 
+fn validate_year(year_str: &str, low: i64, high: i64) -> bool {
+    let year = year_str.parse().unwrap();
+    (low <= year) && (year <= high)
+}
+
 fn validate_key_value(kv: &str) -> bool {
     let key_value: Vec<&str> = kv.split(":").collect();
     match key_value[0] {
-        "byr" => {
-            let year = key_value[1].parse().unwrap();
-            (1920 <= year) && (year <= 2002)
-        }
-        "iyr" => {
-            let year = key_value[1].parse().unwrap();
-            (2010 <= year) && (year <= 2020)
-        }
-        "eyr" => {
-            let year = key_value[1].parse().unwrap();
-            (2020 <= year) && (year <= 2030)
-        }
+        "byr" => validate_year(key_value[1], 1920, 2002),
+        "iyr" => validate_year(key_value[1], 2010, 2020),
+        "eyr" => validate_year(key_value[1], 2020, 2030),
         "hgt" => {
             if key_value[1].contains("cm") {
                 let height = key_value[1].replace("cm", "").parse().unwrap();
@@ -39,13 +35,14 @@ fn validate_key_value(kv: &str) -> bool {
 
 fn valid_passport(passport: &str) -> bool {
     if !check_required_fields(passport) {
-        return false;
+        false
+    } else {
+        passport
+            .replace('\n', " ")
+            .split(" ")
+            .map(validate_key_value)
+            .all(|item| item)
     }
-    passport
-        .replace('\n', " ")
-        .split(" ")
-        .map(|key_value| validate_key_value(key_value))
-        .all(|item| item)
 }
 
 fn check_required_fields(passport: &str) -> bool {
@@ -57,18 +54,16 @@ fn check_required_fields(passport: &str) -> bool {
     true
 }
 
-pub fn part_1(input: String) -> Result<i64, Error> {
+pub fn run(input: String, part_2: bool) -> Result<i64, Error> {
     Ok(input
         .split("\n\n")
-        .filter(|line| check_required_fields(line.trim()))
-        .collect::<Vec<_>>()
-        .len() as i64)
-}
-
-pub fn part_2(input: String) -> Result<i64, Error> {
-    Ok(input
-        .split("\n\n")
-        .filter(|line| valid_passport(line.trim()))
+        .filter(|line| {
+            if !part_2 {
+                check_required_fields(line.trim())
+            } else {
+                valid_passport(line.trim())
+            }
+        })
         .collect::<Vec<_>>()
         .len() as i64)
 }
@@ -118,13 +113,13 @@ pid:3556412378 byr:2007";
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT.to_string()).unwrap() == 2);
+        assert!(run(INPUT.to_string(), false).unwrap() == 2);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT.to_string()).unwrap() == 2);
-        assert!(part_2(VALID.to_string()).unwrap() == 4);
-        assert!(part_2(INVALID.to_string()).unwrap() == 0);
+        assert!(run(INPUT.to_string(), true).unwrap() == 2);
+        assert!(run(VALID.to_string(), true).unwrap() == 4);
+        assert!(run(INVALID.to_string(), true).unwrap() == 0);
     }
 }

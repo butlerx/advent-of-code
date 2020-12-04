@@ -86,11 +86,7 @@ fn main() {
         }
         Opt::DayFour { input, part_two } => {
             let day_four_input = input::read(input).unwrap();
-            if part_two {
-                day_four::part_2(day_four_input).unwrap()
-            } else {
-                day_four::part_1(day_four_input).unwrap()
-            }
+            day_four::run(day_four_input, part_two).unwrap()
         }
     };
     println!("results: {}", result);
