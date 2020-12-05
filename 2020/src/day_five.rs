@@ -6,7 +6,7 @@ fn parse_space_partition(input: &str) -> i64 {
     }) as i64
 }
 
-pub fn part_1(input: String) -> Result<i64, Error> {
+pub fn part_1(input: &str) -> Result<i64, Error> {
     Ok(input
         .lines()
         .map(parse_space_partition)
@@ -14,7 +14,7 @@ pub fn part_1(input: String) -> Result<i64, Error> {
         .expect("Missing seat"))
 }
 
-pub fn part_2(input: String) -> Result<i64, Error> {
+pub fn part_2(input: &str) -> Result<i64, Error> {
     let mut occupied = [false; 1024];
     let mut max_occupied = 0;
     for line in input.lines() {
@@ -41,11 +41,11 @@ BBFFBBFRLL";
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT.to_string()).unwrap() == 820);
+        assert!(part_1(INPUT).unwrap() == 820);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT.to_string()).unwrap() == 819);
+        assert!(part_2(INPUT).unwrap() == 819);
     }
 }

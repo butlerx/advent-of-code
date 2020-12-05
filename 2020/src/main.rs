@@ -1,9 +1,9 @@
 mod day_five;
 mod day_four;
 mod day_one;
+mod day_six;
 mod day_three;
 mod day_two;
-mod input;
 
 use structopt::StructOpt;
 
@@ -12,18 +12,12 @@ use structopt::StructOpt;
 enum Opt {
     /// Day One, multiply numbers that add together to make 2020
     DayOne {
-        /// Input File
-        #[structopt(default_value = "day_one.txt", long)]
-        input: String,
-        /// Number of digits to add together
-        #[structopt(default_value = "2", short, long)]
-        num: i64,
+        /// Flag for part two position policy
+        #[structopt(short, long)]
+        part_two: bool,
     },
     /// Day Two, Validate strings for aritrary policy
     DayTwo {
-        /// Input File
-        #[structopt(default_value = "day_two.txt", long)]
-        input: String,
         /// Flag for part two position policy
         #[structopt(short, long)]
         part_two: bool,
@@ -33,31 +27,24 @@ enum Opt {
         /// Input File
         #[structopt(default_value = "day_three.txt", long)]
         input: String,
-        #[structopt(short, long)]
-        right: usize,
-        #[structopt(short, long)]
-        down: usize,
-        /// Flag for part 1
-        #[structopt(long)]
-        part_one: bool,
         /// Flag for part 2
         #[structopt(long)]
         part_two: bool,
     },
     /// Day Four, Validate Passport data
     DayFour {
-        /// Input File
-        #[structopt(default_value = "day_four.txt", long)]
-        input: String,
         /// Flag for part 2
         #[structopt(long)]
         part_two: bool,
     },
-    /// Day Five
+    /// Day Five, convert byte data to string and find missing number
     DayFive {
-        /// Input File
-        #[structopt(default_value = "day_five.txt", long)]
-        input: String,
+        /// Flag for part 2
+        #[structopt(long)]
+        part_two: bool,
+    },
+    /// Day Six
+    DaySix {
         /// Flag for part 2
         #[structopt(long)]
         part_two: bool,
@@ -66,44 +53,41 @@ enum Opt {
 
 fn main() {
     let result = match Opt::from_args() {
-        Opt::DayOne { input, num } => {
-            let day_one_input = input::read(input).unwrap();
-            day_one::run(day_one_input, num - 1).unwrap()
-        }
-        Opt::DayTwo { input, part_two } => {
-            let day_two_input = input::read(input).unwrap();
+        Opt::DayOne { part_two } => day_one::run(
+            include_str!("../input/day_one.txt"),
+            if part_two { 3 } else { 2 },
+        )
+        .unwrap(),
+        Opt::DayTwo { part_two } => {
             if part_two {
-                day_two::part_2(day_two_input).unwrap()
+                day_two::part_2(include_str!("../input/day_two.txt")).unwrap()
             } else {
-                day_two::part_1(day_two_input).unwrap()
+                day_two::part_1(include_str!("../input/day_two.txt")).unwrap()
             }
         }
-        Opt::DayThree {
-            input,
-            right,
-            down,
-            part_one,
-            part_two,
-        } => {
+        Opt::DayThree { input, part_two } => {
             let day_three_input = input::read(input).unwrap();
-            if part_one {
-                day_three::part_1(day_three_input).unwrap()
-            } else if part_two {
-                day_three::part_2(day_three_input).unwrap()
+            if part_two {
+                day_three::part_2(include_str!("../input/day_three.txt")).unwrap()
             } else {
-                day_three::run(day_three_input, right, down).unwrap()
+                day_three::part_1(include_str!("../input/day_three.txt")).unwrap()
             }
         }
-        Opt::DayFour { input, part_two } => {
-            let day_four_input = input::read(input).unwrap();
-            day_four::run(day_four_input, part_two).unwrap()
+        Opt::DayFour { part_two } => {
+            day_four::run(include_str!("../input/day_four.txt"), part_two).unwrap()
         }
-        Opt::DayFive { input, part_two } => {
-            let day_five_input = input::read(input).unwrap();
+        Opt::DayFive { part_two } => {
             if part_two {
-                day_five::part_2(day_five_input).unwrap()
+                day_five::part_2(include_str!("../input/day_five.txt")).unwrap()
             } else {
-                day_five::part_1(day_five_input).unwrap()
+                day_five::part_1(include_str!("../input/day_five.txt")).unwrap()
+            }
+        }
+        Opt::DaySix { part_two } => {
+            if part_two {
+                day_six::part_2(include_str!("../input/day_six.txt")).unwrap()
+            } else {
+                day_six::part_1(include_str!("../input/day_six.txt")).unwrap()
             }
         }
     };

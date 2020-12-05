@@ -1,6 +1,6 @@
 use std::io::Error;
 
-fn parse_expense(raw_expense: String) -> Result<Vec<i64>, Error> {
+fn parse_expense(raw_expense: &str) -> Result<Vec<i64>, Error> {
     let expense = raw_expense
         .split_whitespace()
         .map(|line| line.trim().parse::<i64>().expect("parse error"))
@@ -53,7 +53,7 @@ fn find_2020_multiple_recurse(
     Ok(0)
 }
 
-pub fn run(input: String, depth: i64) -> Result<i64, Error> {
+pub fn run(input: &str, depth: i64) -> Result<i64, Error> {
     let expenses = parse_expense(input)?;
     find_2020_multiple(&expenses, depth)
 }
@@ -65,7 +65,7 @@ mod tests {
     #[test]
     fn test_parse_expense() {
         let results = vec![1721, 979, 366, 299, 675, 1456];
-        assert!(parse_expense("1721\n979\n366\n299\n675\n1456".to_string()).unwrap() == results);
+        assert!(parse_expense("1721\n979\n366\n299\n675\n1456").unwrap() == results);
     }
 
     #[test]
