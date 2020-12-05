@@ -30,7 +30,7 @@ fn valid_policy(policy: &str, position: bool) -> bool {
     (low <= count) && (count <= high)
 }
 
-fn run(input: String, position: bool) -> Result<i64, Error> {
+fn run(input: &str, position: bool) -> Result<i64, Error> {
     Ok(input
         .split("\n")
         .filter(|line| valid_policy(line.trim(), position))
@@ -38,11 +38,11 @@ fn run(input: String, position: bool) -> Result<i64, Error> {
         .len() as i64)
 }
 
-pub fn part_1(input: String) -> Result<i64, Error> {
+pub fn part_1(input: &str) -> Result<i64, Error> {
     run(input, false)
 }
 
-pub fn part_2(input: String) -> Result<i64, Error> {
+pub fn part_2(input: &str) -> Result<i64, Error> {
     run(input, true)
 }
 
@@ -67,11 +67,13 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT.to_string()).unwrap() == 2);
+        assert!(part_1(INPUT).unwrap() == 2);
+        assert!(part_1(include_str!("../input/day_two.txt")).unwrap() == 515);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT.to_string()).unwrap() == 1);
+        assert!(part_2(INPUT).unwrap() == 1);
+        assert!(part_2(include_str!("../input/day_two.txt")).unwrap() == 711);
     }
 }

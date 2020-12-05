@@ -55,7 +55,7 @@ fn check_required_fields(passport: &str) -> bool {
 }
 
 pub fn run(input: &str, part_2: bool) -> Result<i64, Error> {
-    Ok(include_str!("../input/day_four.txt")
+    Ok(input
         .split("\n\n")
         .filter(|line| {
             if !part_2 {
@@ -114,6 +114,7 @@ pid:3556412378 byr:2007";
     #[test]
     fn test_part_1() {
         assert!(run(INPUT, false).unwrap() == 2);
+        assert!(run(include_str!("../input/day_four.txt"), false).unwrap() == 230);
     }
 
     #[test]
@@ -121,5 +122,6 @@ pid:3556412378 byr:2007";
         assert!(run(INPUT, true).unwrap() == 2);
         assert!(run(VALID, true).unwrap() == 4);
         assert!(run(INVALID, true).unwrap() == 0);
+        assert!(run(include_str!("../input/day_four.txt"), true).unwrap() == 156);
     }
 }

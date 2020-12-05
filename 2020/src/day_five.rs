@@ -42,10 +42,12 @@ BBFFBBFRLL";
     #[test]
     fn test_part_1() {
         assert!(part_1(INPUT).unwrap() == 820);
+        assert!(part_1(include_str!("../input/day_five.txt")).unwrap() == 901);
     }
 
     #[test]
     fn test_part_2() {
         assert!(part_2(INPUT).unwrap() == 819);
+        assert!(part_2(include_str!("../input/day_five.txt")).unwrap() == 661);
     }
 }

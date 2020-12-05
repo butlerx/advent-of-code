@@ -1,6 +1,6 @@
 use std::io::Error;
 
-pub fn run(input: String, right: usize, down: usize) -> Result<i64, Error> {
+pub fn run(input: &str, right: usize, down: usize) -> Result<i64, Error> {
     let tree = '#';
     let (num_tree, _right_count) =
         input
@@ -22,14 +22,14 @@ pub fn run(input: String, right: usize, down: usize) -> Result<i64, Error> {
     Ok(num_tree)
 }
 
-pub fn part_1(input: String) -> Result<i64, Error> {
+pub fn part_1(input: &str) -> Result<i64, Error> {
     run(input, 3, 1)
 }
 
-pub fn part_2(input: String) -> Result<i64, Error> {
+pub fn part_2(input: &str) -> Result<i64, Error> {
     Ok([(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
         .iter()
-        .map(|&(right, down)| run(input.clone(), right, down).unwrap())
+        .map(|&(right, down)| run(input, right, down).unwrap())
         .product::<i64>())
 }
 
@@ -50,20 +50,22 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT.to_string()).unwrap() == 7);
+        assert!(part_1(INPUT).unwrap() == 7);
+        assert!(part_1(include_str!("../input/day_three.txt")).unwrap() == 250);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT.to_string()).unwrap() == 336);
+        assert!(part_2(INPUT).unwrap() == 336);
+        assert!(part_2(include_str!("../input/day_three.txt")).unwrap() == 1592662500);
     }
 
     #[test]
     fn test_run() {
-        assert!(run(INPUT.to_string(), 1, 1).unwrap() == 2);
-        assert!(run(INPUT.to_string(), 3, 1).unwrap() == 7);
-        assert!(run(INPUT.to_string(), 5, 1).unwrap() == 3);
-        assert!(run(INPUT.to_string(), 7, 1).unwrap() == 4);
-        assert!(run(INPUT.to_string(), 1, 2).unwrap() == 2);
+        assert!(run(INPUT, 1, 1).unwrap() == 2);
+        assert!(run(INPUT, 3, 1).unwrap() == 7);
+        assert!(run(INPUT, 5, 1).unwrap() == 3);
+        assert!(run(INPUT, 7, 1).unwrap() == 4);
+        assert!(run(INPUT, 1, 2).unwrap() == 2);
     }
 }
