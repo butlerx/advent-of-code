@@ -58,9 +58,6 @@ enum Opt {
         /// Input File
         #[structopt(default_value = "day_five.txt", long)]
         input: String,
-        /// Flag for part 1
-        #[structopt(long)]
-        part_one: bool,
         /// Flag for part 2
         #[structopt(long)]
         part_two: bool,
@@ -101,18 +98,12 @@ fn main() {
             let day_four_input = input::read(input).unwrap();
             day_four::run(day_four_input, part_two).unwrap()
         }
-        Opt::DayFive {
-            input,
-            part_one,
-            part_two,
-        } => {
+        Opt::DayFive { input, part_two } => {
             let day_five_input = input::read(input).unwrap();
-            if part_one {
-                day_five::part_1(day_five_input).unwrap()
-            } else if part_two {
+            if part_two {
                 day_five::part_2(day_five_input).unwrap()
             } else {
-                day_five::run(day_five_input).unwrap()
+                day_five::part_1(day_five_input).unwrap()
             }
         }
     };
