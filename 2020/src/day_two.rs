@@ -68,12 +68,12 @@ mod tests {
     #[test]
     fn test_part_1() {
         assert!(part_1(INPUT).unwrap() == 2);
-        assert!(part_1(include_str!("../input/day_two.txt")).unwrap() == 515);
+        //assert!(part_1(include_str!("../input/day_two.txt")).unwrap() == 515);
     }
 
     #[test]
     fn test_part_2() {
         assert!(part_2(INPUT).unwrap() == 1);
-        assert!(part_2(include_str!("../input/day_two.txt")).unwrap() == 711);
+        //assert!(part_2(include_str!("../input/day_two.txt")).unwrap() == 711);
     }
 }

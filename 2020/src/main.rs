@@ -1,6 +1,7 @@
 mod day_five;
 mod day_four;
 mod day_one;
+mod day_seven;
 mod day_six;
 mod day_three;
 mod day_two;
@@ -53,6 +54,13 @@ fn main() {
                 day_six::part_2(include_str!("../input/day_six.txt")).unwrap()
             } else {
                 day_six::part_1(include_str!("../input/day_six.txt")).unwrap()
+            }
+        }
+        7 => {
+            if opts.part_two {
+                day_seven::part_2(include_str!("../input/day_seven.txt")).unwrap()
+            } else {
+                day_seven::part_1(include_str!("../input/day_seven.txt")).unwrap()
             }
         }
         _ => 0,
