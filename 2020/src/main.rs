@@ -1,10 +1,28 @@
-mod day_five;
-mod day_four;
-mod day_one;
-mod day_seven;
-mod day_six;
-mod day_three;
-mod day_two;
+mod day_1;
+mod day_10;
+mod day_11;
+mod day_12;
+mod day_13;
+mod day_14;
+mod day_15;
+mod day_16;
+mod day_17;
+mod day_18;
+mod day_19;
+mod day_2;
+mod day_20;
+mod day_21;
+mod day_22;
+mod day_23;
+mod day_24;
+mod day_25;
+mod day_3;
+mod day_4;
+mod day_5;
+mod day_6;
+mod day_7;
+mod day_8;
+mod day_9;
 
 use structopt::StructOpt;
 
@@ -22,45 +40,44 @@ struct Opt {
 fn main() {
     let opts = Opt::from_args();
     let result = match opts.day {
-        1 => day_one::run(
-            include_str!("../input/day_one.txt"),
+        1 => day_1::run(
+            include_str!("../input/day_1.txt"),
             if opts.part_two { 3 } else { 2 },
-        )
-        .unwrap(),
+        ),
         2 => {
             if opts.part_two {
-                day_two::part_2(include_str!("../input/day_two.txt")).unwrap()
+                day_2::part_2(include_str!("../input/day_2.txt"))
             } else {
-                day_two::part_1(include_str!("../input/day_two.txt")).unwrap()
+                day_2::part_1(include_str!("../input/day_2.txt"))
             }
         }
         3 => {
             if opts.part_two {
-                day_three::part_2(include_str!("../input/day_three.txt")).unwrap()
+                day_3::part_2(include_str!("../input/day_3.txt"))
             } else {
-                day_three::part_1(include_str!("../input/day_three.txt")).unwrap()
+                day_3::part_1(include_str!("../input/day_3.txt"))
             }
         }
-        4 => day_four::run(include_str!("../input/day_four.txt"), opts.part_two).unwrap(),
+        4 => day_4::run(include_str!("../input/day_4.txt"), opts.part_two),
         5 => {
             if opts.part_two {
-                day_five::part_2(include_str!("../input/day_five.txt")).unwrap()
+                day_5::part_2(include_str!("../input/day_5.txt"))
             } else {
-                day_five::part_1(include_str!("../input/day_five.txt")).unwrap()
+                day_5::part_1(include_str!("../input/day_5.txt"))
             }
         }
         6 => {
             if opts.part_two {
-                day_six::part_2(include_str!("../input/day_six.txt")).unwrap()
+                day_6::part_2(include_str!("../input/day_6.txt"))
             } else {
-                day_six::part_1(include_str!("../input/day_six.txt")).unwrap()
+                day_6::part_1(include_str!("../input/day_6.txt"))
             }
         }
         7 => {
             if opts.part_two {
-                day_seven::part_2(include_str!("../input/day_seven.txt")).unwrap()
+                day_7::part_2(include_str!("../input/day_7.txt"))
             } else {
-                day_seven::part_1(include_str!("../input/day_seven.txt")).unwrap()
+                day_7::part_1(include_str!("../input/day_7.txt"))
             }
         }
         _ => 0,

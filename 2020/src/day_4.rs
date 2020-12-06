@@ -1,5 +1,4 @@
 use regex::Regex;
-use std::io::Error;
 
 fn validate_year(year_str: &str, low: i64, high: i64) -> bool {
     let year = year_str.parse().unwrap();
@@ -54,8 +53,8 @@ fn check_required_fields(passport: &str) -> bool {
     true
 }
 
-pub fn run(input: &str, part_2: bool) -> Result<i64, Error> {
-    Ok(input
+pub fn run(input: &str, part_2: bool) -> i64 {
+    input
         .split("\n\n")
         .filter(|line| {
             if !part_2 {
@@ -65,7 +64,7 @@ pub fn run(input: &str, part_2: bool) -> Result<i64, Error> {
             }
         })
         .collect::<Vec<_>>()
-        .len() as i64)
+        .len() as i64
 }
 
 #[cfg(test)]
@@ -113,15 +112,15 @@ pid:3556412378 byr:2007";
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false).unwrap() == 2);
-        assert!(run(include_str!("../input/day_four.txt"), false).unwrap() == 230);
+        assert!(run(INPUT, false) == 2);
+        assert!(run(include_str!("../input/day_4.txt"), false) == 230);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT, true).unwrap() == 2);
-        assert!(run(VALID, true).unwrap() == 4);
-        assert!(run(INVALID, true).unwrap() == 0);
-        assert!(run(include_str!("../input/day_four.txt"), true).unwrap() == 156);
+        assert!(run(INPUT, true) == 2);
+        assert!(run(VALID, true) == 4);
+        assert!(run(INVALID, true) == 0);
+        assert!(run(include_str!("../input/day_4.txt"), true) == 156);
     }
 }

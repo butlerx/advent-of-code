@@ -1,20 +1,18 @@
-use std::io::Error;
-
 fn parse_space_partition(input: &str) -> i64 {
     input.bytes().fold(0, |seat_id, byte| {
         b"BR".contains(&byte) as u16 + (seat_id << 1)
     }) as i64
 }
 
-pub fn part_1(input: &str) -> Result<i64, Error> {
-    Ok(input
+pub fn part_1(input: &str) -> i64 {
+    input
         .lines()
         .map(parse_space_partition)
         .max()
-        .expect("Missing seat"))
+        .expect("Missing seat")
 }
 
-pub fn part_2(input: &str) -> Result<i64, Error> {
+pub fn part_2(input: &str) -> i64 {
     let mut occupied = [false; 1024];
     let mut max_occupied = 0;
     for line in input.lines() {
@@ -24,11 +22,11 @@ pub fn part_2(input: &str) -> Result<i64, Error> {
             max_occupied = seat_id;
         }
     }
-    Ok((0..max_occupied)
+    (0..max_occupied)
         .rev()
         .into_iter()
         .find(|&seat_id| !occupied[seat_id as usize])
-        .unwrap())
+        .unwrap()
 }
 
 #[cfg(test)]
@@ -41,13 +39,13 @@ BBFFBBFRLL";
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT).unwrap() == 820);
-        assert!(part_1(include_str!("../input/day_five.txt")).unwrap() == 901);
+        assert!(part_1(INPUT) == 820);
+        assert!(part_1(include_str!("../input/day_5.txt")) == 901);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT).unwrap() == 819);
-        assert!(part_2(include_str!("../input/day_five.txt")).unwrap() == 661);
+        assert!(part_2(INPUT) == 819);
+        assert!(part_2(include_str!("../input/day_5.txt")) == 661);
     }
 }

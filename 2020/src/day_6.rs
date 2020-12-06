@@ -1,8 +1,7 @@
 use itertools::Itertools;
-use std::io::Error;
 
-fn run(input: &str, part_2: bool) -> Result<i64, Error> {
-    Ok(input
+fn run(input: &str, part_2: bool) -> i64 {
+    input
         .split("\n\n")
         .map(|line| {
             if !part_2 {
@@ -26,14 +25,14 @@ fn run(input: &str, part_2: bool) -> Result<i64, Error> {
                     .sum()
             }
         })
-        .sum::<usize>() as i64)
+        .sum::<usize>() as i64
 }
 
-pub fn part_1(input: &str) -> Result<i64, Error> {
+pub fn part_1(input: &str) -> i64 {
     run(input, false)
 }
 
-pub fn part_2(input: &str) -> Result<i64, Error> {
+pub fn part_2(input: &str) -> i64 {
     run(input, true)
 }
 
@@ -58,16 +57,16 @@ b";
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT).unwrap() == 11);
-        let results = part_1(include_str!("../input/day_six.txt")).unwrap();
+        assert!(part_1(INPUT) == 11);
+        let results = part_1(include_str!("../input/day_6.txt"));
         println!("{}", results);
         assert!(results == 6742);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT).unwrap() == 6);
-        let results = part_2(include_str!("../input/day_six.txt")).unwrap();
+        assert!(part_2(INPUT) == 6);
+        let results = part_2(include_str!("../input/day_6.txt"));
         println!("{}", results);
         assert!(results == 3447);
     }
