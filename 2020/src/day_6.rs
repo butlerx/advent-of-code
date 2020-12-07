@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-fn run(input: &str, part_2: bool) -> i64 {
+pub fn run(input: &str, part_2: bool) -> i64 {
     input
         .split("\n\n")
         .map(|line| {
@@ -28,14 +28,6 @@ fn run(input: &str, part_2: bool) -> i64 {
         .sum::<usize>() as i64
 }
 
-pub fn part_1(input: &str) -> i64 {
-    run(input, false)
-}
-
-pub fn part_2(input: &str) -> i64 {
-    run(input, true)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -57,16 +49,16 @@ b";
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT) == 11);
-        let results = part_1(include_str!("../input/day_6.txt"));
+        assert!(run(INPUT, false) == 11);
+        let results = run(include_str!("../input/day_6.txt"), false);
         println!("{}", results);
         assert!(results == 6742);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT) == 6);
-        let results = part_2(include_str!("../input/day_6.txt"));
+        assert!(run(INPUT, true) == 6);
+        let results = run(include_str!("../input/day_6.txt"), true);
         println!("{}", results);
         assert!(results == 3447);
     }

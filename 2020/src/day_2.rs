@@ -29,20 +29,12 @@ fn valid_policy(policy: &str, position: bool) -> bool {
     (low <= count) && (count <= high)
 }
 
-fn run(input: &str, position: bool) -> i64 {
+pub fn run(input: &str, position: bool) -> i64 {
     input
         .split("\n")
         .filter(|line| valid_policy(line.trim(), position))
         .collect::<Vec<_>>()
         .len() as i64
-}
-
-pub fn part_1(input: &str) -> i64 {
-    run(input, false)
-}
-
-pub fn part_2(input: &str) -> i64 {
-    run(input, true)
 }
 
 #[cfg(test)]
@@ -66,13 +58,13 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT) == 2);
-        //assert!(part_1(include_str!("../input/day_2.txt")) == 515);
+        assert!(run(INPUT, false) == 2);
+        //assert!(run(include_str!("../input/day_2.txt"), false) == 515);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT) == 1);
-        //assert!(part_2(include_str!("../input/day_2.txt")) == 711);
+        assert!(run(INPUT, true) == 1);
+        //assert!(run(include_str!("../input/day_2.txt"), true) == 711);
     }
 }

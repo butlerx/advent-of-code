@@ -1,4 +1,4 @@
-pub fn run(input: &str, right: usize, down: usize) -> i64 {
+fn find_path(input: &str, right: usize, down: usize) -> i64 {
     let tree = '#';
     let (num_tree, _right_count) =
         input
@@ -20,15 +20,15 @@ pub fn run(input: &str, right: usize, down: usize) -> i64 {
     num_tree
 }
 
-pub fn part_1(input: &str) -> i64 {
-    run(input, 3, 1)
-}
-
-pub fn part_2(input: &str) -> i64 {
-    [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
-        .iter()
-        .map(|&(right, down)| run(input, right, down))
-        .product::<i64>()
+pub fn run(input: &str, part_two: bool) -> i64 {
+    if part_two {
+        [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
+            .iter()
+            .map(|&(right, down)| find_path(input, right, down))
+            .product::<i64>()
+    } else {
+        find_path(input, 3, 1)
+    }
 }
 
 #[cfg(test)]
@@ -48,22 +48,22 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT) == 7);
-        assert!(part_1(include_str!("../input/day_3.txt")) == 250);
+        assert!(run(INPUT, false) == 7);
+        assert!(run(include_str!("../input/day_3.txt"), false) == 250);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT) == 336);
-        assert!(part_2(include_str!("../input/day_3.txt")) == 1592662500);
+        assert!(run(INPUT, true) == 336);
+        assert!(run(include_str!("../input/day_3.txt"), true) == 1592662500);
     }
 
     #[test]
     fn test_run() {
-        assert!(run(INPUT, 1, 1) == 2);
-        assert!(run(INPUT, 3, 1) == 7);
-        assert!(run(INPUT, 5, 1) == 3);
-        assert!(run(INPUT, 7, 1) == 4);
-        assert!(run(INPUT, 1, 2) == 2);
+        assert!(find_path(INPUT, 1, 1) == 2);
+        assert!(find_path(INPUT, 3, 1) == 7);
+        assert!(find_path(INPUT, 5, 1) == 3);
+        assert!(find_path(INPUT, 7, 1) == 4);
+        assert!(find_path(INPUT, 1, 2) == 2);
     }
 }

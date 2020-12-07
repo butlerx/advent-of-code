@@ -41,17 +41,16 @@ fn unpack(
         .collect()
 }
 
-pub fn part_1(input: &str) -> i64 {
+pub fn run(input: &str, part_two: bool) -> i64 {
     let bags = parse_input(input);
-    bags.keys().filter(|k| contains_gold(&bags, k)).count() as i64
-}
-
-pub fn part_2(input: &str) -> i64 {
-    let bags = parse_input(input);
-    unpack(&bags, "shiny gold", 1)
-        .iter()
-        .map(|(count, _bag)| count)
-        .sum::<i64>()
+    if !part_two {
+        bags.keys().filter(|k| contains_gold(&bags, k)).count() as i64
+    } else {
+        unpack(&bags, "shiny gold", 1)
+            .iter()
+            .map(|(count, _bag)| count)
+            .sum::<i64>()
+    }
 }
 
 #[cfg(test)]
@@ -76,15 +75,15 @@ dark violet bags contain no other bags.";
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT_1) == 4);
-        assert!(part_1(INPUT_2) == 0);
-        //assert!(part_1(include_str!("../input/day_7.txt") == 177);
+        assert!(run(INPUT_1, false) == 4);
+        assert!(run(INPUT_2, false) == 0);
+        //assert!(run(include_str!("../input/day_7.txt"), false) == 177);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT_1) == 4);
-        assert!(part_2(INPUT_2) == 126);
-        //assert!(part_2(include_str!("../input/day_7.txt") == 34988);
+        assert!(run(INPUT_1, true) == 4);
+        assert!(run(INPUT_2, true) == 126);
+        //assert!(run(include_str!("../input/day_7.txt"), true) == 34988);
     }
 }
