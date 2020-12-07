@@ -56,7 +56,7 @@ mod tests {
 
     #[test]
     fn test_part_2() {
-        let results = run(include_str!("../input/day_4.txt"), false);
+        let results = run(include_str!("../input/day_4.txt"), true);
         println!("{}", results);
         assert!(results == 981);
     }
