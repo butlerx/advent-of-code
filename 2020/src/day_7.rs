@@ -57,7 +57,7 @@ pub fn part_2(input: &str) -> i64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    static INPUT: &str = "light red bags contain 1 bright white bag, 2 muted yellow bags.
+    static INPUT_1: &str = "light red bags contain 1 bright white bag, 2 muted yellow bags.
 dark orange bags contain 3 bright white bags, 4 muted yellow bags.
 bright white bags contain 1 shiny gold bag.
 muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.
@@ -76,14 +76,14 @@ dark violet bags contain no other bags.";
 
     #[test]
     fn test_part_1() {
-        let results = part_1(INPUT);
-        println!("{}", results);
-        assert!(results == 4);
+        assert!(part_1(INPUT_1) == 4);
+        assert!(part_1(INPUT_2) == 0);
         //assert!(part_1(include_str!("../input/day_7.txt") == 177);
     }
 
     #[test]
     fn test_part_2() {
+        assert!(part_2(INPUT_1) == 4);
         assert!(part_2(INPUT_2) == 126);
         //assert!(part_2(include_str!("../input/day_7.txt") == 34988);
     }
