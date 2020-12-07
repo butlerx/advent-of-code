@@ -1,4 +1,4 @@
-pub fn run(memory: Vec<usize>, noun: usize, verb: usize) -> i64 {
+fn execute(memory: Vec<usize>, noun: usize, verb: usize) -> i64 {
     let mut nums = memory.clone();
     let mut pointer = 0;
     nums[1] = noun;
@@ -19,35 +19,35 @@ pub fn run(memory: Vec<usize>, noun: usize, verb: usize) -> i64 {
         pointer += 4;
     }
 }
-pub fn part_1(input: &str) -> i64 {
-    run(
-        input
+pub fn run(input: &str, part_two: bool) -> i64 {
+    if part_two {
+        let mem: Vec<usize> = input
             .split(",")
             .map(|num| num.trim().parse().unwrap())
-            .collect(),
-        12,
-        2,
-    )
-}
-
-pub fn part_2(input: &str) -> i64 {
-    let mem: Vec<usize> = input
-        .split(",")
-        .map(|num| num.trim().parse().unwrap())
-        .collect();
-    let goal = 19690720;
-    let (mut noun, mut verb) = (0, 0);
-    for n in 0..99 {
-        for v in 0..99 {
-            let test = run(mem.clone(), n, v);
-            if test == goal {
-                noun = n;
-                verb = v;
-                break;
+            .collect();
+        let goal = 19690720;
+        let (mut noun, mut verb) = (0, 0);
+        for n in 0..99 {
+            for v in 0..99 {
+                let test = execute(mem.clone(), n, v);
+                if test == goal {
+                    noun = n;
+                    verb = v;
+                    break;
+                }
             }
         }
+        (100 * noun + verb) as i64
+    } else {
+        execute(
+            input
+                .split(",")
+                .map(|num| num.trim().parse().unwrap())
+                .collect(),
+            12,
+            2,
+        )
     }
-    (100 * noun + verb) as i64
 }
 
 #[cfg(test)]
@@ -57,15 +57,15 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT) == 1600);
-        let results = part_1(include_str!("../input/day_2.txt"));
+        assert!(run(INPUT, false) == 1600);
+        let results = run(include_str!("../input/day_2.txt"), false);
         println!("{}", results);
         assert!(results == 3850704);
     }
 
     #[test]
     fn test_part_2() {
-        let results = part_2(include_str!("../input/day_2.txt"));
+        let results = run(include_str!("../input/day_2.txt"), true);
         println!("{}", results);
         assert!(results == 6718);
     }

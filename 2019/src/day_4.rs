@@ -43,28 +43,20 @@ pub fn run(input: &str, part_two: bool) -> i64 {
         .count() as i64
 }
 
-pub fn part_1(input: &str) -> i64 {
-    run(input, false)
-}
-
-pub fn part_2(input: &str) -> i64 {
-    run(input, true)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_part_1() {
-        let results = part_1(include_str!("../input/day_4.txt"));
+        let results = run(include_str!("../input/day_4.txt"), false);
         println!("{}", results);
         assert!(results == 1748);
     }
 
     #[test]
     fn test_part_2() {
-        let results = part_2(include_str!("../input/day_4.txt"));
+        let results = run(include_str!("../input/day_4.txt"), false);
         println!("{}", results);
         assert!(results == 981);
     }

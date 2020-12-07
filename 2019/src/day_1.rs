@@ -2,10 +2,16 @@ fn calculate_fuel(mass: f64) -> f64 {
     (mass / 3.0).floor() - 2.0
 }
 
-pub fn part_1(input: &str) -> i64 {
+pub fn run(input: &str, part_two: bool) -> i64 {
     input
         .lines()
-        .map(|line| calculate_fuel(line.trim().parse::<f64>().unwrap()))
+        .map(|line| {
+            if part_two {
+                cumalitive_fule(line.trim().parse::<f64>().unwrap())
+            } else {
+                calculate_fuel(line.trim().parse::<f64>().unwrap())
+            }
+        })
         .sum::<f64>() as i64
 }
 
@@ -19,13 +25,6 @@ pub fn cumalitive_fule(mass: f64) -> f64 {
     total_fuel
 }
 
-pub fn part_2(input: &str) -> i64 {
-    input
-        .lines()
-        .map(|line| cumalitive_fule(line.trim().parse::<f64>().unwrap()))
-        .sum::<f64>() as i64
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -36,16 +35,16 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT) == 34241);
-        let results = part_1(include_str!("../input/day_1.txt"));
+        assert!(run(INPUT, false) == 34241);
+        let results = run(include_str!("../input/day_1.txt"), false);
         println!("{}", results);
         assert!(results == 3268951);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT) == 51316);
-        let results = part_2(include_str!("../input/day_1.txt"));
+        assert!(run(INPUT, true) == 51316);
+        let results = run(include_str!("../input/day_1.txt"), true);
         println!("{}", results);
         assert!(results == 4900568);
     }
