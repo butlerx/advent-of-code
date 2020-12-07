@@ -14,7 +14,7 @@ mod tests {
     #[test]
     fn test_part_1() {
         assert!(part_1(INPUT) == 0);
-        let results = part_1(include_str!("../input/day_2.txt"));
+        let results = part_1(include_str!("../input/day_6.txt"));
         println!("{}", results);
         assert!(results == 0);
     }
@@ -22,7 +22,7 @@ mod tests {
     #[test]
     fn test_part_2() {
         assert!(part_2(INPUT) == 0);
-        let results = part_2(include_str!("../input/day_2.txt"));
+        let results = part_2(include_str!("../input/day_6.txt"));
         println!("{}", results);
         assert!(results == 0);
     }
