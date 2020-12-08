@@ -1,45 +1,46 @@
-fn execute(instruction_set: &Vec<(&str, i64)>) -> Result<i64, i64> {
-    let mut accumulator = 0;
+fn execute(instruction_set: Vec<(&str, i64)>) -> Result<i64, i64> {
+    let (mut pointer, mut accumulator) = (0, 0);
     let mut visited = vec![false; instruction_set.len()];
-    let mut pointer = 0;
-    while pointer < instruction_set.len() {
-        let (command, arg) = instruction_set[pointer];
-        if visited[pointer] {
-            return Err(accumulator);
+    loop {
+        if pointer >= instruction_set.len() {
+            break Ok(accumulator);
+        } else if visited[pointer] {
+            break Err(accumulator);
         } else {
             visited[pointer] = true;
         }
-        match command {
-            "nop" => {
+        match instruction_set[pointer] {
+            ("nop", _) => {
                 pointer += 1;
             }
-            "acc" => {
+            ("acc", arg) => {
                 accumulator += arg;
                 pointer += 1;
             }
-            "jmp" => {
+            ("jmp", arg) => {
                 pointer = (pointer as i64 + arg) as usize;
             }
             _ => unreachable!(),
         }
     }
-    Ok(accumulator)
 }
 
-fn swap_operations(instruction: &mut (&str, i64)) {
-    match instruction {
+fn fix_instruction_set(instruction_set: Vec<(&str, i64)>, pointer: usize) -> Vec<(&str, i64)> {
+    let mut new_instruction_set = instruction_set.clone();
+    match new_instruction_set[pointer] {
         ("nop", _) => {
-            instruction.0 = "jmp";
+            new_instruction_set[pointer].0 = "jmp";
         }
         ("jmp", _) => {
-            instruction.0 = "nop";
+            new_instruction_set[pointer].0 = "nop";
         }
         _ => (),
     }
+    new_instruction_set
 }
 
 pub fn run(input: &str, part_two: bool) -> i64 {
-    let mut instruction_set = input
+    let instruction_set = input
         .lines()
         .map(|line| {
             let instruction = line.trim().split(" ").collect::<Vec<&str>>();
@@ -52,18 +53,15 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 
     if part_two {
         for i in 0..instruction_set.len() {
-            swap_operations(&mut instruction_set[i]);
-            if let Ok(accumulator) = execute(&instruction_set) {
+            if let Ok(accumulator) = execute(fix_instruction_set(instruction_set.clone(), i)) {
                 return accumulator;
             }
-            // Reveret Change if it failed
-            swap_operations(&mut instruction_set[i]);
         }
         0
     } else {
         // Dont care if it fails or succedes just want the value of the accumulator at
-        // end
-        match execute(&instruction_set) {
+        // end of the first run
+        match execute(instruction_set) {
             Ok(accumulator) => accumulator,
             Err(accumulator) => accumulator,
         }
