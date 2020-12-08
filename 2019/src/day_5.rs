@@ -12,39 +12,7 @@ fn read_mem(memory: &Vec<i64>, pointer: usize, mem: usize) -> i64 {
     }
 }
 
-fn part_1(memory: Vec<i64>, input: i64) -> i64 {
-    let mut mem = memory.clone();
-    let mut pointer = 0;
-    let mut output = 0;
-    loop {
-        pointer = match parse_opcode(mem[pointer]) {
-            1 => {
-                let pos = mem[pointer + 3] as usize;
-                mem[pos] = read_mem(&mem, pointer, 1) + read_mem(&mem, pointer, 2);
-                pointer + 4
-            }
-            2 => {
-                let pos = mem[pointer + 3] as usize;
-                mem[pos] = read_mem(&mem, pointer, 1) * read_mem(&mem, pointer, 2);
-                pointer + 4
-            }
-            3 => {
-                let pos = mem[pointer + 1] as usize;
-                mem[pos] = input;
-                pointer + 2
-            }
-            4 => {
-                output = read_mem(&mem, pointer, 1);
-                println!("Output: {}", output);
-                pointer + 2
-            }
-            99 => break output as i64,
-            _ => unreachable!(),
-        };
-    }
-}
-
-fn part_2(memory: Vec<i64>, input: i64) -> i64 {
+fn execute(memory: Vec<i64>, input: i64) -> i64 {
     let mut mem = memory.clone();
     let mut pointer = 0;
     let mut output = 0;
@@ -114,9 +82,9 @@ pub fn run(input: &str, part_two: bool) -> i64 {
         .map(|num| num.trim().parse().unwrap())
         .collect();
     if part_two {
-        part_2(nums, 5)
+        execute(nums, 5)
     } else {
-        part_1(nums, 1)
+        execute(nums, 1)
     }
 }
 
