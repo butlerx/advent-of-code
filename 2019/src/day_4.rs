@@ -8,7 +8,7 @@ fn valid_password(password: &i64, max: bool) -> bool {
         let prev = head % 10;
 
         if tail < prev {
-            return false;
+            break false;
         }
 
         if tail == prev {
@@ -25,7 +25,7 @@ fn valid_password(password: &i64, max: bool) -> bool {
         }
 
         if head == 0 {
-            return pair;
+            break pair;
         }
 
         head /= 10;
@@ -58,6 +58,6 @@ mod tests {
     fn test_part_2() {
         let results = run(include_str!("../input/day_4.txt"), true);
         println!("{}", results);
-        assert!(results == 981);
+        assert!(results == 1180);
     }
 }

@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 fn execute(instruction_set: Vec<(&str, i64)>) -> Result<i64, i64> {
     let (mut pointer, mut accumulator) = (0, 0);
     let mut visited = vec![false; instruction_set.len()];
@@ -9,17 +11,13 @@ fn execute(instruction_set: Vec<(&str, i64)>) -> Result<i64, i64> {
         } else {
             visited[pointer] = true;
         }
-        match instruction_set[pointer] {
-            ("nop", _) => {
-                pointer += 1;
-            }
+        pointer = match instruction_set[pointer] {
+            ("nop", _) => pointer + 1,
             ("acc", arg) => {
                 accumulator += arg;
-                pointer += 1;
+                pointer + 1
             }
-            ("jmp", arg) => {
-                pointer = (pointer as i64 + arg) as usize;
-            }
+            ("jmp", arg) => (pointer as i64 + arg) as usize,
             _ => unreachable!(),
         }
     }
@@ -27,15 +25,11 @@ fn execute(instruction_set: Vec<(&str, i64)>) -> Result<i64, i64> {
 
 fn fix_instruction_set(instruction_set: Vec<(&str, i64)>, pointer: usize) -> Vec<(&str, i64)> {
     let mut new_instruction_set = instruction_set.clone();
-    match new_instruction_set[pointer] {
-        ("nop", _) => {
-            new_instruction_set[pointer].0 = "jmp";
-        }
-        ("jmp", _) => {
-            new_instruction_set[pointer].0 = "nop";
-        }
-        _ => (),
-    }
+    new_instruction_set[pointer].0 = match new_instruction_set[pointer] {
+        ("nop", _) => "jmp",
+        ("jmp", _) => "nop",
+        (code, _) => code,
+    };
     new_instruction_set
 }
 
@@ -43,11 +37,8 @@ pub fn run(input: &str, part_two: bool) -> i64 {
     let instruction_set = input
         .lines()
         .map(|line| {
-            let instruction = line.trim().split(" ").collect::<Vec<&str>>();
-            (
-                instruction[0].trim(),
-                instruction[1].parse::<i64>().unwrap(),
-            )
+            let (code, arg) = line.trim().split(" ").collect_tuple().unwrap();
+            (code.trim(), arg.parse::<i64>().unwrap())
         })
         .collect::<Vec<(&str, i64)>>();
 

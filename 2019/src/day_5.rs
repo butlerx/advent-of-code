@@ -17,30 +17,30 @@ fn part_1(memory: Vec<i64>, input: i64) -> i64 {
     let mut pointer = 0;
     let mut output = 0;
     loop {
-        match parse_opcode(mem[pointer]) {
+        pointer = match parse_opcode(mem[pointer]) {
             1 => {
                 let pos = mem[pointer + 3] as usize;
                 mem[pos] = read_mem(&mem, pointer, 1) + read_mem(&mem, pointer, 2);
-                pointer += 4;
+                pointer + 4
             }
             2 => {
                 let pos = mem[pointer + 3] as usize;
                 mem[pos] = read_mem(&mem, pointer, 1) * read_mem(&mem, pointer, 2);
-                pointer += 4;
+                pointer + 4
             }
             3 => {
                 let pos = mem[pointer + 1] as usize;
                 mem[pos] = input;
-                pointer += 2;
+                pointer + 2
             }
             4 => {
                 output = read_mem(&mem, pointer, 1);
                 println!("Output: {}", output);
-                pointer += 2;
+                pointer + 2
             }
-            99 => return output as i64,
+            99 => break output as i64,
             _ => unreachable!(),
-        }
+        };
     }
 }
 
@@ -49,40 +49,40 @@ fn part_2(memory: Vec<i64>, input: i64) -> i64 {
     let mut pointer = 0;
     let mut output = 0;
     loop {
-        match parse_opcode(mem[pointer]) {
+        pointer = match parse_opcode(mem[pointer]) {
             1 => {
                 let pos = mem[pointer + 3] as usize;
                 mem[pos] = read_mem(&mem, pointer, 1) + read_mem(&mem, pointer, 2);
-                pointer += 4;
+                pointer + 4
             }
             2 => {
                 let pos = mem[pointer + 3] as usize;
                 mem[pos] = read_mem(&mem, pointer, 1) * read_mem(&mem, pointer, 2);
-                pointer += 4;
+                pointer + 4
             }
             3 => {
                 let pos = mem[pointer + 1] as usize;
                 mem[pos] = input;
-                pointer += 2;
+                pointer + 2
             }
             4 => {
                 output = read_mem(&mem, pointer, 1);
                 println!("Output: {}", output);
-                pointer += 2;
+                pointer + 2
             }
             5 => {
-                pointer = if read_mem(&mem, pointer, 1) != 0 {
+                if read_mem(&mem, pointer, 1) != 0 {
                     read_mem(&mem, pointer, 2) as usize
                 } else {
                     pointer + 3
-                };
+                }
             }
             6 => {
-                pointer = if read_mem(&mem, pointer, 1) == 0 {
+                if read_mem(&mem, pointer, 1) == 0 {
                     read_mem(&mem, pointer, 2) as usize
                 } else {
                     pointer + 3
-                };
+                }
             }
             7 => {
                 let pos = mem[pointer + 3] as usize;
@@ -91,7 +91,7 @@ fn part_2(memory: Vec<i64>, input: i64) -> i64 {
                 } else {
                     0
                 };
-                pointer += 4;
+                pointer + 4
             }
             8 => {
                 let pos = mem[pointer + 3] as usize;
@@ -100,9 +100,9 @@ fn part_2(memory: Vec<i64>, input: i64) -> i64 {
                 } else {
                     0
                 };
-                pointer += 4;
+                pointer + 4
             }
-            99 => return output as i64,
+            99 => break output as i64,
             _ => unreachable!(),
         }
     }
