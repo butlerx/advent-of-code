@@ -82,7 +82,7 @@ dark violet bags contain no other bags.";
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT_1, true) == 4);
+        assert!(run(INPUT_1, true) == 32);
         assert!(run(INPUT_2, true) == 126);
         //assert!(run(include_str!("../input/day_7.txt"), true) == 34988);
     }

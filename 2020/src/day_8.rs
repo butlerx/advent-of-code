@@ -51,19 +51,18 @@ pub fn run(input: &str, part_two: bool) -> i64 {
         .collect::<Vec<(&str, i64)>>();
 
     if part_two {
-        let mut solution = 0;
         for i in 0..instruction_set.len() {
             swap_operations(&mut instruction_set[i]);
-
             if let Ok(accumulator) = execute(&instruction_set) {
-                solution = accumulator;
-                break;
+                return accumulator;
             }
-
+            // Reveret Change if it failed
             swap_operations(&mut instruction_set[i]);
         }
-        solution
+        0
     } else {
+        // Dont care if it fails or succedes just want the value of the accumulator at
+        // end
         match execute(&instruction_set) {
             Ok(accumulator) => accumulator,
             Err(accumulator) => accumulator,
