@@ -1,43 +1,32 @@
 use itertools::Itertools;
 use std::collections::HashMap;
 
-fn combinations(nums: Vec<i64>) -> i64 {
-    let nums = nums.iter().sorted();
-    let mut points = HashMap::new();
-    points.insert(0, 1);
-    for &num in nums.clone() {
-        points.insert(
-            num,
-            points.get(&(num - 1)).unwrap_or(&0)
-                + points.get(&(num - 2)).unwrap_or(&0)
-                + points.get(&(num - 3)).unwrap_or(&0),
-        );
-    }
-    points[nums.last().unwrap()]
-}
-
-fn find_jolt_diff(nums: Vec<i64>) -> (i64, i64, i64) {
-    nums.iter()
-        .sorted()
-        .tuple_windows()
-        .fold((1, 0, 1), |diffs, (last, next)| match next - last {
-            1 => (diffs.0 + 1, diffs.1, diffs.2),
-            2 => (diffs.0, diffs.1 + 1, diffs.2),
-            3 => (diffs.0, diffs.1, diffs.2 + 1),
-            _ => diffs,
-        })
-}
-
 pub fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
         .lines()
         .map(|num| num.trim().parse::<i64>().unwrap())
-        .collect();
+        .sorted();
     if part_two {
-        combinations(nums)
+        let mut points = HashMap::new();
+        let end = nums.clone().last().unwrap();
+        points.insert(0, 1);
+        for num in nums {
+            let value = points.get(&(num - 1)).unwrap_or(&0)
+                + points.get(&(num - 2)).unwrap_or(&0)
+                + points.get(&(num - 3)).unwrap_or(&0);
+            points.insert(num, value);
+        }
+        points[&end]
     } else {
-        let (one_diff, _two_diff, three_diff) = find_jolt_diff(nums);
-        one_diff * three_diff
+        let diff = nums
+            .tuple_windows()
+            .fold((1, 0, 1), |diffs, (last, next)| match next - last {
+                1 => (diffs.0 + 1, diffs.1, diffs.2),
+                2 => (diffs.0, diffs.1 + 1, diffs.2),
+                3 => (diffs.0, diffs.1, diffs.2 + 1),
+                _ => diffs,
+            });
+        diff.0 * diff.2
     }
 }
 
