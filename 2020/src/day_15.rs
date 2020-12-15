@@ -1,29 +1,30 @@
-use std::collections::HashMap;
-fn play_game(nums: Vec<i64>, turns: usize) -> i64 {
-    let mut spoken: HashMap<i64, usize> = HashMap::new();
-    let mut last = 0;
-    for turn in 0..turns {
-        last = if turn < nums.len() {
-            let number = nums[turn];
-            spoken.insert(number, turn);
-            number
-        } else {
-            let number = match spoken.get(&last) {
-                Some(last_turn) => turn - 1 - last_turn,
-                None => 0,
-            };
-            spoken.insert(last, turn - 1);
-            number as i64
-        }
+fn play_game(nums: Vec<usize>, turns: usize) -> i64 {
+    let mut spoken: Vec<(usize, usize)> = vec![(usize::MAX, usize::MAX); turns];
+    for (i, num) in nums.iter().enumerate() {
+        spoken[*num].1 = i;
     }
-    last
+    let mut next_num: usize = *nums.last().unwrap();
+    let mut turn_num = nums.len();
+    loop {
+        if turn_num >= turns {
+            break next_num as i64;
+        }
+        let (last_turn, turn) = spoken[next_num];
+        next_num = if last_turn != usize::MAX && turn != usize::MAX {
+            turn - last_turn
+        } else {
+            0
+        };
+        spoken[next_num] = (spoken[next_num].1, turn_num);
+        turn_num += 1;
+    }
 }
 
 pub fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
         .trim()
         .split(",")
-        .map(|n| n.parse::<i64>().unwrap())
+        .map(|n| n.parse::<usize>().unwrap())
         .collect();
     play_game(nums, if part_two { 30_000_000 } else { 2020 })
 }
@@ -41,29 +42,25 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 436);
-        assert!(run(INPUT_1, false) == 1);
-        assert!(run(INPUT_2, false) == 10);
-        assert!(run(INPUT_3, false) == 27);
-        assert!(run(INPUT_4, false) == 78);
-        assert!(run(INPUT_5, false) == 438);
-        assert!(run(INPUT_6, false) == 1836);
-        let results = run(include_str!("../input/day_15.txt"), false);
-        println!("{}", results);
-        assert!(results == 700);
+        assert_eq!(run(INPUT, false), 436);
+        assert_eq!(run(INPUT_1, false), 1);
+        assert_eq!(run(INPUT_2, false), 10);
+        assert_eq!(run(INPUT_3, false), 27);
+        assert_eq!(run(INPUT_4, false), 78);
+        assert_eq!(run(INPUT_5, false), 438);
+        assert_eq!(run(INPUT_6, false), 1836);
+        assert_eq!(run(include_str!("../input/day_15.txt"), false), 700);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT, true) == 175594);
-        assert!(run(INPUT_1, false) == 2578);
-        assert!(run(INPUT_2, false) == 3544142);
-        assert!(run(INPUT_3, false) == 261214);
-        assert!(run(INPUT_4, false) == 6895259);
-        assert!(run(INPUT_5, false) == 18);
-        assert!(run(INPUT_6, false) == 362);
-        let results = run(include_str!("../input/day_15.txt"), true);
-        println!("{}", results);
-        assert!(results == 51358);
+        assert_eq!(run(INPUT, true), 175594);
+        assert_eq!(run(INPUT_1, true), 2578);
+        assert_eq!(run(INPUT_2, true), 3544142);
+        assert_eq!(run(INPUT_3, true), 261214);
+        assert_eq!(run(INPUT_4, true), 6895259);
+        assert_eq!(run(INPUT_5, true), 18);
+        assert_eq!(run(INPUT_6, true), 362);
+        assert_eq!(run(include_str!("../input/day_15.txt"), true), 51358);
     }
 }
