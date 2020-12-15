@@ -71,35 +71,46 @@ fn write(
     }
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn part_one(instructions: &str) -> i64 {
     let mut mem: HashMap<usize, u64> = HashMap::new();
     let re = Regex::new(r"mask = ([10X]+)").unwrap();
-    if part_two {
-        let mut zeroes_mask = MASK_36_BIT;
-        let mut ones_mask = 0u64;
-        for instruction in input.lines() {
-            if re.is_match(instruction) {
-                let (zeroes, ones) = parse_mask(&re.captures(instruction).unwrap()[1]);
-                zeroes_mask = MASK_36_BIT & !zeroes;
-                ones_mask = ones;
-            } else {
-                let (pos, value) = parse_input(instruction);
-                mem.insert(pos, (value | ones_mask) & zeroes_mask);
-            }
-        }
-    } else {
-        let mut mask: Vec<u64> = Vec::new();
-        for instruction in input.lines() {
-            if re.is_match(instruction) {
-                mask = parse_mask_floating(&re.captures(instruction).unwrap()[1]);
-            } else {
-                let (pos, value) = parse_input(instruction);
-                // assume re_mem matches
-                write(&mut mem, &mask, pos, value, 0);
-            }
+    let mut zeroes_mask = MASK_36_BIT;
+    let mut ones_mask = 0u64;
+    for instruction in instructions.lines() {
+        if re.is_match(instruction) {
+            let (zeroes, ones) = parse_mask(&re.captures(instruction).unwrap()[1]);
+            zeroes_mask = MASK_36_BIT & !zeroes;
+            ones_mask = ones;
+        } else {
+            let (pos, value) = parse_input(instruction);
+            mem.insert(pos, (value | ones_mask) & zeroes_mask);
         }
     }
     mem.values().sum::<u64>() as i64
+}
+
+fn part_two(instructions: &str) -> i64 {
+    let re = Regex::new(r"mask = ([10X]+)").unwrap();
+    let mut mem: HashMap<usize, u64> = HashMap::new();
+    let mut mask: Vec<u64> = Vec::new();
+    for instruction in instructions.lines() {
+        if re.is_match(instruction) {
+            mask = parse_mask_floating(&re.captures(instruction).unwrap()[1]);
+        } else {
+            let (pos, value) = parse_input(instruction);
+            // assume re_mem matches
+            write(&mut mem, &mask, pos, value, 0);
+        }
+    }
+    mem.values().sum::<u64>() as i64
+}
+
+pub fn run(input: &str, version_two: bool) -> i64 {
+    if version_two {
+        part_two(input)
+    } else {
+        part_one(input)
+    }
 }
 
 #[cfg(test)]
