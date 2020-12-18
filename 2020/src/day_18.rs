@@ -1,115 +1,123 @@
 fn find_matching_par(chars: &[char]) -> usize {
-    let mut d = 0;
-    let mut pointer = 0;
+    let (mut nested, mut pointer) = (0, 0);
     loop {
         match chars[pointer] {
-            '(' => d += 1,
-            ')' => d -= 1,
+            '(' => nested += 1,
+            ')' => nested -= 1,
             _ => {}
         }
-        if d == 0 {
-            break pointer;
+        match nested {
+            0 => break pointer,
+            _ => pointer += 1,
         }
-        pointer += 1;
     }
 }
 
-fn oper(op: char, x: i64, y: i64) -> i64 {
-    match op {
-        '+' => x + y,
-        '*' => x * y,
-        _ => unreachable!(),
-    }
-}
+mod part_1 {
+    use super::find_matching_par;
 
-fn eval(chars: Vec<char>) -> i64 {
-    let (mut res, mut i, mut op) = (0, 0, '+');
-    loop {
-        if i >= chars.len() {
-            break res;
-        }
-        match chars[i] {
-            '+' => op = '+',
-            '*' => op = '*',
-            '0'..='9' => res = oper(op, res, chars[i].to_digit(10).unwrap() as i64),
-            '(' => {
-                let end = i + find_matching_par(&chars[i..]);
-                res = oper(op, res, eval(chars[i + 1..end].to_vec()));
-                i = end;
-            }
+    fn oper(op: char, x: i64, y: i64) -> i64 {
+        match op {
+            '+' => x + y,
+            '*' => x * y,
             _ => unreachable!(),
         }
-        i += 1;
     }
-}
 
-fn new_math(input: &str) -> i64 {
-    eval(input.chars().filter(|c| c != &' ').collect())
-}
-
-fn gat_value(chars: &Vec<char>, i: usize) -> (i64, usize) {
-    if chars[i] == '(' {
-        let j = find_matching_par(&chars[i..]);
-        (eval_adv(chars[i + 1..i + j].to_vec()), j)
-    } else {
-        (chars[i].to_digit(10).unwrap() as i64, 0)
-    }
-}
-
-fn eval_adv(chars: Vec<char>) -> i64 {
-    let (mut res, mut i) = (1, 0);
-    loop {
-        if i >= chars.len() {
-            break res;
+    pub fn eval(chars: Vec<char>) -> i64 {
+        let (mut res, mut i, mut op) = (0, 0, '+');
+        loop {
+            if i >= chars.len() {
+                break res;
+            }
+            match chars[i] {
+                '+' | '*' => op = chars[i],
+                '0'..='9' => res = oper(op, res, chars[i].to_digit(10).unwrap() as i64),
+                '(' => {
+                    let end = i + find_matching_par(&chars[i..]);
+                    res = oper(op, res, eval(chars[i + 1..end].to_vec()));
+                    i = end;
+                }
+                _ => unreachable!(),
+            }
+            i += 1;
         }
-        let (mut val, step) = gat_value(&chars, i);
-        i += step;
-        while let Some('+') = chars.get(i + 1) {
-            let (tmp, step) = gat_value(&chars, i + 2);
-            val += tmp;
-            i += step + 2;
-        }
-        res *= val;
-        i += 2;
     }
 }
 
-fn new_math_adv(input: &str) -> i64 {
-    eval_adv(input.chars().filter(|c| c != &' ').collect())
+mod part_2 {
+    use super::find_matching_par;
+
+    fn gat_value(chars: &Vec<char>, i: usize) -> (i64, usize) {
+        match chars[i] {
+            '(' => {
+                let j = find_matching_par(&chars[i..]);
+                (eval(chars[i + 1..i + j].to_vec()), j)
+            }
+            _ => (chars[i].to_digit(10).unwrap() as i64, 0),
+        }
+    }
+
+    pub fn eval(chars: Vec<char>) -> i64 {
+        let (mut res, mut i) = (1, 0);
+        loop {
+            if i >= chars.len() {
+                break res;
+            }
+            let (mut val, step) = gat_value(&chars, i);
+            i += step;
+            while let Some('+') = chars.get(i + 1) {
+                let (tmp, step) = gat_value(&chars, i + 2);
+                val += tmp;
+                i += step + 2;
+            }
+            res *= val;
+            i += 2;
+        }
+    }
 }
 
 pub fn run(input: &str, part_two: bool) -> i64 {
     input
         .lines()
-        .map(if part_two { new_math_adv } else { new_math })
+        .map(|line| {
+            let sums = line.chars().filter(|c| c != &' ').collect();
+            if part_two {
+                part_2::eval(sums)
+            } else {
+                part_1::eval(sums)
+            }
+        })
         .sum()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    static INPUT: &str = "1 + (2 * 3) + (4 * (5 + 6))";
-    static INPUT_1: &str = "2 * 3 + (4 * 5)";
-    static INPUT_2: &str = "5 + (8 * 3 + 9 + 3 * 4 * 3)";
-    static INPUT_3: &str = "5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))";
-    static INPUT_4: &str = "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2";
+    static INPUT: [&str; 5] = [
+        "1 + (2 * 3) + (4 * (5 + 6))",
+        "2 * 3 + (4 * 5)",
+        "5 + (8 * 3 + 9 + 3 * 4 * 3)",
+        "5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))",
+        "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2",
+    ];
 
     #[test]
-    fn test_new_math() {
-        assert_eq!(new_math(INPUT), 51);
-        assert_eq!(new_math(INPUT_1), 26);
-        assert_eq!(new_math(INPUT_2), 437);
-        assert_eq!(new_math(INPUT_3), 12240);
-        assert_eq!(new_math(INPUT_4), 13632);
+    fn test_eval() {
+        assert_eq!(run(INPUT[0], false), 51);
+        assert_eq!(run(INPUT[1], false), 26);
+        assert_eq!(run(INPUT[2], false), 437);
+        assert_eq!(run(INPUT[3], false), 12240);
+        assert_eq!(run(INPUT[4], false), 13632);
     }
 
     #[test]
-    fn test_new_math_adv() {
-        assert_eq!(new_math_adv(INPUT), 51);
-        assert_eq!(new_math_adv(INPUT_1), 46);
-        assert_eq!(new_math_adv(INPUT_2), 1445);
-        assert_eq!(new_math_adv(INPUT_3), 669060);
-        assert_eq!(new_math_adv(INPUT_4), 23340);
+    fn test_eval_adv() {
+        assert_eq!(run(INPUT[0], true), 51);
+        assert_eq!(run(INPUT[1], true), 46);
+        assert_eq!(run(INPUT[2], true), 1445);
+        assert_eq!(run(INPUT[3], true), 669060);
+        assert_eq!(run(INPUT[4], true), 23340);
     }
 
     #[test]
