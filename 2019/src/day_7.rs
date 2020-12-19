@@ -147,20 +147,16 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT_1, false) == 43210);
-        assert!(run(INPUT_2, false) == 54321);
-        assert!(run(INPUT_3, false) == 65210);
-        let results = run(include_str!("../input/day_7.txt"), false);
-        println!("{}", results);
-        assert!(results == 65464);
+        assert_eq!(run(INPUT_1, false), 43210);
+        assert_eq!(run(INPUT_2, false), 54321);
+        assert_eq!(run(INPUT_3, false), 65210);
+        assert_eq!(run(include_str!("../input/day_7.txt"), false), 65464);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT_4, true) == 139629729);
-        assert!(run(INPUT_5, true) == 18216);
-        let results = run(include_str!("../input/day_7.txt"), true);
-        println!("{}", results);
-        assert!(results == 1518124);
+        assert_eq!(run(INPUT_4, true), 139629729);
+        assert_eq!(run(INPUT_5, true), 18216);
+        assert_eq!(run(include_str!("../input/day_7.txt"), true), 1518124);
     }
 }
