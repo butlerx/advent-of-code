@@ -1,4 +1,4 @@
-use std::collections::*;
+use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
 
 type Row3d = (i8, i8, i8);
