@@ -30,15 +30,15 @@ fn parse_rules(rules: &str) -> HashMap<usize, Rule> {
         .collect()
 }
 
-fn validate_msg(rules: HashMap<usize, Rule>, msg: &str, mut queue: VecDeque<usize>) -> bool {
+fn validate_msg(rules: &HashMap<usize, Rule>, msg: &str, mut queue: VecDeque<usize>) -> bool {
     if queue.is_empty() || msg.is_empty() {
         return queue.is_empty() && msg.is_empty();
     }
 
-    let validate_seq = |seq: Vec<usize>, mut q| {
+    let validate_seq = |seq: &Vec<usize>, mut q| {
         let mut buf = seq.iter().map(|&n| n).collect::<VecDeque<usize>>();
         buf.append(&mut q);
-        validate_msg(rules.clone(), msg, buf)
+        validate_msg(rules, msg, buf)
     };
 
     match rules.get(&queue.pop_front().unwrap()) {
@@ -46,9 +46,9 @@ fn validate_msg(rules: HashMap<usize, Rule>, msg: &str, mut queue: VecDeque<usiz
             Some(ch) if &ch == c => validate_msg(rules, &msg[1..], queue),
             _ => false,
         },
-        Some(Rule::Seq(seq)) => validate_seq(seq.clone(), queue.clone()),
+        Some(Rule::Seq(seq)) => validate_seq(&seq, queue),
         Some(Rule::Alt(seq_1, seq_2)) => {
-            validate_seq(seq_1.clone(), queue.clone()) || validate_seq(seq_2.clone(), queue.clone())
+            validate_seq(&seq_1, queue.clone()) || validate_seq(&seq_2, queue.clone())
         }
         _ => unreachable!(),
     }
@@ -63,11 +63,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
     }
     messages
         .lines()
-        .filter(|line| {
-            let mut queue = VecDeque::new();
-            queue.push_back(0);
-            validate_msg(schema.clone(), line, queue)
-        })
+        .filter(|line| validate_msg(&schema, line, vec![0].into_iter().collect()))
         .count() as i64
 }
 
