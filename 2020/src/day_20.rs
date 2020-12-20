@@ -59,7 +59,12 @@ impl Tile {
 
     fn matching(&self, side: usize) -> u16 {
         (0..self.data.rows).fold(0, |total, row| {
-            (total << 1) | (((self.nesw[side] & (1 << row)) != 0) as u16)
+            (total << 1)
+                | ((if row < 16 {
+                    self.nesw[side] & (1 << row)
+                } else {
+                    0
+                }) != 0) as u16
         })
     }
 
@@ -344,6 +349,6 @@ Tile 3079:
     #[test]
     fn test_part_2() {
         assert_eq!(run(INPUT, true), 273);
-        assert_eq!(run(include_str!("../input/day_20.txt"), true), 0);
+        assert_eq!(run(include_str!("../input/day_20.txt"), true), 2133);
     }
 }
