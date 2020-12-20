@@ -25,70 +25,48 @@ impl Computer {
         self.memory[self.pointer] as usize % 100
     }
 
-    fn read(&self, mem: usize) -> i64 {
-        if (self.memory[self.pointer] / 10i64.pow(mem as u32 + 1)) % 10 == 1 {
-            self.memory[self.pointer + mem]
-        } else {
-            self.memory[self.memory[self.pointer + mem] as usize]
-        }
+    fn move_pointer(&mut self, op: usize) {
+        self.pointer += match op {
+            1..=2 | 7..=8 => 4,
+            3..=4 => 2,
+            5..=6 => 3,
+            _ => 0,
+        };
     }
 
-    fn read_pos(&self, pos: usize) -> usize {
-        self.memory[self.pointer + pos] as usize
+    fn read(&mut self, mem: usize) -> &mut i64 {
+        let pos = self.pointer + mem;
+        let address = match self.memory[self.pointer] / 10i64.pow(mem as u32 + 1) % 10 {
+            0 => self.memory[pos] as usize,
+            1 => pos,
+            _ => unreachable!(),
+        };
+        &mut self.memory[address]
     }
 
     fn execute(&mut self, input: Vec<i64>) -> Option<i64> {
         let mut input = input.iter();
         loop {
-            match self.parse_opcode() {
-                1 => {
-                    let pos = self.read_pos(3);
-                    self.memory[pos] = self.read(1) + self.read(2);
-                    self.pointer += 4;
+            let op = self.parse_opcode();
+            match op {
+                1 => *self.read(3) = *self.read(1) + *self.read(2),
+                2 => *self.read(3) = *self.read(1) * *self.read(2),
+                3 => *self.read(1) = *input.next().unwrap(),
+                4 => break Some(*self.read(1)),
+                5 if *self.read(1) != 0 => {
+                    self.pointer = *self.read(2) as usize;
+                    continue;
                 }
-                2 => {
-                    let pos = self.read_pos(3);
-                    self.memory[pos] = self.read(1) * self.read(2);
-                    self.pointer += 4;
+                6 if *self.read(1) == 0 => {
+                    self.pointer = *self.read(2) as usize;
+                    continue;
                 }
-                3 => {
-                    let pos = self.read_pos(1);
-                    self.memory[pos] = *input.next().unwrap();
-                    self.pointer += 2;
-                }
-                4 => {
-                    self.output = self.read(1);
-                    // println!("Output: {}", output);
-                    self.pointer += 2;
-                    break Some(self.output);
-                }
-                5 => {
-                    if self.read(1) != 0 {
-                        self.pointer = self.read(2) as usize;
-                    } else {
-                        self.pointer += 3;
-                    }
-                }
-                6 => {
-                    if self.read(1) == 0 {
-                        self.pointer = self.read(2) as usize;
-                    } else {
-                        self.pointer += 3;
-                    }
-                }
-                7 => {
-                    let pos = self.read_pos(3);
-                    self.memory[pos] = if self.read(1) < self.read(2) { 1 } else { 0 };
-                    self.pointer += 4;
-                }
-                8 => {
-                    let pos = self.read_pos(3);
-                    self.memory[pos] = if self.read(1) == self.read(2) { 1 } else { 0 };
-                    self.pointer += 4;
-                }
+                7 => *self.read(3) = if *self.read(1) < *self.read(2) { 1 } else { 0 },
+                8 => *self.read(3) = if *self.read(1) == *self.read(2) { 1 } else { 0 },
                 99 => break None,
-                _ => unreachable!(),
+                _ => (),
             }
+            self.move_pointer(op);
         }
     }
 }

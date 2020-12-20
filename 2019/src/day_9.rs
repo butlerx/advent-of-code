@@ -23,17 +23,17 @@ impl Computer {
 
     // parse opscode, returning the code and if the args are in position mode or imediate
     // if an arg is true its in  imediate mode
-    fn parse_opcode(&self) -> (usize, usize) {
-        let op = self.memory[self.pointer] as usize % 100;
-        (
-            op,
-            match op {
-                1..=2 | 7..=8 => 4,
-                3..=4 | 9 => 2,
-                5..=6 => 3,
-                _ => 0,
-            },
-        )
+    fn parse_opcode(&self) -> usize {
+        self.memory[self.pointer] as usize % 100
+    }
+
+    fn move_pointer(&mut self, op: usize) {
+        self.pointer += match op {
+            1..=2 | 7..=8 => 4,
+            3..=4 | 9 => 2,
+            5..=6 => 3,
+            _ => 0,
+        };
     }
 
     fn read(&mut self, mem: usize) -> &mut i64 {
@@ -50,7 +50,7 @@ impl Computer {
     fn execute(&mut self, input: Vec<i64>) -> Option<i64> {
         let mut input = input.iter();
         loop {
-            let (op, steps) = self.parse_opcode();
+            let op = self.parse_opcode();
             match op {
                 1 => *self.read(3) = *self.read(1) + *self.read(2),
                 2 => *self.read(3) = *self.read(1) * *self.read(2),
@@ -70,7 +70,7 @@ impl Computer {
                 99 => break None,
                 _ => (),
             }
-            self.pointer += steps;
+            self.move_pointer(op);
         }
     }
 }
