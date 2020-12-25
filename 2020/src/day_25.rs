@@ -1,8 +1,7 @@
 use itertools::Itertools;
 
-fn transform(mut value: i64, subject: i64) -> i64 {
-    value *= subject;
-    value % 20201227
+fn transform(value: i64, subject: i64) -> i64 {
+    (value * subject) % 20201227
 }
 
 fn find_loop(subject: i64, goal: i64) -> i64 {
@@ -24,11 +23,7 @@ pub fn run(input: &str) -> i64 {
         .map(|n| n.parse::<i64>().unwrap())
         .collect_tuple()
         .unwrap();
-    let mut value = 1;
-    for _ in 0..find_loop(7, door_key) {
-        value = transform(value, card_key);
-    }
-    value
+    (0..find_loop(7, door_key)).fold(1, |value, _| transform(value, card_key))
 }
 
 #[cfg(test)]
