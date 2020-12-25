@@ -67,7 +67,7 @@ fn main() {
         22 => day_22::run(include_str!("../input/day_22.txt"), opts.part_two),
         23 => day_23::run(include_str!("../input/day_23.txt"), opts.part_two),
         24 => day_24::run(include_str!("../input/day_24.txt"), opts.part_two),
-        25 => day_25::run(include_str!("../input/day_25.txt"), opts.part_two),
+        25 => day_25::run(include_str!("../input/day_25.txt")),
         _ => 0,
     };
     println!("results: {}", result);
