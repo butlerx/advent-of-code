@@ -1,0 +1,59 @@
+use itertools::Itertools;
+
+fn main() {
+    let input = include_str!("../../input/01.txt");
+    println!("Part 1: {}", part_1(input));
+    println!("Part 2: {}", part_2(input));
+}
+
+fn parse_input(input: &str) -> Vec<i64> {
+    input
+        .lines()
+        .map(|num| num.trim().parse::<i64>().unwrap())
+        .collect()
+}
+
+pub fn part_1(input: &str) -> i64 {
+    parse_input(input)
+        .iter()
+        .tuple_windows()
+        .map(|(prev, next)| if next > prev { 1 } else { 0 })
+        .sum()
+}
+
+pub fn part_2(input: &str) -> i64 {
+    parse_input(input)
+        .iter()
+        .tuple_windows()
+        .map(|(prev, current, next)| prev + current + next)
+        .tuple_windows()
+        .map(|(prev, next)| if next > prev { 1 } else { 0 })
+        .sum()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    static INPUT: &str = "199
+200
+208
+210
+200
+207
+240
+269
+260
+263";
+
+    #[test]
+    fn test_part_1() {
+        assert!(part_1(INPUT) == 7);
+        assert!(1715 == part_1(include_str!("../../input/01.txt")));
+    }
+
+    #[test]
+    fn test_part_2() {
+        assert!(part_2(INPUT) == 5);
+        assert!(part_2(include_str!("../../input/01.txt")) == 1739);
+    }
+}
