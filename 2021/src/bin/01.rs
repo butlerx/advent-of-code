@@ -1,5 +1,3 @@
-use itertools::Itertools;
-
 fn main() {
     let input = include_str!("../../input/01.txt");
     println!("Part 1: {}", part_1(input));
@@ -15,20 +13,16 @@ fn parse_input(input: &str) -> Vec<i64> {
 
 pub fn part_1(input: &str) -> i64 {
     parse_input(input)
-        .iter()
-        .tuple_windows()
-        .map(|(prev, next)| if next > prev { 1 } else { 0 })
-        .sum()
+        .windows(2)
+        .filter(|w| w[0] < w[1])
+        .count() as i64
 }
 
 pub fn part_2(input: &str) -> i64 {
     parse_input(input)
-        .iter()
-        .tuple_windows()
-        .map(|(prev, current, next)| prev + current + next)
-        .tuple_windows()
-        .map(|(prev, next)| if next > prev { 1 } else { 0 })
-        .sum()
+        .windows(4)
+        .filter(|w| w[0] < w[3])
+        .count() as i64
 }
 
 #[cfg(test)]
