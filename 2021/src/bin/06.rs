@@ -7,20 +7,16 @@ fn main() {
 }
 
 fn parse_input(input: &str) -> [usize; 9] {
-    let nums: Vec<usize> = input
-        .split(COMMA)
-        .map(|num| num.trim().parse::<usize>().unwrap())
-        .collect();
     let mut counts: [usize; 9] = [0; 9];
-    for age in nums {
-        counts[age] += 1;
+    for age in input.split(COMMA) {
+        counts[age.trim().parse::<usize>().unwrap()] += 1;
     }
     counts
 }
 
 fn calculate(counts: &mut [usize; 9], num_days: usize) -> usize {
-    for _day in 0..num_days {
-        counts[7usize] += counts[0usize];
+    for _ in 0..num_days {
+        counts[7] += counts[0];
         counts.rotate_left(1);
     }
     counts.iter().sum()
