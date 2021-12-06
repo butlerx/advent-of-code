@@ -34,9 +34,9 @@ forward 2";
 
     #[test]
     fn test_tun() {
-        assert!(run(INPUT) == (150, 900));
+        assert_eq!(run(INPUT), (150, 900));
         let (p1, p2) = run(include_str!("../../input/02.txt"));
-        assert!(p1 == 2019945);
-        assert!(p2 == 1599311480);
+        assert_eq!(p1, 2019945);
+        assert_eq!(p2, 1599311480);
     }
 }

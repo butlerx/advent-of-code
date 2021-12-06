@@ -84,14 +84,14 @@ mod tests {
     #[test]
     fn test_small_input() {
         let input = parse_input(INPUT);
-        assert!(part_1(input.clone()) == 5);
-        assert!(part_2(input) == 12);
+        assert_eq!(part_1(input.clone()), 5);
+        assert_eq!(part_2(input), 12);
     }
 
     #[test]
     fn test_large_input() {
         let input = parse_input(include_str!("../../input/05.txt"));
-        assert!(part_1(input.clone()) == 7297);
-        assert!(part_2(input) == 21038);
+        assert_eq!(part_1(input.clone()), 7297);
+        assert_eq!(part_2(input), 21038);
     }
 }

@@ -103,12 +103,16 @@ mod tests {
  2  0 12  3  7";
 
     #[test]
-    fn test_run() {
+    fn test_small_input() {
         let (part1, part2) = run(INPUT);
-        assert!(part1 == 4512);
-        assert!(part2 == 1924);
+        assert_eq!(part1, 4512);
+        assert_eq!(part2, 1924);
+    }
+
+    #[test]
+    fn test_large_input() {
         let (p1, p2) = run(include_str!("../../input/04.txt"));
-        assert!(p1 == 49860);
-        assert!(p2 == 24628);
+        assert_eq!(p1, 49860);
+        assert_eq!(p2, 24628);
     }
 }

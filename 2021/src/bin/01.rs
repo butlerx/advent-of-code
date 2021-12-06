@@ -41,13 +41,13 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT) == 7);
-        assert!(1715 == part_1(include_str!("../../input/01.txt")));
+        assert_eq!(part_1(INPUT), 7);
+        assert_eq!(1715, part_1(include_str!("../../input/01.txt")));
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT) == 5);
-        assert!(part_2(include_str!("../../input/01.txt")) == 1739);
+        assert_eq!(part_2(INPUT), 5);
+        assert_eq!(part_2(include_str!("../../input/01.txt")), 1739);
     }
 }

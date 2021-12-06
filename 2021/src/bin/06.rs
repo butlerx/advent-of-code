@@ -30,14 +30,14 @@ mod tests {
     #[test]
     fn test_small_input() {
         let input = parse_input(INPUT);
-        assert!(calculate(&mut input.clone(), 80) == 5934);
-        assert!(calculate(&mut input.clone(), 256) == 26984457539);
+        assert_eq!(calculate(&mut input.clone(), 80), 5934);
+        assert_eq!(calculate(&mut input.clone(), 256), 26984457539);
     }
 
     #[test]
     fn test_large_input() {
         let input = parse_input(include_str!("../../input/06.txt"));
-        assert!(calculate(&mut input.clone(), 80) == 361169);
-        assert!(calculate(&mut input.clone(), 256) == 1634946868992);
+        assert_eq!(calculate(&mut input.clone(), 80), 361169);
+        assert_eq!(calculate(&mut input.clone(), 256), 1634946868992);
     }
 }

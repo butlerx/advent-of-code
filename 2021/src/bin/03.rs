@@ -68,13 +68,13 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT) == 198);
-        assert!(part_1(include_str!("../../input/03.txt")) == 3847100);
+        assert_eq!(part_1(INPUT), 198);
+        assert_eq!(part_1(include_str!("../../input/03.txt")), 3847100);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT) == 230);
-        assert!(part_2(include_str!("../../input/03.txt")) == 4105235);
+        assert_eq!(part_2(INPUT), 230);
+        assert_eq!(part_2(include_str!("../../input/03.txt")), 4105235);
     }
 }

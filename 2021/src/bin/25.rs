@@ -20,14 +20,14 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT) == 0);
-        assert!(part_1(include_str!("../../input/25.txt")) == 0);
+        assert_eq!(part_1(INPUT), 0);
+        assert_eq!(part_1(include_str!("../../input/25.txt")), 0);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT) == 0);
-        assert!(part_2(include_str!("../../input/25.txt")) == 0);
+        assert_eq!(part_2(INPUT), 0);
+        assert_eq!(part_2(include_str!("../../input/25.txt")), 0);
     }
 }
 
