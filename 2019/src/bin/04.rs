@@ -1,3 +1,11 @@
+const DASH: &str = "-";
+
+fn main() {
+    let input = include_str!("../../input/04.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn valid_password(password: &i64, max: bool) -> bool {
     let mut head = password / 10;
     let mut tail = password % 10;
@@ -35,7 +43,7 @@ fn valid_password(password: &i64, max: bool) -> bool {
 
 pub fn run(input: &str, part_two: bool) -> i64 {
     let range: Vec<i64> = input
-        .split("-")
+        .split(DASH)
         .map(|num| num.trim().parse::<i64>().unwrap())
         .collect();
     (range[0]..range[1])
@@ -49,15 +57,11 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        let results = run(include_str!("../input/day_4.txt"), false);
-        println!("{}", results);
-        assert!(results == 1748);
+        assert_eq!(run(include_str!("../../input/04.txt"), false), 1748);
     }
 
     #[test]
     fn test_part_2() {
-        let results = run(include_str!("../input/day_4.txt"), true);
-        println!("{}", results);
-        assert!(results == 1180);
+        assert_eq!(run(include_str!("../../input/04.txt"), true), 1180);
     }
 }

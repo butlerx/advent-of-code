@@ -1,5 +1,13 @@
 use itertools::Itertools;
 
+const COMMA: &str = ",";
+
+fn main() {
+    let input = include_str!("../../input/07.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 #[derive(Clone)]
 struct Computer {
     memory: Vec<i64>,
@@ -11,7 +19,7 @@ impl Computer {
     fn new(input: &str) -> Self {
         Computer {
             memory: input
-                .split(",")
+                .split(COMMA)
                 .map(|num| num.trim().parse().unwrap())
                 .collect(),
             pointer: 0,
@@ -71,7 +79,7 @@ impl Computer {
     }
 }
 
-fn feedback(comp: &Computer, phases: &Vec<i64>) -> i64 {
+fn feedback(comp: &Computer, phases: &[i64]) -> i64 {
     let mut amplifiers: Vec<_> = phases.iter().map(|_| comp.clone()).collect();
 
     let init = phases
@@ -86,7 +94,7 @@ fn feedback(comp: &Computer, phases: &Vec<i64>) -> i64 {
     amplifiers.last().unwrap().output
 }
 
-fn applify(comp: &Computer, phases: &Vec<i64>) -> i64 {
+fn applify(comp: &Computer, phases: &[i64]) -> i64 {
     phases.iter().fold(0, |input, phase| {
         comp.clone().execute(vec![*phase, input]).unwrap()
     })
@@ -128,13 +136,13 @@ mod tests {
         assert_eq!(run(INPUT_1, false), 43210);
         assert_eq!(run(INPUT_2, false), 54321);
         assert_eq!(run(INPUT_3, false), 65210);
-        assert_eq!(run(include_str!("../input/day_7.txt"), false), 65464);
+        assert_eq!(run(include_str!("../../input/07.txt"), false), 65464);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(run(INPUT_4, true), 139629729);
         assert_eq!(run(INPUT_5, true), 18216);
-        assert_eq!(run(include_str!("../input/day_7.txt"), true), 1518124);
+        assert_eq!(run(include_str!("../../input/07.txt"), true), 1518124);
     }
 }

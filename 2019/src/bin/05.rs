@@ -1,10 +1,18 @@
+const COMMA: &str = ",";
+
+fn main() {
+    let input = include_str!("../../input/05.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 // parse opscode, returning the code and if the args are in position mode or imediate
 // if an arg is true its in  imediate mode
 fn parse_opcode(code: i64) -> usize {
     code as usize % 100
 }
 
-fn read_mem(memory: &Vec<i64>, pointer: usize, mem: usize) -> i64 {
+fn read_mem(memory: &[i64], pointer: usize, mem: usize) -> i64 {
     if (memory[pointer] / 10i64.pow(mem as u32 + 1)) % 10 == 1 {
         memory[pointer + mem]
     } else {
@@ -13,7 +21,7 @@ fn read_mem(memory: &Vec<i64>, pointer: usize, mem: usize) -> i64 {
 }
 
 fn execute(memory: Vec<i64>, input: i64) -> i64 {
-    let mut mem = memory.clone();
+    let mut mem = memory;
     let mut pointer = 0;
     let mut output = 0;
     loop {
@@ -78,7 +86,7 @@ fn execute(memory: Vec<i64>, input: i64) -> i64 {
 
 pub fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
-        .split(",")
+        .split(COMMA)
         .map(|num| num.trim().parse().unwrap())
         .collect();
     if part_two {
@@ -94,15 +102,11 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        let results = run(include_str!("../input/day_5.txt"), false);
-        println!("{}", results);
-        assert!(results == 13294380);
+        assert_eq!(run(include_str!("../../input/05.txt"), false), 13294380);
     }
 
     #[test]
     fn test_part_2() {
-        let results = run(include_str!("../input/day_5.txt"), true);
-        println!("{}", results);
-        assert!(results == 11460760);
+        assert_eq!(run(include_str!("../../input/05.txt"), true), 11460760);
     }
 }

@@ -1,5 +1,11 @@
 const PIXELS: [&str; 3] = ["  ", "██", "  "];
 
+fn main() {
+    let input = include_str!("../../input/08.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn convert_to_layers(input: &str, pixels_wide: usize, pixels_tall: usize) -> Vec<String> {
     input
         .trim()
@@ -14,7 +20,6 @@ fn convert_to_layers(input: &str, pixels_wide: usize, pixels_tall: usize) -> Vec
                 .join("")
         })
         .collect::<Vec<String>>()
-        .clone()
 }
 
 fn layers_to_image(layers: Vec<String>) -> String {
@@ -32,7 +37,7 @@ fn layers_to_image(layers: Vec<String>) -> String {
         .collect::<Vec<String>>()
         .join("")
 }
-fn print_image(image: &String, pixels_wide: usize) {
+fn print_image(image: &str, pixels_wide: usize) {
     for line in image
         .chars()
         .map(|c| match c {
@@ -62,7 +67,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
                 x.matches(zeros).count().cmp(&y.matches(zeros).count())
             })
             .unwrap();
-        (&layer.matches(&"1".to_string()).count() * &layer.matches(&"2".to_string()).count()) as i64
+        (layer.matches(&"1").count() * layer.matches(&"2").count()) as i64
     }
 }
 
@@ -81,21 +86,16 @@ mod tests {
 
     #[test]
     fn test_layers_to_image() {
-        let results = layers_to_image(convert_to_layers(INPUT_2, 2, 2));
-        assert!(results == "0110");
+        assert_eq!(layers_to_image(convert_to_layers(INPUT_2, 2, 2)), "0110");
     }
 
     #[test]
     fn test_part_1() {
-        let results = run(include_str!("../input/day_8.txt"), false);
-        println!("{}", results);
-        assert!(results == 1920);
+        assert_eq!(run(include_str!("../../input/08.txt"), false), 1920);
     }
 
     #[test]
     fn test_part_2() {
-        let results = run(include_str!("../input/day_8.txt"), true);
-        println!("{}", results);
-        assert!(results == 0);
+        assert_eq!(run(include_str!("../../input/08.txt"), true), 0);
     }
 }

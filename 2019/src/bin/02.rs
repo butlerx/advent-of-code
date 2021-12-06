@@ -1,5 +1,13 @@
+static COMMA: &str = ",";
+
+fn main() {
+    let input = include_str!("../../input/02.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn execute(memory: Vec<usize>, noun: usize, verb: usize) -> i64 {
-    let mut nums = memory.clone();
+    let mut nums = memory;
     let mut pointer = 0;
     nums[1] = noun;
     nums[2] = verb;
@@ -22,7 +30,7 @@ fn execute(memory: Vec<usize>, noun: usize, verb: usize) -> i64 {
 pub fn run(input: &str, part_two: bool) -> i64 {
     if part_two {
         let mem: Vec<usize> = input
-            .split(",")
+            .split(COMMA)
             .map(|num| num.trim().parse().unwrap())
             .collect();
         let goal = 19690720;
@@ -41,7 +49,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
     } else {
         execute(
             input
-                .split(",")
+                .split(COMMA)
                 .map(|num| num.trim().parse().unwrap())
                 .collect(),
             12,
@@ -57,16 +65,12 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 1600);
-        let results = run(include_str!("../input/day_2.txt"), false);
-        println!("{}", results);
-        assert!(results == 3850704);
+        assert_eq!(run(INPUT, false), 1600);
+        assert_eq!(run(include_str!("../../input/02.txt"), false), 3850704);
     }
 
     #[test]
     fn test_part_2() {
-        let results = run(include_str!("../input/day_2.txt"), true);
-        println!("{}", results);
-        assert!(results == 6718);
+        assert_eq!(run(include_str!("../../input/02.txt"), true), 6718);
     }
 }

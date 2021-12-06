@@ -1,6 +1,15 @@
-use std::collections::HashMap;
-use std::collections::HashSet;
-use std::iter::FromIterator;
+use std::{
+    collections::{HashMap, HashSet},
+    iter::FromIterator,
+};
+
+const COMMA: &str = ",";
+
+fn main() {
+    let input = include_str!("../../input/03.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
 
 fn find_path(path: Vec<(char, usize)>) -> HashMap<(i64, i64), i64> {
     let mut cells = HashMap::new();
@@ -25,10 +34,10 @@ fn find_path(path: Vec<(char, usize)>) -> HashMap<(i64, i64), i64> {
     cells
 }
 fn parse(path: &str) -> Vec<(char, usize)> {
-    path.split(",")
+    path.split(COMMA)
         .map(|direction| {
             (
-                direction.chars().nth(0).unwrap(),
+                direction.chars().next().unwrap(),
                 direction[1..].parse().unwrap(),
             )
         })
@@ -44,8 +53,8 @@ pub fn run(input: &str, part_two: bool) -> i64 {
             .min()
             .unwrap()
     } else {
-        let path_1: HashSet<&(i64, i64)> = HashSet::from_iter(paths[0].keys().into_iter());
-        let path_2: HashSet<&(i64, i64)> = HashSet::from_iter(paths[1].keys().into_iter());
+        let path_1: HashSet<&(i64, i64)> = HashSet::from_iter(paths[0].keys());
+        let path_2: HashSet<&(i64, i64)> = HashSet::from_iter(paths[1].keys());
         path_1
             .intersection(&path_2)
             .map(|(x, y)| x.abs() + y.abs())
@@ -64,19 +73,15 @@ U98,R91,D20,R16,D67,R40,U7,R15,U6,R7";
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT_1, false) == 159);
-        assert!(run(INPUT_2, false) == 135);
-        let results = run(include_str!("../input/day_3.txt"), false);
-        println!("{}", results);
-        assert!(results == 1519);
+        assert_eq!(run(INPUT_1, false), 159);
+        assert_eq!(run(INPUT_2, false), 135);
+        assert_eq!(run(include_str!("../../input/03.txt"), false), 1519);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT_1, true) == 610);
-        assert!(run(INPUT_2, true) == 410);
-        let results = run(include_str!("../input/day_3.txt"), true);
-        println!("{}", results);
-        assert!(results == 14358);
+        assert_eq!(run(INPUT_1, true), 610);
+        assert_eq!(run(INPUT_2, true), 410);
+        assert_eq!(run(include_str!("../../input/03.txt"), true), 14358);
     }
 }

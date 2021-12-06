@@ -1,6 +1,13 @@
 use itertools::Itertools;
-use std::collections::HashMap;
-use std::iter::successors;
+use std::{collections::HashMap, iter::successors};
+
+const BRACE: &str = ")";
+
+fn main() {
+    let input = include_str!("../../input/06.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
 
 fn calculate(orbits: &HashMap<&str, Vec<&str>>, object: &str, distance: i64) -> i64 {
     orbits
@@ -14,7 +21,7 @@ fn calculate(orbits: &HashMap<&str, Vec<&str>>, object: &str, distance: i64) -> 
         + distance
 }
 
-fn calc_distance(orbits: &HashMap<&str, &str>, source: &str, dest: &str) -> i64 {
+fn calc_distance(orbits: HashMap<&str, &str>, source: &str, dest: &str) -> i64 {
     let mut you: Vec<_> = successors(orbits.get(source), |&o| orbits.get(o))
         .copied()
         .collect();
@@ -29,20 +36,26 @@ fn calc_distance(orbits: &HashMap<&str, &str>, source: &str, dest: &str) -> i64 
 
 pub fn run(input: &str, part_two: bool) -> i64 {
     if part_two {
-        let oribits: HashMap<&str, &str> = input
-            .lines()
-            .map(|line| {
-                let l: (&str, &str) = line.split(")").collect_tuple().unwrap();
-                (l.1, l.0)
-            })
-            .collect();
-        calc_distance(&oribits, "YOU", "SAN")
+        calc_distance(
+            input
+                .lines()
+                .map(|line| {
+                    let l: (&str, &str) = line.split(BRACE).collect_tuple().unwrap();
+                    (l.1, l.0)
+                })
+                .collect(),
+            "YOU",
+            "SAN",
+        )
     } else {
-        let oribits = input
-            .lines()
-            .map(|line| line.split(")").collect_tuple().unwrap())
-            .into_group_map();
-        calculate(&oribits, "COM", 0)
+        calculate(
+            &input
+                .lines()
+                .map(|line| line.split(BRACE).collect_tuple().unwrap())
+                .into_group_map(),
+            "COM",
+            0,
+        )
     }
 }
 
@@ -76,17 +89,13 @@ I)SAN";
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 42);
-        let results = run(include_str!("../input/day_6.txt"), false);
-        println!("{}", results);
-        assert!(results == 200001);
+        assert_eq!(run(INPUT, false), 42);
+        assert_eq!(run(include_str!("../../input/06.txt"), false), 200001);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT_2, true) == 4);
-        let results = run(include_str!("../input/day_6.txt"), true);
-        println!("{}", results);
-        assert!(results == 379);
+        assert_eq!(run(INPUT_2, true), 4);
+        assert_eq!(run(include_str!("../../input/06.txt"), true), 379);
     }
 }

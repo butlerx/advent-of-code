@@ -1,3 +1,12 @@
+static COMMA: &str = ",";
+
+fn main() {
+    let mut comp = Computer::new(include_str!("../../input/09.txt"));
+
+    println!("Part 1: {}", comp.execute(vec![1]).unwrap());
+    println!("Part 2: {}", comp.execute(vec![2]).unwrap());
+}
+
 #[derive(Clone)]
 struct Computer {
     base: i64,
@@ -9,7 +18,7 @@ struct Computer {
 impl Computer {
     fn new(input: &str) -> Self {
         let mut mem: Vec<i64> = input
-            .split(",")
+            .split(COMMA)
             .map(|num| num.trim().parse().unwrap())
             .collect();
         mem.resize(10 * 1024, 0);
@@ -66,21 +75,12 @@ impl Computer {
                 }
                 7 => *self.read(3) = if *self.read(1) < *self.read(2) { 1 } else { 0 },
                 8 => *self.read(3) = if *self.read(1) == *self.read(2) { 1 } else { 0 },
-                9 => self.base = self.base + *self.read(1),
+                9 => self.base += *self.read(1),
                 99 => break None,
                 _ => (),
             }
             self.move_pointer(op);
         }
-    }
-}
-
-pub fn run(input: &str, part_two: bool) -> i64 {
-    let mut comp = Computer::new(input);
-    if part_two {
-        comp.execute(vec![2]).unwrap()
-    } else {
-        comp.execute(vec![1]).unwrap()
     }
 }
 
@@ -94,15 +94,19 @@ mod tests {
     ];
 
     #[test]
-    fn test_part_1() {
-        assert_eq!(run(INPUT[0], false), 109);
-        assert_eq!(run(INPUT[1], false).to_string().len(), 16);
-        assert_eq!(run(INPUT[2], false), 1125899906842624);
-        assert_eq!(run(include_str!("../input/day_9.txt"), false), 3454977209);
+    fn test_small_input() {
+        let mut c0 = Computer::new(INPUT[0]);
+        assert_eq!(c0.execute(vec![1]).unwrap(), 109);
+        let mut c1 = Computer::new(INPUT[1]);
+        assert_eq!(c1.execute(vec![1]).unwrap().to_string().len(), 16);
+        let mut c2 = Computer::new(INPUT[2]);
+        assert_eq!(c2.execute(vec![1]).unwrap(), 1125899906842624);
     }
 
     #[test]
-    fn test_part_2() {
-        assert_eq!(run(include_str!("../input/day_9.txt"), true), 50120);
+    fn test_large_input() {
+        let mut comp = Computer::new(include_str!("../../input/09.txt"));
+        assert_eq!(comp.execute(vec![1]).unwrap(), 3454977209);
+        assert_eq!(comp.execute(vec![2]).unwrap(), 50120);
     }
 }
