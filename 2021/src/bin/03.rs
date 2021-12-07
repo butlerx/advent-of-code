@@ -50,7 +50,7 @@ fn get_rating(nums: &[i64], most_common: i64, bit_length: usize) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_3_tests {
     use super::*;
 
     static INPUT: &str = "00100

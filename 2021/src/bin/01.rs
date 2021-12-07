@@ -26,7 +26,7 @@ pub fn part_2(input: &str) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_1_tests {
     use super::*;
     static INPUT: &str = "199
 200

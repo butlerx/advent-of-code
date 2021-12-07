@@ -68,7 +68,7 @@ fn count_points_covered(lines: Vec<((i64, i64), (i64, i64))>) -> usize {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_5_tests {
     use super::*;
     static INPUT: &str = "0,9 -> 5,9
 8,0 -> 0,8

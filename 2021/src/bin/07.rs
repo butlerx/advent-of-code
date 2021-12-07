@@ -39,7 +39,7 @@ fn cost(num: usize, exponential: bool) -> usize {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_7_tests {
     use super::*;
     static INPUT: &str = "16,1,2,0,4,2,7,1,2,14";
 

@@ -22,7 +22,7 @@ pub fn run(input: &str) -> (i64, i64) {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_2_tests {
     use super::*;
 
     static INPUT: &str = "forward 5

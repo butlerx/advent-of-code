@@ -23,7 +23,7 @@ fn calculate(counts: &mut [usize; 9], num_days: usize) -> usize {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_6_tests {
     use super::*;
     static INPUT: &str = "3,4,3,1,2";
 

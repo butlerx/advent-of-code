@@ -4,7 +4,6 @@ fn main() {
     println!("Part 2: {}", part_2(input));
 }
 
-
 pub fn part_1(input: &str) -> i64 {
     0
 }
@@ -14,7 +13,7 @@ pub fn part_2(input: &str) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_19_tests {
     use super::*;
     static INPUT: &str = "";
 
@@ -30,4 +29,3 @@ mod tests {
         assert_eq!(part_2(include_str!("../../input/19.txt")), 0);
     }
 }
-
