@@ -86,6 +86,12 @@ static NEIGHBOURS: [Row4d; 80] = [
     (1, 1, 1, 1),
 ];
 
+fn main() {
+    let input = include_str!("../../input/17.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn simulate<Pos: Hash + Eq + Copy, F: Fn(&HashSet<Pos>) -> HashMap<Pos, usize>>(
     active: HashSet<Pos>,
     count_neighbours: F,
@@ -94,10 +100,7 @@ fn simulate<Pos: Hash + Eq + Copy, F: Fn(&HashSet<Pos>) -> HashMap<Pos, usize>>(
         .fold(active, |active, _| {
             count_neighbours(&active)
                 .iter()
-                .filter(|(pos, n)| match (n, active.contains(pos)) {
-                    (2, true) | (3, _) => true,
-                    _ => false,
-                })
+                .filter(|(pos, n)| matches!((n, active.contains(pos)), (2, true) | (3, _)))
                 .map(|(&pos, _)| pos)
                 .collect()
         })
@@ -154,7 +157,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod dat_17_tests {
     use super::*;
     static INPUT: &str = ".#.
 ..#
@@ -163,7 +166,7 @@ mod tests {
     #[test]
     fn test_part_1() {
         assert!(run(INPUT, false) == 112);
-        let results = run(include_str!("../input/day_17.txt"), false);
+        let results = run(include_str!("../../input/17.txt"), false);
         println!("{}", results);
         assert!(results == 310);
     }
@@ -171,7 +174,7 @@ mod tests {
     #[test]
     fn test_part_2() {
         assert!(run(INPUT, true) == 848);
-        let results = run(include_str!("../input/day_17.txt"), true);
+        let results = run(include_str!("../../input/17.txt"), true);
         println!("{}", results);
         assert!(results == 2056);
     }

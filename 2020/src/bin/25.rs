@@ -1,5 +1,9 @@
 use itertools::Itertools;
 
+fn main() {
+    println!("Part 1: {}", run("../../input/25.txt"));
+}
+
 fn transform(value: i64, subject: i64) -> i64 {
     (value * subject) % 20201227
 }
@@ -27,7 +31,7 @@ pub fn run(input: &str) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_25_tests {
     use super::*;
     static INPUT: &str = "5764801
 17807724";
@@ -41,6 +45,6 @@ mod tests {
     #[test]
     fn test_run() {
         assert_eq!(run(INPUT), 14897079);
-        assert_eq!(run(include_str!("../input/day_25.txt")), 6011069);
+        assert_eq!(run(include_str!("../../input/25.txt")), 6011069);
     }
 }

@@ -1,6 +1,12 @@
 use itertools::Itertools;
 use std::collections::{HashSet, VecDeque};
 
+fn main() {
+    let input = include_str!("../../input/22.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn find_score(deck: VecDeque<i64>) -> i64 {
     deck.iter().enumerate().fold(0, |total, (pos, card)| {
         total + (*card * (deck.len() - pos) as i64)
@@ -76,7 +82,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_22_tests {
     use super::*;
     static INPUT: &str = "Player 1:
 9
@@ -95,12 +101,12 @@ Player 2:
     #[test]
     fn test_part_1() {
         assert_eq!(run(INPUT, false), 306);
-        assert_eq!(run(include_str!("../input/day_22.txt"), false), 32366);
+        assert_eq!(run(include_str!("../../input/22.txt"), false), 32366);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(run(INPUT, true), 291);
-        //assert_eq!(run(include_str!("../input/day_22.txt"), true), 30891);
+        assert_eq!(run(include_str!("../../input/22.txt"), true), 30891);
     }
 }

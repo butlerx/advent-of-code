@@ -1,6 +1,12 @@
 use itertools::Itertools;
 use std::collections::HashMap;
 
+fn main() {
+    let input = include_str!("../../input/10.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 pub fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
         .lines()
@@ -31,7 +37,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_10_tests {
     use super::*;
     static INPUT: &str = "16
 10
@@ -78,19 +84,18 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 35);
-        assert!(run(INPUT_2, false) == 220);
-        let results = run(include_str!("../input/day_10.txt"), false);
-        println!("{}", results);
-        assert!(results == 2432);
+        assert_eq!(run(INPUT, false), 35);
+        assert_eq!(run(INPUT_2, false), 220);
+        assert_eq!(run(include_str!("../../input/10.txt"), false), 2432);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT, true) == 8);
-        assert!(run(INPUT_2, true) == 19208);
-        let results = run(include_str!("../input/day_10.txt"), true);
-        println!("{}", results);
-        assert!(results == 453551299002368);
+        assert_eq!(run(INPUT, true), 8);
+        assert_eq!(run(INPUT_2, true), 19208);
+        assert_eq!(
+            run(include_str!("../../input/10.txt"), true),
+            453551299002368
+        );
     }
 }

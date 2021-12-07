@@ -1,3 +1,9 @@
+fn main() {
+    let input = include_str!("../../input/18.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn find_matching_par(chars: &[char]) -> usize {
     let (mut nested, mut pointer) = (0, 0);
     loop {
@@ -48,7 +54,7 @@ mod part_1 {
 mod part_2 {
     use super::find_matching_par;
 
-    fn gat_value(chars: &Vec<char>, i: usize) -> (i64, usize) {
+    fn gat_value(chars: &[char], i: usize) -> (i64, usize) {
         match chars[i] {
             '(' => {
                 let j = find_matching_par(&chars[i..]);
@@ -92,7 +98,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_18_tests {
     use super::*;
     static INPUT: [&str; 5] = [
         "1 + (2 * 3) + (4 * (5 + 6))",
@@ -123,7 +129,7 @@ mod tests {
     #[test]
     fn test_part_1() {
         assert_eq!(
-            run(include_str!("../input/day_18.txt"), false),
+            run(include_str!("../../input/18.txt"), false),
             25190263477788
         );
     }
@@ -131,7 +137,7 @@ mod tests {
     #[test]
     fn test_part_2() {
         assert_eq!(
-            run(include_str!("../input/day_18.txt"), true),
+            run(include_str!("../../input/18.txt"), true),
             297139939002972
         );
     }

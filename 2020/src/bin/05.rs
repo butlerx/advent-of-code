@@ -1,3 +1,9 @@
+fn main() {
+    let input = include_str!("../../input/05.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn parse_space_partition(input: &str) -> i64 {
     input.bytes().fold(0, |seat_id, byte| {
         b"BR".contains(&byte) as u16 + (seat_id << 1)
@@ -38,7 +44,7 @@ fn part_2(input: &str) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_5_tests {
     use super::*;
     static INPUT: &str = "FBFBBFFRLR
 BFFFBBFRRR
@@ -48,12 +54,12 @@ BBFFBBFRLL";
     #[test]
     fn test_part_1() {
         assert!(part_1(INPUT) == 820);
-        assert!(part_1(include_str!("../input/day_5.txt")) == 901);
+        assert!(part_1(include_str!("../../input/05.txt")) == 901);
     }
 
     #[test]
     fn test_part_2() {
         assert!(part_2(INPUT) == 819);
-        assert!(part_2(include_str!("../input/day_5.txt")) == 661);
+        assert!(part_2(include_str!("../../input/05.txt")) == 661);
     }
 }

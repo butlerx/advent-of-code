@@ -1,6 +1,12 @@
+fn main() {
+    let input = include_str!("../../input/12.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn rotate_heading(heading: (f32, f32), angle_change: f32) -> (f32, f32) {
     let rads = angle_change.to_radians();
-    let last_heading = heading.clone();
+    let last_heading = heading;
     (
         (rads.sin() * last_heading.1 + rads.cos() * last_heading.0).round(),
         (rads.cos() * last_heading.1 - rads.sin() * last_heading.0).round(),
@@ -69,7 +75,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_12_tests {
     use super::*;
     static INPUT: &str = "F10
 N3
@@ -80,7 +86,7 @@ F11";
     #[test]
     fn test_part_1() {
         assert!(run(INPUT, false) == 25);
-        let results = run(include_str!("../input/day_12.txt"), false);
+        let results = run(include_str!("../../input/12.txt"), false);
         println!("{}", results);
         assert!(results == 1007);
     }
@@ -88,7 +94,7 @@ F11";
     #[test]
     fn test_part_2() {
         assert!(run(INPUT, true) == 286);
-        let results = run(include_str!("../input/day_12.txt"), true);
+        let results = run(include_str!("../../input/12.txt"), true);
         println!("{}", results);
         assert!(results == 41212);
     }

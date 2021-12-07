@@ -1,5 +1,11 @@
 use itertools::Itertools;
 
+fn main() {
+    let input = include_str!("../../input/08.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn execute(instruction_set: Vec<(&str, i64)>) -> Result<i64, i64> {
     let (mut pointer, mut accumulator) = (0, 0);
     let mut visited = vec![false; instruction_set.len()];
@@ -37,7 +43,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
     let instruction_set = input
         .lines()
         .map(|line| {
-            let (code, arg) = line.trim().split(" ").collect_tuple().unwrap();
+            let (code, arg) = line.trim().split(' ').collect_tuple().unwrap();
             (code.trim(), arg.parse::<i64>().unwrap())
         })
         .collect::<Vec<(&str, i64)>>();
@@ -60,7 +66,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_8_tests {
     use super::*;
     static INPUT: &str = "nop +0
 acc +1
@@ -75,7 +81,7 @@ acc +6";
     #[test]
     fn test_part_1() {
         assert!(run(INPUT, false) == 5);
-        let results = run(include_str!("../input/day_8.txt"), false);
+        let results = run(include_str!("../../input/08.txt"), false);
         println!("{}", results);
         assert!(results == 1528);
     }
@@ -83,7 +89,7 @@ acc +6";
     #[test]
     fn test_part_2() {
         assert!(run(INPUT, true) == 8);
-        let results = run(include_str!("../input/day_8.txt"), true);
+        let results = run(include_str!("../../input/08.txt"), true);
         println!("{}", results);
         assert!(results == 640);
     }

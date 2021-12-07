@@ -3,8 +3,6 @@ use std::{
     iter::FromIterator,
 };
 
-const COMMA: &str = ",";
-
 fn main() {
     let input = include_str!("../../input/03.txt");
     println!("Part 1: {}", run(input, false));
@@ -34,7 +32,7 @@ fn find_path(path: Vec<(char, usize)>) -> HashMap<(i64, i64), i64> {
     cells
 }
 fn parse(path: &str) -> Vec<(char, usize)> {
-    path.split(COMMA)
+    path.split(',')
         .map(|direction| {
             (
                 direction.chars().next().unwrap(),

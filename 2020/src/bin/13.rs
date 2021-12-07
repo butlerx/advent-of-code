@@ -1,5 +1,11 @@
 use itertools::Itertools;
 
+fn main() {
+    let input = include_str!("../../input/13.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn find_next_bus(current_time: i64, bus_ids: Vec<i64>) -> i64 {
     (current_time..)
         .find_map(|i| bus_ids.iter().find(|&b| i % b == 0).map(|b| (i, b)))
@@ -42,7 +48,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
     let inputs: (&str, &str) = input.lines().collect_tuple().unwrap();
     let ids: Vec<(i64, i64)> = inputs
         .1
-        .split(",")
+        .split(',')
         .enumerate()
         .filter(|(_, n)| n != &"x")
         .map(|(i, n)| (i as i64, n.trim().parse::<i64>().unwrap()))
@@ -58,7 +64,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_13_tests {
     use super::*;
     static INPUT: &str = "939
 7,13,x,x,59,x,31,19";
@@ -66,7 +72,7 @@ mod tests {
     #[test]
     fn test_part_1() {
         assert!(run(INPUT, false) == 295);
-        let results = run(include_str!("../input/day_13.txt"), false);
+        let results = run(include_str!("../../input/13.txt"), false);
         println!("{}", results);
         assert!(results == 2382);
     }
@@ -74,7 +80,7 @@ mod tests {
     #[test]
     fn test_part_2() {
         assert!(run(INPUT, true) == 1068781);
-        let results = run(include_str!("../input/day_13.txt"), true);
+        let results = run(include_str!("../../input/13.txt"), true);
         println!("{}", results);
         assert!(results == 906332393333683);
     }

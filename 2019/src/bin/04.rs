@@ -1,5 +1,3 @@
-const DASH: &str = "-";
-
 fn main() {
     let input = include_str!("../../input/04.txt");
     println!("Part 1: {}", run(input, false));
@@ -43,7 +41,7 @@ fn valid_password(password: &i64, max: bool) -> bool {
 
 pub fn run(input: &str, part_two: bool) -> i64 {
     let range: Vec<i64> = input
-        .split(DASH)
+        .split('-')
         .map(|num| num.trim().parse::<i64>().unwrap())
         .collect();
     (range[0]..range[1])

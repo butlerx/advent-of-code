@@ -1,5 +1,11 @@
 use regex::Regex;
 
+fn main() {
+    let input = include_str!("../../input/02.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn parse_policy(policy: &str) -> (usize, usize, char, String) {
     let cap = Regex::new(r"(\d+)-(\d+) (\w): (\w+)")
         .unwrap()
@@ -14,7 +20,7 @@ fn parse_policy(policy: &str) -> (usize, usize, char, String) {
 }
 
 fn valid_policy(policy: &str, position: bool) -> bool {
-    if policy == "" {
+    if policy.is_empty() {
         return false;
     }
     let (low, high, letter, password) = parse_policy(policy);
@@ -29,16 +35,15 @@ fn valid_policy(policy: &str, position: bool) -> bool {
     (low <= count) && (count <= high)
 }
 
-pub fn run(input: &str, position: bool) -> i64 {
+fn run(input: &str, position: bool) -> i64 {
     input
-        .split("\n")
+        .split('\n')
         .filter(|line| valid_policy(line.trim(), position))
-        .collect::<Vec<_>>()
-        .len() as i64
+        .count() as i64
 }
 
 #[cfg(test)]
-mod tests {
+mod day_2_tests {
     use super::*;
     static INPUT: &str = "1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc";
 
@@ -51,20 +56,20 @@ mod tests {
     #[test]
     fn test_valid_policy() {
         let input = "1-3 a: abcde";
-        assert!(valid_policy(input.clone(), false));
-        assert!(valid_policy(input.clone(), true));
+        assert!(valid_policy(input, false));
+        assert!(valid_policy(input, true));
         assert!(!valid_policy("2-9 c: ccccccccc", true))
     }
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 2);
-        //assert!(run(include_str!("../input/day_2.txt"), false) == 515);
+        assert_eq!(run(INPUT, false), 2);
+        assert_eq!(run(include_str!("../../input/02.txt"), false), 515);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT, true) == 1);
-        //assert!(run(include_str!("../input/day_2.txt"), true) == 711);
+        assert_eq!(run(INPUT, true), 1);
+        assert_eq!(run(include_str!("../../input/02.txt"), true), 711);
     }
 }

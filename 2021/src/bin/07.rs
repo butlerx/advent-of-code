@@ -1,7 +1,5 @@
 use itertools::Itertools;
 
-static COMMA: &str = ",";
-
 fn main() {
     let input = include_str!("../../input/07.txt");
     println!("Part 1: {}", run(input, false));
@@ -10,7 +8,7 @@ fn main() {
 
 fn run(input: &str, exponential: bool) -> usize {
     let mut nums: Vec<i64> = input
-        .split(COMMA)
+        .split(',')
         .map(|n| n.trim().parse::<i64>().unwrap())
         .collect();
     nums.sort_unstable();

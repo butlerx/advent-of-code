@@ -1,5 +1,11 @@
 use std::collections::HashSet;
 
+fn main() {
+    let input = include_str!("../../input/23.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn move_cups(input: Vec<i64>, rounds: usize) -> Vec<i64> {
     let (n, mut pointers) = if rounds <= 100 {
         (input.len() as i64, [0i64; 10].to_vec())
@@ -67,19 +73,19 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_23_tests {
     use super::*;
     static INPUT: &str = "389125467";
 
     #[test]
     fn test_part_1() {
         assert_eq!(run(INPUT, false), 67384529);
-        assert_eq!(run(include_str!("../input/day_23.txt"), false), 25398647);
+        assert_eq!(run(include_str!("../../input/23.txt"), false), 25398647);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(run(INPUT, true), 149245887792);
-        //assert_eq!(run(include_str!("../input/day_23.txt"), true), 363807398885);
+        assert_eq!(run(include_str!("../../input/23.txt"), true), 363807398885);
     }
 }

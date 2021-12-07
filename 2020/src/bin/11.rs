@@ -1,6 +1,12 @@
 use itertools::iproduct;
 
-fn count_neighbors(map: &Vec<Vec<char>>, y: usize, x: usize) -> usize {
+fn main() {
+    let input = include_str!("../../input/11.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
+fn count_neighbors(map: &[Vec<char>], y: usize, x: usize) -> usize {
     let mut total = 0;
     for (ny, nx) in iproduct!(y.saturating_sub(1)..=y + 1, x.saturating_sub(1)..=x + 1) {
         if ny == y && nx == x || ny >= map.len() || nx >= map[0].len() {
@@ -14,16 +20,16 @@ fn count_neighbors(map: &Vec<Vec<char>>, y: usize, x: usize) -> usize {
     total
 }
 // check if current coordinate is in the grid
-fn on_grid(grid: &Vec<Vec<char>>, c: (i64, i64)) -> bool {
+fn on_grid(grid: &[Vec<char>], c: (i64, i64)) -> bool {
     c.1 >= 0 && c.0 >= 0 && c.1 < grid[0].len() as i64 && c.0 < grid.len() as i64
 }
 
 // index into grid using i64 instead of usize with current coordinate
-fn check_grid(grid: &Vec<Vec<char>>, c: (i64, i64)) -> char {
+fn check_grid(grid: &[Vec<char>], c: (i64, i64)) -> char {
     grid[c.0 as usize][c.1 as usize]
 }
 
-fn count_visible_neighbors(map: &Vec<Vec<char>>, y: usize, x: usize) -> usize {
+fn count_visible_neighbors(map: &[Vec<char>], y: usize, x: usize) -> usize {
     let mut total = 0;
 
     for dy in -1..=1 {
@@ -53,14 +59,14 @@ fn count_visible_neighbors(map: &Vec<Vec<char>>, y: usize, x: usize) -> usize {
     total
 }
 
-fn fill_seats(map: &Vec<Vec<char>>, visible: bool) -> Vec<Vec<char>> {
-    let mut output = map.clone();
+fn fill_seats(map: &[Vec<char>], visible: bool) -> Vec<Vec<char>> {
+    let mut output = map.to_owned();
     for (y, row) in map.iter().enumerate() {
         for (x, seat) in row.iter().enumerate() {
             let (neighbors, threshold) = if visible {
-                (count_visible_neighbors(&map, y, x), 5)
+                (count_visible_neighbors(map, y, x), 5)
             } else {
-                (count_neighbors(&map, y, x), 4)
+                (count_neighbors(map, y, x), 4)
             };
 
             match (seat, neighbors) {
@@ -75,7 +81,7 @@ fn fill_seats(map: &Vec<Vec<char>>, visible: bool) -> Vec<Vec<char>> {
 
 pub fn run(input: &str, part_two: bool) -> i64 {
     let mut map: Vec<Vec<_>> = input.lines().map(|l| l.chars().collect()).collect();
-    let mut next = fill_seats(&map.clone(), part_two);
+    let mut next = fill_seats(&map, part_two);
     while map != next {
         map = next.clone();
         next = fill_seats(&map, part_two);
@@ -84,7 +90,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_11_tests {
     use super::*;
     static INPUT: &str = "L.LL.LL.LL
 LLLLLLL.LL
@@ -100,7 +106,7 @@ L.LLLLL.LL";
     #[test]
     fn test_part_1() {
         assert!(run(INPUT, false) == 37);
-        let results = run(include_str!("../input/day_11.txt"), false);
+        let results = run(include_str!("../../input/11.txt"), false);
         println!("{}", results);
         assert!(results == 2438);
     }
@@ -108,7 +114,7 @@ L.LLLLL.LL";
     #[test]
     fn test_part_2() {
         assert!(run(INPUT, true) == 26);
-        let results = run(include_str!("../input/day_11.txt"), true);
+        let results = run(include_str!("../../input/11.txt"), true);
         println!("{}", results);
         assert!(results == 2174);
     }

@@ -8,6 +8,12 @@ type Rule = (RangeInclusive<i64>, RangeInclusive<i64>);
 type Schema = HashMap<String, Rule>;
 type Ticket = Vec<i64>;
 
+fn main() {
+    let input = include_str!("../../input/16.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn parse_schema(input: &str) -> Schema {
     let re = Regex::new(r"^([a-zA-Z\s]+): (\d+)-(\d+) or (\d+)-(\d+)").unwrap();
     input
@@ -33,14 +39,14 @@ fn parse_tickets(input: &str) -> Vec<Ticket> {
         .skip(1)
         .map(|line| {
             line.trim()
-                .split(",")
+                .split(',')
                 .map(|n| n.trim().parse::<i64>().unwrap())
                 .collect()
         })
         .collect()
 }
 
-fn invalid_fields(schema: &Schema, ticket: &Ticket) -> i64 {
+fn invalid_fields(schema: &Schema, ticket: &[i64]) -> i64 {
     ticket
         .iter()
         .filter(|value| !schema.values().any(|ranges| valid_rule(ranges, value)))
@@ -48,12 +54,12 @@ fn invalid_fields(schema: &Schema, ticket: &Ticket) -> i64 {
 }
 
 fn valid_rule(ranges: &Rule, value: &i64) -> bool {
-    ranges.0.contains(&value) || ranges.1.contains(&value)
+    ranges.0.contains(value) || ranges.1.contains(value)
 }
 
 fn generate_name_index(mut map: HashMap<String, HashSet<usize>>) -> HashMap<String, usize> {
     let mut name_index = HashMap::new();
-    while map.len() > 0 {
+    while !map.is_empty() {
         for (k, v) in map.iter().filter(|(_, v)| v.len() == 1) {
             name_index.insert(k.clone(), v.clone().into_iter().next().unwrap());
         }
@@ -111,7 +117,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_16_tests {
     use super::*;
     static INPUT: &str = "class: 1-3 or 5-7
 row: 6-11 or 33-44
@@ -129,14 +135,14 @@ nearby tickets:
     #[test]
     fn test_part_1() {
         assert!(run(INPUT, false) == 71);
-        let results = run(include_str!("../input/day_16.txt"), false);
+        let results = run(include_str!("../../input/16.txt"), false);
         println!("{}", results);
         assert!(results == 22057);
     }
 
     #[test]
     fn test_part_2() {
-        let results = run(include_str!("../input/day_16.txt"), true);
+        let results = run(include_str!("../../input/16.txt"), true);
         println!("{}", results);
         assert!(results == 1093427331937);
     }

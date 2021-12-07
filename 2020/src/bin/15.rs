@@ -1,3 +1,9 @@
+fn main() {
+    let input = include_str!("../../input/15.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn play_game(nums: Vec<usize>, turns: usize) -> i64 {
     let mut spoken: Vec<(usize, usize)> = vec![(usize::MAX, usize::MAX); turns];
     for (i, num) in nums.iter().enumerate() {
@@ -23,14 +29,14 @@ fn play_game(nums: Vec<usize>, turns: usize) -> i64 {
 pub fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
         .trim()
-        .split(",")
+        .split(',')
         .map(|n| n.parse::<usize>().unwrap())
         .collect();
     play_game(nums, if part_two { 30_000_000 } else { 2020 })
 }
 
 #[cfg(test)]
-mod tests {
+mod day_15_tests {
     use super::*;
     static INPUT: &str = "0,3,6";
     static INPUT_1: &str = "1,3,2";
@@ -49,18 +55,18 @@ mod tests {
         assert_eq!(run(INPUT_4, false), 78);
         assert_eq!(run(INPUT_5, false), 438);
         assert_eq!(run(INPUT_6, false), 1836);
-        assert_eq!(run(include_str!("../input/day_15.txt"), false), 700);
+        assert_eq!(run(include_str!("../../input/15.txt"), false), 700);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(run(INPUT, true), 175594);
-        //assert_eq!(run(INPUT_1, true), 2578);
-        //assert_eq!(run(INPUT_2, true), 3544142);
-        //assert_eq!(run(INPUT_3, true), 261214);
-        //assert_eq!(run(INPUT_4, true), 6895259);
-        //assert_eq!(run(INPUT_5, true), 18);
-        //assert_eq!(run(INPUT_6, true), 362);
-        //assert_eq!(run(include_str!("../input/day_15.txt"), true), 51358);
+        assert_eq!(run(INPUT_1, true), 2578);
+        assert_eq!(run(INPUT_2, true), 3544142);
+        assert_eq!(run(INPUT_3, true), 261214);
+        assert_eq!(run(INPUT_4, true), 6895259);
+        assert_eq!(run(INPUT_5, true), 18);
+        assert_eq!(run(INPUT_6, true), 362);
+        assert_eq!(run(include_str!("../../input/15.txt"), true), 51358);
     }
 }

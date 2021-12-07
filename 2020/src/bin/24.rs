@@ -1,5 +1,11 @@
 use std::collections::HashSet;
 
+fn main() {
+    let input = include_str!("../../input/24.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn find_tile(input: &str, x: i64, y: i64) -> (usize, usize) {
     let (x, y, _) = input.chars().fold((x, y, None), |(x, y, prev), c| match c {
         'n' => (x, y, Some('n')),
@@ -108,7 +114,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_24_tests {
     use super::*;
     static INPUT: &str = "sesenwnenenewseeswwswswwnenewsewsw
 neeenesenwnwwswnenewnwwsewnenwseswesw
@@ -134,12 +140,12 @@ wseweeenwnesenwwwswnew";
     #[test]
     fn test_part_1() {
         assert_eq!(run(INPUT, false), 10);
-        assert_eq!(run(include_str!("../input/day_24.txt"), false), 228);
+        assert_eq!(run(include_str!("../../input/24.txt"), false), 228);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(run(INPUT, true), 2208);
-        // assert_eq!(run(include_str!("../input/day_24.txt"), true), 3672);
+        assert_eq!(run(include_str!("../../input/24.txt"), true), 3672);
     }
 }

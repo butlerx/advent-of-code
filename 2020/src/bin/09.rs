@@ -1,20 +1,25 @@
 use itertools::Itertools;
 
-fn find_not_sum(nums: &Vec<i64>, preable: usize) -> i64 {
+fn main() {
+    let input = include_str!("../../input/09.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
+fn find_not_sum(nums: &[i64], preable: usize) -> i64 {
     nums[(preable..nums.len())
         .position(|i| {
             !&nums[i - preable..i]
                 .iter()
                 .permutations(2)
-                .map(|comb| comb.iter().map(|j| *j).sum())
-                .collect::<Vec<i64>>()
-                .contains(&nums[i])
+                .map(|comb| comb.iter().copied().sum())
+                .any(|x: i64| x == nums[i])
         })
         .unwrap()
         + preable]
 }
 
-fn find_range(nums: &Vec<i64>, target: i64) -> (i64, i64) {
+fn find_range(nums: &[i64], target: i64) -> (i64, i64) {
     let (mut sum, mut low, mut high) = (0, 0, 0);
     loop {
         sum = if low >= nums.len() {
@@ -34,7 +39,7 @@ fn find_range(nums: &Vec<i64>, target: i64) -> (i64, i64) {
 }
 
 pub fn run(input: &str, part_two: bool) -> i64 {
-    let nums = input
+    let nums: Vec<i64> = input
         .lines()
         .map(|line| line.trim().parse::<i64>().unwrap())
         .collect();
@@ -48,7 +53,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_9_tests {
     use super::*;
     static INPUT: &str = "35
 20
@@ -73,37 +78,29 @@ mod tests {
 
     #[test]
     fn test_find_range() {
-        let nums = INPUT
+        let nums: Vec<i64> = INPUT
             .lines()
             .map(|line| line.parse::<i64>().unwrap())
             .collect();
-        assert!(find_range(&nums, find_not_sum(&nums, 5)) == (15, 47))
+        assert_eq!(find_range(&nums, find_not_sum(&nums, 5)), (15, 47))
     }
 
     #[test]
     fn test_find_not_sum() {
-        assert!(
-            find_not_sum(
-                &INPUT
-                    .lines()
-                    .map(|line| line.parse::<i64>().unwrap())
-                    .collect(),
-                5
-            ) == 127
-        );
+        let nums: Vec<i64> = INPUT
+            .lines()
+            .map(|line| line.parse::<i64>().unwrap())
+            .collect();
+        assert_eq!(find_not_sum(&nums, 5), 127);
     }
 
     #[test]
     fn test_part_1() {
-        let results = run(include_str!("../input/day_9.txt"), false);
-        println!("{}", results);
-        assert!(results == 69316178);
+        assert_eq!(run(include_str!("../../input/09.txt"), false), 69316178);
     }
 
     #[test]
     fn test_part_2() {
-        let results = run(include_str!("../input/day_9.txt"), true);
-        println!("{}", results);
-        assert!(results == 9351526);
+        assert_eq!(run(include_str!("../../input/09.txt"), true), 9351526);
     }
 }

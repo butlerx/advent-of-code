@@ -1,7 +1,6 @@
 use itertools::Itertools;
 
 static BOARD_SIZE: usize = 5;
-static COMMA: &str = ",";
 
 fn main() {
     let input = include_str!("../../input/04.txt");
@@ -15,7 +14,7 @@ pub fn run(input: &str) -> (i64, i64) {
         .lines()
         .next()
         .unwrap()
-        .split(COMMA)
+        .split(',')
         .map(|num| num.trim().parse::<i64>().unwrap())
         .collect();
 
@@ -39,8 +38,7 @@ pub fn run(input: &str) -> (i64, i64) {
             (0..numbers.len())
                 .into_iter()
                 .map(|i| &numbers[0..=i])
-                .skip_while(|drawn| !has_won(board, drawn))
-                .next()
+                .find(|drawn| has_won(board, drawn))
                 .map(|winning_draws| (board, winning_draws))
         })
         .sorted_by(|(_, x), (_, y)| x.len().cmp(&y.len()));

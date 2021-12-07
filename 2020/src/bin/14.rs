@@ -3,6 +3,12 @@ use std::collections::HashMap;
 
 const MASK_36_BIT: u64 = (1u64 << 36) - 1;
 
+fn main() {
+    let input = include_str!("../../input/14.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn parse_input(input: &str) -> (usize, u64) {
     let cap = Regex::new(r"mem\[(\d+)\] = (\d+)")
         .unwrap()
@@ -43,7 +49,7 @@ fn parse_mask_floating(mask: &str) -> Vec<u64> {
 
 fn write(
     memory: &mut HashMap<usize, u64>,
-    mask: &Vec<u64>,
+    mask: &[u64],
     address: usize,
     value: u64,
     current_index: usize,
@@ -114,7 +120,7 @@ pub fn run(input: &str, version_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_14_tests {
     use super::*;
     static INPUT: &str = "mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
 mem[8] = 11
@@ -128,7 +134,7 @@ mem[26] = 1";
     #[test]
     fn test_part_1() {
         assert!(run(INPUT, false) == 165);
-        let results = run(include_str!("../input/day_14.txt"), false);
+        let results = run(include_str!("../../input/14.txt"), false);
         println!("{}", results);
         assert!(results == 17481577045893);
     }
@@ -136,7 +142,7 @@ mem[26] = 1";
     #[test]
     fn test_part_2() {
         assert!(run(INPUT_2, true) == 208);
-        let results = run(include_str!("../input/day_14.txt"), true);
+        let results = run(include_str!("../../input/14.txt"), true);
         println!("{}", results);
         assert!(results == 4160009892257);
     }

@@ -1,3 +1,9 @@
+fn main() {
+    let input = include_str!("../../input/03.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn find_path(input: &str, right: usize, down: usize) -> i64 {
     let tree = '#';
     let (num_tree, _right_count) =
@@ -6,7 +12,7 @@ fn find_path(input: &str, right: usize, down: usize) -> i64 {
             .step_by(down)
             .fold((0, 0), |(num_tree, right_count), line| {
                 let mut chars = line.chars();
-                let len = chars.clone().collect::<Vec<_>>().len();
+                let len = chars.clone().count();
                 (
                     num_tree
                         + if chars.nth(right_count).unwrap() == tree {
@@ -32,7 +38,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_3_tests {
     use super::*;
     static INPUT: &str = "..##.........##.........##.........##.........##.........##.......
 #...#...#..#...#...#..#...#...#..#...#...#..#...#...#..#...#...#..
@@ -49,13 +55,13 @@ mod tests {
     #[test]
     fn test_part_1() {
         assert!(run(INPUT, false) == 7);
-        assert!(run(include_str!("../input/day_3.txt"), false) == 250);
+        assert!(run(include_str!("../../input/03.txt"), false) == 250);
     }
 
     #[test]
     fn test_part_2() {
         assert!(run(INPUT, true) == 336);
-        assert!(run(include_str!("../input/day_3.txt"), true) == 1592662500);
+        assert!(run(include_str!("../../input/03.txt"), true) == 1592662500);
     }
 
     #[test]

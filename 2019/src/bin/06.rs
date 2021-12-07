@@ -1,8 +1,6 @@
 use itertools::Itertools;
 use std::{collections::HashMap, iter::successors};
 
-const BRACE: &str = ")";
-
 fn main() {
     let input = include_str!("../../input/06.txt");
     println!("Part 1: {}", run(input, false));
@@ -14,7 +12,7 @@ fn calculate(orbits: &HashMap<&str, Vec<&str>>, object: &str, distance: i64) -> 
         .get(object)
         .map(|v| {
             v.iter()
-                .map(|orbit| calculate(&orbits, orbit, distance + 1))
+                .map(|orbit| calculate(orbits, orbit, distance + 1))
                 .sum::<i64>()
         })
         .unwrap_or(0)
@@ -40,7 +38,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
             input
                 .lines()
                 .map(|line| {
-                    let l: (&str, &str) = line.split(BRACE).collect_tuple().unwrap();
+                    let l: (&str, &str) = line.split(')').collect_tuple().unwrap();
                     (l.1, l.0)
                 })
                 .collect(),
@@ -51,7 +49,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
         calculate(
             &input
                 .lines()
-                .map(|line| line.split(BRACE).collect_tuple().unwrap())
+                .map(|line| line.split(')').collect_tuple().unwrap())
                 .into_group_map(),
             "COM",
             0,

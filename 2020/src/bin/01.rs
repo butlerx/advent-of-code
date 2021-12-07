@@ -1,5 +1,11 @@
 use itertools::Itertools;
 
+fn main() {
+    let input = include_str!("../../input/01.txt");
+    println!("Part 1: {}", run(input, 2));
+    println!("Part 2: {}", run(input, 3));
+}
+
 fn parse_expense(raw_expense: &str) -> Vec<i64> {
     raw_expense
         .split_whitespace()
@@ -22,13 +28,13 @@ fn find_2020_multiple(expenses: Vec<i64>, depth: usize) -> i64 {
     }
 }
 
-pub fn run(input: &str, depth: usize) -> i64 {
+fn run(input: &str, depth: usize) -> i64 {
     let expenses = parse_expense(input);
     find_2020_multiple(expenses, depth)
 }
 
 #[cfg(test)]
-mod tests {
+mod day_1_tests {
     use super::*;
 
     #[test]
@@ -52,14 +58,14 @@ mod tests {
     }
     #[test]
     fn test_part_1() {
-        let results = run(include_str!("../input/day_1.txt"), 2);
+        let results = run(include_str!("../../input/01.txt"), 2);
         println!("{}", results);
         assert!(results == 864864);
     }
 
     #[test]
     fn test_part_2() {
-        let results = run(include_str!("../input/day_1.txt"), 3);
+        let results = run(include_str!("../../input/01.txt"), 3);
         println!("{}", results);
         assert!(results == 281473080);
     }

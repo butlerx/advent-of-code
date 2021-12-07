@@ -1,6 +1,12 @@
 use itertools::Itertools;
 use std::collections::{HashMap, VecDeque};
 
+fn main() {
+    let input = include_str!("../../input/19.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 #[derive(Debug, Clone)]
 enum Rule {
     Char(char),
@@ -18,12 +24,12 @@ fn parse_rules(rules: &str) -> HashMap<usize, Rule> {
             } else if value.contains('|') {
                 let (seq_1, seq_2) = value
                     .split(" | ")
-                    .map(|seg| seg.split(" ").map(|n| n.parse().unwrap()).collect())
+                    .map(|seg| seg.split(' ').map(|n| n.parse().unwrap()).collect())
                     .collect_tuple()
                     .unwrap();
                 Rule::Alt(seq_1, seq_2)
             } else {
-                Rule::Seq(value.split(" ").map(|n| n.parse().unwrap()).collect())
+                Rule::Seq(value.split(' ').map(|n| n.parse().unwrap()).collect())
             };
             (key.parse::<usize>().unwrap(), rule)
         })
@@ -36,7 +42,7 @@ fn validate_msg(rules: &HashMap<usize, Rule>, msg: &str, mut queue: VecDeque<usi
     }
 
     let validate_seq = |seq: &Vec<usize>, mut q| {
-        let mut buf = seq.iter().map(|&n| n).collect::<VecDeque<usize>>();
+        let mut buf = seq.iter().copied().collect::<VecDeque<usize>>();
         buf.append(&mut q);
         validate_msg(rules, msg, buf)
     };
@@ -46,9 +52,9 @@ fn validate_msg(rules: &HashMap<usize, Rule>, msg: &str, mut queue: VecDeque<usi
             Some(ch) if &ch == c => validate_msg(rules, &msg[1..], queue),
             _ => false,
         },
-        Some(Rule::Seq(seq)) => validate_seq(&seq, queue),
+        Some(Rule::Seq(seq)) => validate_seq(seq, queue),
         Some(Rule::Alt(seq_1, seq_2)) => {
-            validate_seq(&seq_1, queue.clone()) || validate_seq(&seq_2, queue.clone())
+            validate_seq(seq_1, queue.clone()) || validate_seq(seq_2, queue.clone())
         }
         _ => unreachable!(),
     }
@@ -68,7 +74,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_19_tests {
     use super::*;
     static INPUT: &str = "0: 4 1 5
 1: 2 3 | 3 2
@@ -134,13 +140,13 @@ aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba";
     fn test_part_1() {
         assert_eq!(run(INPUT, false), 2);
         assert_eq!(run(INPUT_1, false), 3);
-        assert_eq!(run(include_str!("../input/day_19.txt"), false), 195);
+        assert_eq!(run(include_str!("../../input/19.txt"), false), 195);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(run(INPUT, true), 2);
         assert_eq!(run(INPUT_1, true), 12);
-        assert_eq!(run(include_str!("../input/day_19.txt"), true), 309);
+        assert_eq!(run(include_str!("../../input/19.txt"), true), 309);
     }
 }

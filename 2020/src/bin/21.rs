@@ -3,6 +3,15 @@ use std::collections::{hash_map::Entry, HashMap, HashSet};
 type Allergens = HashMap<String, HashSet<String>>;
 type Ingredients = (Allergens, HashMap<String, usize>);
 
+fn main() {
+    let (allergens, occurrences) = parse_input(include_str!("../../input/21.txt"));
+    println!("Part 1: {}", part_1(occurrences));
+    println!(
+        "Part 2: {}",
+        find_danderous_ingrediants(allergens).join(",")
+    );
+}
+
 fn parse_input(input: &str) -> Ingredients {
     let mut allergen_map = HashMap::<String, HashSet<String>>::new();
     let mut occurrences = HashMap::<String, usize>::new();
@@ -22,11 +31,7 @@ fn parse_input(input: &str) -> Ingredients {
                     entry.insert(ingredients.clone());
                 }
                 Entry::Occupied(mut entry) => {
-                    *entry.get_mut() = entry
-                        .get()
-                        .intersection(&ingredients)
-                        .map(|i| i.clone())
-                        .collect();
+                    *entry.get_mut() = entry.get().intersection(&ingredients).cloned().collect();
                 }
             }
         }
@@ -73,20 +78,14 @@ fn find_danderous_ingrediants(mut allergens: Allergens) -> Vec<String> {
     }
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
-    let (allergens, occurrences) = parse_input(input);
-    if part_two {
-        println!("{}", find_danderous_ingrediants(allergens).join(","));
-        0
-    } else {
-        occurrences
-            .values()
-            .fold(0, |sum, occurrence| sum + *occurrence as i64)
-    }
+pub fn part_1(occurrences: HashMap<String, usize>) -> i64 {
+    occurrences
+        .values()
+        .fold(0, |sum, occurrence| sum + *occurrence as i64)
 }
 
 #[cfg(test)]
-mod tests {
+mod day_21_tests {
     use super::*;
     static INPUT: &str = "mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
 trh fvjkl sbzzf mxmxvkd (contains dairy)
@@ -95,8 +94,10 @@ sqjhc mxmxvkd sbzzf (contains fish)";
 
     #[test]
     fn test_part_1() {
-        assert_eq!(run(INPUT, false), 5);
-        assert_eq!(run(include_str!("../input/day_21.txt"), false), 2779);
+        let (_, o) = parse_input(INPUT);
+        assert_eq!(part_1(o), 5);
+        let (_, occurrences) = parse_input(include_str!("../../input/21.txt"));
+        assert_eq!(part_1(occurrences), 2779);
     }
 
     #[test]
@@ -106,7 +107,7 @@ sqjhc mxmxvkd sbzzf (contains fish)";
             find_danderous_ingrediants(allergens).join(","),
             "mxmxvkd,sqjhc,fvjkl"
         );
-        let (allergens_2, _) = parse_input(include_str!("../input/day_21.txt"));
+        let (allergens_2, _) = parse_input(include_str!("../../input/21.txt"));
         assert_eq!(
             find_danderous_ingrediants(allergens_2).join(","),
             "lkv,lfcppl,jhsrjlj,jrhvk,zkls,qjltjd,xslr,rfpbpn"

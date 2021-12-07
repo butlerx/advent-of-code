@@ -1,5 +1,3 @@
-const COMMA: &str = ",";
-
 fn main() {
     let input = include_str!("../../input/05.txt");
     println!("Part 1: {}", run(input, false));
@@ -86,7 +84,7 @@ fn execute(memory: Vec<i64>, input: i64) -> i64 {
 
 pub fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
-        .split(COMMA)
+        .split(',')
         .map(|num| num.trim().parse().unwrap())
         .collect();
     if part_two {

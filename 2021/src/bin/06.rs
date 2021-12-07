@@ -1,5 +1,3 @@
-static COMMA: &str = ",";
-
 fn main() {
     let input = parse_input(include_str!("../../input/06.txt"));
     println!("Part 1: {}", calculate(&mut input.clone(), 80));
@@ -8,7 +6,7 @@ fn main() {
 
 fn parse_input(input: &str) -> [usize; 9] {
     let mut counts: [usize; 9] = [0; 9];
-    for age in input.split(COMMA) {
+    for age in input.split(',') {
         counts[age.trim().parse::<usize>().unwrap()] += 1;
     }
     counts

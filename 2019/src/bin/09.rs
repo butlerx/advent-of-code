@@ -1,5 +1,3 @@
-static COMMA: &str = ",";
-
 fn main() {
     let mut comp = Computer::new(include_str!("../../input/09.txt"));
 
@@ -12,13 +10,12 @@ struct Computer {
     base: i64,
     memory: Vec<i64>,
     pointer: usize,
-    output: i64,
 }
 
 impl Computer {
     fn new(input: &str) -> Self {
         let mut mem: Vec<i64> = input
-            .split(COMMA)
+            .split(',')
             .map(|num| num.trim().parse().unwrap())
             .collect();
         mem.resize(10 * 1024, 0);
@@ -26,7 +23,6 @@ impl Computer {
             memory: mem,
             base: 0,
             pointer: 0,
-            output: 0,
         }
     }
 

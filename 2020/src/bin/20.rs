@@ -2,6 +2,12 @@ use itertools::Itertools;
 use pathfinding::prelude::Matrix;
 use std::collections::{HashMap, HashSet};
 
+fn main() {
+    let input = include_str!("../../input/20.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 #[derive(Debug, Clone)]
 struct Tile {
     data: Matrix<bool>,
@@ -78,12 +84,12 @@ impl Tile {
     }
 }
 
-fn find_corners(tiles: &Vec<Tile>) -> Vec<usize> {
+fn find_corners(tiles: &[Tile]) -> Vec<usize> {
     let mut matching = HashMap::new();
     for t in tiles {
         matching
             .entry(t.nesw[0])
-            .or_insert_with(|| HashSet::new())
+            .or_insert_with(HashSet::new)
             .insert(t.id);
     }
     let mut counter = HashMap::new();
@@ -103,7 +109,7 @@ fn find_corners(tiles: &Vec<Tile>) -> Vec<usize> {
         .collect()
 }
 
-fn find_img(tiles: &Vec<Tile>) -> usize {
+fn find_img(tiles: &[Tile]) -> usize {
     let angles = find_corners(tiles);
     let topleft = angles[0];
     let topleft_index = tiles
@@ -214,7 +220,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
         .split("\n\n")
         .map(|tile| {
             let (tile_id, img) = tile.split(":\n").collect_tuple().unwrap();
-            let (_, id) = tile_id.split(" ").collect_tuple().unwrap();
+            let (_, id) = tile_id.split(' ').collect_tuple().unwrap();
             Tile::new(id.parse::<usize>().unwrap(), img).collection()
         })
         .flatten()
@@ -227,7 +233,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_20_tests {
     use super::*;
     static INPUT: &str = "Tile 2311:
 ..##.#..#.
@@ -341,7 +347,7 @@ Tile 3079:
     fn test_part_1() {
         assert_eq!(run(INPUT, false), 20899048083289);
         assert_eq!(
-            run(include_str!("../input/day_20.txt"), false),
+            run(include_str!("../../input/20.txt"), false),
             15405893262491
         );
     }
@@ -349,6 +355,6 @@ Tile 3079:
     #[test]
     fn test_part_2() {
         assert_eq!(run(INPUT, true), 273);
-        assert_eq!(run(include_str!("../input/day_20.txt"), true), 2133);
+        assert_eq!(run(include_str!("../../input/20.txt"), true), 2133);
     }
 }

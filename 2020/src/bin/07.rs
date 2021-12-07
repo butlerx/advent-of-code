@@ -1,6 +1,11 @@
 use regex::Regex;
-
 use std::collections::HashMap;
+
+fn main() {
+    let input = include_str!("../../input/07.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
 
 fn contains_gold(map: &HashMap<&str, Vec<(i64, String)>>, bag: &str) -> bool {
     map[bag]
@@ -54,7 +59,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_7_tests {
     use super::*;
     static INPUT_1: &str = "light red bags contain 1 bright white bag, 2 muted yellow bags.
 dark orange bags contain 3 bright white bags, 4 muted yellow bags.
@@ -77,13 +82,13 @@ dark violet bags contain no other bags.";
     fn test_part_1() {
         assert!(run(INPUT_1, false) == 4);
         assert!(run(INPUT_2, false) == 0);
-        //assert!(run(include_str!("../input/day_7.txt"), false) == 177);
+        assert!(run(include_str!("../../input/07.txt"), false) == 177);
     }
 
     #[test]
     fn test_part_2() {
         assert!(run(INPUT_1, true) == 32);
         assert!(run(INPUT_2, true) == 126);
-        //assert!(run(include_str!("../input/day_7.txt"), true) == 34988);
+        assert!(run(include_str!("../../input/07.txt"), true) == 34988);
     }
 }

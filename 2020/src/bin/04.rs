@@ -1,12 +1,18 @@
 use regex::Regex;
 
+fn main() {
+    let input = include_str!("../../input/04.txt");
+    println!("Part 1: {}", run(input, false));
+    println!("Part 2: {}", run(input, true));
+}
+
 fn validate_year(year_str: &str, low: i64, high: i64) -> bool {
     let year = year_str.parse().unwrap();
     (low <= year) && (year <= high)
 }
 
 fn validate_key_value(kv: &str) -> bool {
-    let key_value: Vec<&str> = kv.split(":").collect();
+    let key_value: Vec<&str> = kv.split(':').collect();
     match key_value[0] {
         "byr" => validate_year(key_value[1], 1920, 2002),
         "iyr" => validate_year(key_value[1], 2010, 2020),
@@ -14,10 +20,10 @@ fn validate_key_value(kv: &str) -> bool {
         "hgt" => {
             if key_value[1].contains("cm") {
                 let height = key_value[1].replace("cm", "").parse().unwrap();
-                (150 <= height) && (height <= 193)
+                (150..=193).contains(&height)
             } else if key_value[1].contains("in") {
                 let height = key_value[1].replace("in", "").parse().unwrap();
-                (59 <= height) && (height <= 76)
+                (59..=76).contains(&height)
             } else {
                 false
             }
@@ -38,14 +44,14 @@ fn valid_passport(passport: &str) -> bool {
     } else {
         passport
             .replace('\n', " ")
-            .split(" ")
+            .split(' ')
             .map(validate_key_value)
             .all(|item| item)
     }
 }
 
 fn check_required_fields(passport: &str) -> bool {
-    for field in vec!["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"] {
+    for field in &["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"] {
         if !passport.contains(field) {
             return false;
         }
@@ -63,12 +69,11 @@ pub fn run(input: &str, part_2: bool) -> i64 {
                 valid_passport(line.trim())
             }
         })
-        .collect::<Vec<_>>()
-        .len() as i64
+        .count() as i64
 }
 
 #[cfg(test)]
-mod tests {
+mod day_4_tests {
     use super::*;
     static INPUT: &str = "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
 byr:1937 iyr:2017 cid:147 hgt:183cm
@@ -113,7 +118,7 @@ pid:3556412378 byr:2007";
     #[test]
     fn test_part_1() {
         assert!(run(INPUT, false) == 2);
-        assert!(run(include_str!("../input/day_4.txt"), false) == 230);
+        assert!(run(include_str!("../../input/04.txt"), false) == 230);
     }
 
     #[test]
@@ -121,6 +126,6 @@ pid:3556412378 byr:2007";
         assert!(run(INPUT, true) == 2);
         assert!(run(VALID, true) == 4);
         assert!(run(INVALID, true) == 0);
-        assert!(run(include_str!("../input/day_4.txt"), true) == 156);
+        assert!(run(include_str!("../../input/04.txt"), true) == 156);
     }
 }

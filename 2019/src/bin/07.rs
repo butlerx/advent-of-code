@@ -1,7 +1,5 @@
 use itertools::Itertools;
 
-const COMMA: &str = ",";
-
 fn main() {
     let input = include_str!("../../input/07.txt");
     println!("Part 1: {}", run(input, false));
@@ -19,7 +17,7 @@ impl Computer {
     fn new(input: &str) -> Self {
         Computer {
             memory: input
-                .split(COMMA)
+                .split(',')
                 .map(|num| num.trim().parse().unwrap())
                 .collect(),
             pointer: 0,
