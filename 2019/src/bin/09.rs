@@ -1,6 +1,5 @@
 fn main() {
     let mut comp = Computer::new(include_str!("../../input/09.txt"));
-
     println!("Part 1: {}", comp.execute(vec![1]).unwrap());
     println!("Part 2: {}", comp.execute(vec![2]).unwrap());
 }
