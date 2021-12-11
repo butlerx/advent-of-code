@@ -60,7 +60,6 @@ fn count_points_covered(lines: Vec<((i64, i64), (i64, i64))>) -> usize {
         }
     }
 
-    println!("{:?}", points_covered);
     points_covered
         .into_iter()
         .filter_map(|(_, num_lines)| Some(num_lines).filter(|&x| x >= 2))
