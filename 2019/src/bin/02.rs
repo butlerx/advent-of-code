@@ -25,7 +25,8 @@ fn execute(memory: Vec<usize>, noun: usize, verb: usize) -> i64 {
         pointer += 4;
     }
 }
-pub fn run(input: &str, part_two: bool) -> i64 {
+
+fn run(input: &str, part_two: bool) -> i64 {
     if part_two {
         let mem: Vec<usize> = input
             .split(',')

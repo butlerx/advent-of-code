@@ -26,7 +26,7 @@ fn play_game(nums: Vec<usize>, turns: usize) -> i64 {
     }
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
         .trim()
         .split(',')

@@ -44,7 +44,7 @@ fn chinese_remainder(residues: &[i64], modulii: &[i64]) -> Option<i64> {
     Some(sum % prod)
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let inputs: (&str, &str) = input.lines().collect_tuple().unwrap();
     let ids: Vec<(i64, i64)> = inputs
         .1

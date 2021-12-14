@@ -46,7 +46,7 @@ fn unpack(
         .collect()
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let bags = parse_input(input);
     if !part_two {
         bags.keys().filter(|k| contains_gold(&bags, k)).count() as i64

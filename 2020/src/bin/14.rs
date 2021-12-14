@@ -111,7 +111,7 @@ fn part_two(instructions: &str) -> i64 {
     mem.values().sum::<u64>() as i64
 }
 
-pub fn run(input: &str, version_two: bool) -> i64 {
+fn run(input: &str, version_two: bool) -> i64 {
     if version_two {
         part_two(input)
     } else {

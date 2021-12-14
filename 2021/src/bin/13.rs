@@ -3,6 +3,7 @@ use std::iter::FromIterator;
 
 type Dots = Vec<(usize, usize)>;
 type Instructions = Vec<(char, usize)>;
+static PIXEL: char = '█';
 
 fn main() {
     let input = include_str!("../../input/13.txt");
@@ -61,12 +62,12 @@ fn part_2(input: &str) -> String {
         .fold(
             vec![vec![' '; max_x + 1]; max_y + 1],
             |mut matrix, &(x, y)| {
-                matrix[y][x] = '#';
+                matrix[y][x] = PIXEL;
                 matrix
             },
         )
         .into_iter()
-        .map(String::from_iter)
+        .map(|s| String::from_iter(s).trim().to_owned())
         .join("\n")
 }
 
@@ -103,16 +104,24 @@ fold along x=5";
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT), "#####\n#   #\n#   #\n#   #\n#####");
+        assert_eq!(
+            "\n".to_owned() + &part_2(INPUT),
+            "
+█████
+█   █
+█   █
+█   █
+█████"
+        );
         assert_eq!(
             "\n".to_owned() + &part_2(include_str!("../../input/13.txt")),
             "
-###   ##  #  # #### ###  ####   ##  ## 
-#  # #  # #  #    # #  # #       # #  #
-#  # #    ####   #  ###  ###     # #   
-###  # ## #  #  #   #  # #       # #   
-#    #  # #  # #    #  # #    #  # #  #
-#     ### #  # #### ###  #     ##   ## "
+███   ██  █  █ ████ ███  ████   ██  ██
+█  █ █  █ █  █    █ █  █ █       █ █  █
+█  █ █    ████   █  ███  ███     █ █
+███  █ ██ █  █  █   █  █ █       █ █
+█    █  █ █  █ █    █  █ █    █  █ █  █
+█     ███ █  █ ████ ███  █     ██   ██"
         );
     }
 }

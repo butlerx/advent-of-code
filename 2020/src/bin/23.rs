@@ -52,7 +52,7 @@ fn move_cups(input: Vec<i64>, rounds: usize) -> Vec<i64> {
     }
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
         .trim()
         .chars()

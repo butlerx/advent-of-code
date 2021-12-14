@@ -4,7 +4,7 @@ fn main() {
     println!("Part 2: {}", p2);
 }
 
-pub fn run(input: &str) -> (i64, i64) {
+fn run(input: &str) -> (i64, i64) {
     let position = input
         .lines()
         .map(|line| {

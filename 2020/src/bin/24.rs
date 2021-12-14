@@ -105,7 +105,7 @@ fn flip_tiles(input: &str) -> i64 {
     black.len() as i64
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     if part_two {
         flip_100(input)
     } else {

@@ -39,7 +39,7 @@ fn fix_instruction_set(instruction_set: Vec<(&str, i64)>, pointer: usize) -> Vec
     new_instruction_set
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let instruction_set = input
         .lines()
         .map(|line| {

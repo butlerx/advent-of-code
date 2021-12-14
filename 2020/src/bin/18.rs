@@ -83,7 +83,7 @@ mod part_2 {
     }
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     input
         .lines()
         .map(|line| {

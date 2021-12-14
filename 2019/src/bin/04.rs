@@ -39,7 +39,7 @@ fn valid_password(password: &i64, max: bool) -> bool {
     }
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let range: Vec<i64> = input
         .split('-')
         .map(|num| num.trim().parse::<i64>().unwrap())

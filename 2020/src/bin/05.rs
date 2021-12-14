@@ -10,7 +10,7 @@ fn parse_space_partition(input: &str) -> i64 {
     }) as i64
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     if part_two {
         part_2(input)
     } else {

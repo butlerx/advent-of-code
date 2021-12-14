@@ -7,7 +7,7 @@ fn main() {
     println!("Part 2: {}", run(input, true));
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
         .lines()
         .map(|num| num.trim().parse::<i64>().unwrap())

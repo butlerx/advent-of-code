@@ -9,7 +9,7 @@ fn main() {
     println!("Part 2: {}", part2);
 }
 
-pub fn run(input: &str) -> (i64, i64) {
+fn run(input: &str) -> (i64, i64) {
     let numbers: Vec<i64> = input
         .lines()
         .next()

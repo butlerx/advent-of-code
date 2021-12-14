@@ -2,8 +2,8 @@ const PIXELS: [&str; 3] = ["  ", "██", "  "];
 
 fn main() {
     let input = include_str!("../../input/08.txt");
-    println!("Part 1: {}", run(input, false));
-    println!("Part 2: {}", run(input, true));
+    println!("Part 1: {}", part_1(input));
+    println!("Part 2: \n{}", part_2(input));
 }
 
 fn convert_to_layers(input: &str, pixels_wide: usize, pixels_tall: usize) -> Vec<String> {
@@ -37,8 +37,9 @@ fn layers_to_image(layers: Vec<String>) -> String {
         .collect::<Vec<String>>()
         .join("")
 }
-fn print_image(image: &str, pixels_wide: usize) {
-    for line in image
+
+fn print_image(image: &str, pixels_wide: usize) -> String {
+    image
         .chars()
         .map(|c| match c {
             '0' => PIXELS[0],
@@ -48,27 +49,25 @@ fn print_image(image: &str, pixels_wide: usize) {
         })
         .collect::<Vec<&str>>()
         .chunks(pixels_wide)
-    {
-        println!("{}", line.join(""));
-    }
+        .map(|line| line.join("").trim().to_owned())
+        .collect::<Vec<String>>()
+        .join("\n")
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn part_2(input: &str) -> String {
+    print_image(&layers_to_image(convert_to_layers(input, 25, 6)), 25)
+}
+
+fn part_1(input: &str) -> usize {
     let image = convert_to_layers(input, 25, 6);
-    if part_two {
-        let layer = layers_to_image(image);
-        print_image(&layer, 25);
-        layer.parse().unwrap_or(0)
-    } else {
-        let layer = image
-            .iter()
-            .min_by(|x, y| {
-                let zeros = &"0".to_string();
-                x.matches(zeros).count().cmp(&y.matches(zeros).count())
-            })
-            .unwrap();
-        (layer.matches(&"1").count() * layer.matches(&"2").count()) as i64
-    }
+    let layer = image
+        .iter()
+        .min_by(|x, y| {
+            let zeros = &"0".to_string();
+            x.matches(zeros).count().cmp(&y.matches(zeros).count())
+        })
+        .unwrap();
+    layer.matches(&"1").count() * layer.matches(&"2").count()
 }
 
 #[cfg(test)]
@@ -91,11 +90,20 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert_eq!(run(include_str!("../../input/08.txt"), false), 1920);
+        assert_eq!(part_1(include_str!("../../input/08.txt")), 1920);
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(run(include_str!("../../input/08.txt"), true), 0);
+        assert_eq!(
+            "\n".to_owned() + &part_2(include_str!("../../input/08.txt")),
+            "
+██████      ████    ██    ██  ██          ████
+██    ██  ██    ██  ██    ██  ██        ██    ██
+██    ██  ██        ██    ██  ██        ██    ██
+██████    ██        ██    ██  ██        ████████
+██        ██    ██  ██    ██  ██        ██    ██
+██          ████      ████    ████████  ██    ██"
+        );
     }
 }

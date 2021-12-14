@@ -78,7 +78,7 @@ fn find_danderous_ingrediants(mut allergens: Allergens) -> Vec<String> {
     }
 }
 
-pub fn part_1(occurrences: HashMap<String, usize>) -> i64 {
+fn part_1(occurrences: HashMap<String, usize>) -> i64 {
     occurrences
         .values()
         .fold(0, |sum, occurrence| sum + *occurrence as i64)

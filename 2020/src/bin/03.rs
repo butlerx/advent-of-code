@@ -26,7 +26,7 @@ fn find_path(input: &str, right: usize, down: usize) -> i64 {
     num_tree
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     if part_two {
         [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
             .iter()

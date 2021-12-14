@@ -128,7 +128,7 @@ fn count_neighbours_4d(active: &HashSet<Row4d>) -> HashMap<Row4d, usize> {
     neighbours
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     if part_two {
         let active = input
             .lines()

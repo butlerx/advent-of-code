@@ -4,11 +4,11 @@ fn main() {
     println!("Part 2: {}", part_2(input));
 }
 
-pub fn part_1(_input: &str) -> i64 {
+fn part_1(_input: &str) -> i64 {
     0
 }
 
-pub fn part_2(_input: &str) -> i64 {
+fn part_2(_input: &str) -> i64 {
     0
 }
 

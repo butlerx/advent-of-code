@@ -60,7 +60,7 @@ fn validate_msg(rules: &HashMap<usize, Rule>, msg: &str, mut queue: VecDeque<usi
     }
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let (rules, messages): (&str, &str) = input.split("\n\n").collect_tuple().unwrap();
     let mut schema = parse_rules(rules);
     if part_two {

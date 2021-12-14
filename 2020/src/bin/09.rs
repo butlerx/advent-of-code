@@ -38,7 +38,7 @@ fn find_range(nums: &[i64], target: i64) -> (i64, i64) {
     }
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let nums: Vec<i64> = input
         .lines()
         .map(|line| line.trim().parse::<i64>().unwrap())

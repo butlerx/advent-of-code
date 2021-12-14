@@ -61,7 +61,7 @@ fn find_winner(mut player_1: VecDeque<i64>, mut player_2: VecDeque<i64>) -> i64 
     }
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let (player_1, player_2): (VecDeque<i64>, VecDeque<i64>) = input
         .split("\n\n")
         .map(|lines| {

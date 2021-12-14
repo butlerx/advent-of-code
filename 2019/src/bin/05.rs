@@ -82,7 +82,7 @@ fn execute(memory: Vec<i64>, input: i64) -> i64 {
     }
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
         .split(',')
         .map(|num| num.trim().parse().unwrap())

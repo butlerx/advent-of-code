@@ -6,7 +6,7 @@ fn main() {
     println!("Part 2: {}", run(input, true));
 }
 
-pub fn run(input: &str, part_2: bool) -> i64 {
+fn run(input: &str, part_2: bool) -> i64 {
     input
         .split("\n\n")
         .map(|line| {

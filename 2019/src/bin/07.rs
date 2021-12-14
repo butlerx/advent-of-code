@@ -98,7 +98,7 @@ fn applify(comp: &Computer, phases: &[i64]) -> i64 {
     })
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let comp = Computer::new(input);
     if part_two {
         (5..10)

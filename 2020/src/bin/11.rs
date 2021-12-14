@@ -79,7 +79,7 @@ fn fill_seats(map: &[Vec<char>], visible: bool) -> Vec<Vec<char>> {
     output
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let mut map: Vec<Vec<_>> = input.lines().map(|l| l.chars().collect()).collect();
     let mut next = fill_seats(&map, part_two);
     while map != next {

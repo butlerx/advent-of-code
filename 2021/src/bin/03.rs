@@ -4,7 +4,7 @@ fn main() {
     println!("Part 2: {}", part_2(input));
 }
 
-pub fn part_1(input: &str) -> i64 {
+fn part_1(input: &str) -> i64 {
     let (nums, bit_length) = parse_input(input);
     let gamma_rate: i64 = (0..bit_length)
         .map(|i| most_common_bit(&nums, i) << i)
@@ -13,7 +13,7 @@ pub fn part_1(input: &str) -> i64 {
     gamma_rate * epsilon_rate
 }
 
-pub fn part_2(input: &str) -> i64 {
+fn part_2(input: &str) -> i64 {
     let (nums, bit_length) = parse_input(input);
     let o2_rating = get_rating(&nums, 1, bit_length);
     let c02_rating = get_rating(&nums, 0, bit_length);

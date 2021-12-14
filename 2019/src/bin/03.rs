@@ -42,7 +42,7 @@ fn parse(path: &str) -> Vec<(char, usize)> {
         .collect()
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let paths: Vec<_> = input.lines().map(|line| find_path(parse(line))).collect();
     if part_two {
         paths[0]

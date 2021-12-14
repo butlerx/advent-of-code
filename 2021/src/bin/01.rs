@@ -11,14 +11,14 @@ fn parse_input(input: &str) -> Vec<i64> {
         .collect()
 }
 
-pub fn part_1(input: &str) -> i64 {
+fn part_1(input: &str) -> i64 {
     parse_input(input)
         .windows(2)
         .filter(|w| w[0] < w[1])
         .count() as i64
 }
 
-pub fn part_2(input: &str) -> i64 {
+fn part_2(input: &str) -> i64 {
     parse_input(input)
         .windows(4)
         .filter(|w| w[0] < w[3])

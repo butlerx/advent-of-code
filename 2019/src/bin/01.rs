@@ -8,7 +8,7 @@ fn calculate_fuel(mass: f64) -> f64 {
     (mass / 3.0).floor() - 2.0
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     input
         .lines()
         .map(|line| {
@@ -21,7 +21,7 @@ pub fn run(input: &str, part_two: bool) -> i64 {
         .sum::<f64>() as i64
 }
 
-pub fn cumalitive_fuel(mass: f64) -> f64 {
+fn cumalitive_fuel(mass: f64) -> f64 {
     let mut total_fuel = 0.0;
     let mut fuel = calculate_fuel(mass);
     while fuel > 0.0 {

@@ -59,7 +59,7 @@ fn check_required_fields(passport: &str) -> bool {
     true
 }
 
-pub fn run(input: &str, part_2: bool) -> i64 {
+fn run(input: &str, part_2: bool) -> i64 {
     input
         .split("\n\n")
         .filter(|line| {

@@ -9,7 +9,7 @@ fn main() {
     println!("Part 2: {}", part_2);
 }
 
-pub fn run(input: &str) -> (usize, usize) {
+fn run(input: &str) -> (usize, usize) {
     let mut map: HashMap<Coordinate, usize> = input
         .lines()
         .enumerate()

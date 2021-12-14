@@ -61,7 +61,7 @@ fn follow_directions(
     (pos.0.abs() as i64, pos.1.abs() as i64)
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let directions: Vec<(char, f32)> = input
         .lines()
         .map(|line| (line.chars().next().unwrap(), line[1..].parse().unwrap()))

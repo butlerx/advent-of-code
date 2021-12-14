@@ -102,7 +102,7 @@ fn departure_data(schema: Schema, nearby_tickets: Vec<Vec<i64>>, your_ticket: Ti
     .product()
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let data: Vec<&str> = input.trim().split("\n\n").collect();
     let schema = parse_schema(data[0]);
     let nearby_tickets = parse_tickets(data[2]);

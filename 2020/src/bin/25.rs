@@ -20,7 +20,7 @@ fn find_loop(subject: i64, goal: i64) -> i64 {
     }
 }
 
-pub fn run(input: &str) -> i64 {
+fn run(input: &str) -> i64 {
     let (card_key, door_key) = input
         .trim()
         .lines()

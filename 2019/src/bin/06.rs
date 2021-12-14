@@ -32,7 +32,7 @@ fn calc_distance(orbits: HashMap<&str, &str>, source: &str, dest: &str) -> i64 {
     (you.len() + san.len() - shared) as i64
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     if part_two {
         calc_distance(
             input

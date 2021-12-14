@@ -215,7 +215,7 @@ fn find_img(tiles: &[Tile]) -> usize {
     all_assembled[0].values().filter(|&&b| b).count() - monsters * monster_pos.len()
 }
 
-pub fn run(input: &str, part_two: bool) -> i64 {
+fn run(input: &str, part_two: bool) -> i64 {
     let tiles: Vec<Tile> = input
         .split("\n\n")
         .map(|tile| {
