@@ -17,24 +17,28 @@ fn shortest_path(map: Vec<Vec<i64>>) -> i64 {
             break -cost;
         }
         if -cost < costs[x][y] {
-            let neighbours = vec![
-                (x.saturating_sub(1), y),
-                (x + 1, y),
-                (x, y + 1),
-                (x, y.saturating_sub(1)),
-            ];
-            for (x1, y1) in neighbours {
-                if map.get(x1).and_then(|row| row.get(y1)).is_none() {
-                    continue;
-                }
-                let next_cost = -cost + map[x1][y1];
-                if next_cost < costs[x1][y1] {
-                    to_see.push((-next_cost, x1, y1));
-                    costs[x1][y1] = next_cost;
-                }
+            continue;
+        }
+        for (x1, y1) in get_neighbours(x, y) {
+            if map.get(x1).and_then(|row| row.get(y1)).is_none() {
+                continue;
+            }
+            let next_cost = -cost + map[x1][y1];
+            if next_cost < costs[x1][y1] {
+                to_see.push((-next_cost, x1, y1));
+                costs[x1][y1] = next_cost;
             }
         }
     }
+}
+
+fn get_neighbours(x: usize, y: usize) -> [(usize, usize); 4] {
+    [
+        (x.saturating_sub(1), y),
+        (x + 1, y),
+        (x, y + 1),
+        (x, y.saturating_sub(1)),
+    ]
 }
 
 fn parse_input(input: &str) -> Vec<Vec<i64>> {
@@ -51,11 +55,14 @@ fn part_1(input: &str) -> i64 {
 
 fn part_2(input: &str) -> i64 {
     let map = parse_input(input);
-    let (nr, nc) = (map.len(), map[0].len());
+    let (num_row, num_col) = (map.len(), map[0].len());
     let expanded_map = (0..(5 * map.len()))
-        .map(|r| {
+        .map(|row| {
             (0..(5 * map[0].len()))
-                .map(|c| (map[r % nr][c % nc] + (r / nr + c / nc) as i64 - 1) % 9 + 1)
+                .map(|col| {
+                    let increase = ((row / num_row) + (col / num_col) - 1) as i64;
+                    ((map[row % num_row][col % num_col] + increase) % 9) + 1
+                })
                 .collect()
         })
         .collect();
