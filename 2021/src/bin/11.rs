@@ -14,13 +14,12 @@ fn parse_input(input: &str) -> Grid {
     input
         .lines()
         .enumerate()
-        .map(|(y, line)| {
+        .flat_map(|(y, line)| {
             line.chars()
                 .enumerate()
                 .map(|(x, c)| ((x, y), c.to_string().parse::<usize>().unwrap()))
                 .collect::<Vec<(Cell, usize)>>()
         })
-        .flatten()
         .collect()
 }
 

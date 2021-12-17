@@ -13,7 +13,7 @@ fn run(input: &str) -> (usize, usize) {
     let mut map: HashMap<Coordinate, usize> = input
         .lines()
         .enumerate()
-        .map(|(y, line)| {
+        .flat_map(|(y, line)| {
             line.chars()
                 .enumerate()
                 .map(|(x, c)| {
@@ -24,7 +24,6 @@ fn run(input: &str) -> (usize, usize) {
                 })
                 .collect::<Vec<(Coordinate, usize)>>()
         })
-        .flatten()
         .collect();
     let mut low_points: Vec<Coordinate> = vec![];
     let part_1 = map.keys().fold(0, |total, square| {
