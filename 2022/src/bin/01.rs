@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-static INPUT_TXT = include_str!("../../input/01.txt");
+static INPUT_TXT: &str = include_str!("../../input/01.txt");
 
 fn main() {
     println!("Part 1: {}", part_1(INPUT_TXT));

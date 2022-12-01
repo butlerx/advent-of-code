@@ -1,7 +1,8 @@
+static INPUT_TXT: &str = include_str!("../../input/02.txt");
+
 fn main() {
-    let input = include_str!("../../input/02.txt");
-    println!("Part 1: {}", part_1(input));
-    println!("Part 2: {}", part_2(input));
+    println!("Part 1: {}", part_1(INPUT_TXT));
+    println!("Part 2: {}", part_2(INPUT_TXT));
 }
 
 fn part_1(_input: &str) -> i64 {
@@ -20,12 +21,12 @@ mod day_2_tests {
     #[test]
     fn test_part_1() {
         assert_eq!(part_1(INPUT), 0);
-        assert_eq!(part_1(include_str!("../../input/02.txt")), 0);
+        assert_eq!(part_1(INPUT_TXT), 0);
     }
 
     #[test]
-    fn test_part_02() {
+    fn test_part_2() {
         assert_eq!(part_2(INPUT), 0);
-        assert_eq!(part_2(include_str!("../../input/02.txt")), 0);
+        assert_eq!(part_2(INPUT_TXT), 0);
     }
 }
