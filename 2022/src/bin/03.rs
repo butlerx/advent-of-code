@@ -13,7 +13,7 @@ fn part_2(_input: &str) -> i64 {
 }
 
 #[cfg(test)]
-mod day_1_tests {
+mod day_3_tests {
     use super::*;
     static INPUT: &str = "";
 
