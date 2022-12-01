@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 fn main() {
     let input = include_str!("../../input/01.txt");
     println!("Part 1: {}", part_1(input));
@@ -16,13 +18,15 @@ fn parse_input(input: &str) -> Vec<i64> {
 }
 
 fn part_1(input: &str) -> i64 {
-    *parse_input(input).iter().max().unwrap()
+    parse_input(input).into_iter().max().unwrap()
 }
 
 fn part_2(input: &str) -> i64 {
-    let mut nums = parse_input(input);
-    nums.sort();
-    nums.iter().rev().take(3).sum()
+    parse_input(input)
+        .into_iter()
+        .sorted_by(|a, b| Ord::cmp(&b, &a))
+        .take(3)
+        .sum()
 }
 
 #[cfg(test)]
