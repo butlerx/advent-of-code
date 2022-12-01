@@ -1,9 +1,10 @@
 use std::collections::HashMap;
 
+static INPUT_TXT: &str = include_str!("../../input/02.txt");
+
 fn main() {
-    let input = include_str!("../../input/02.txt");
-    println!("Part 1: {}", part_1(input));
-    println!("Part 2: {}", part_2(input));
+    println!("Part 1: {}", part_1(INPUT_TXT));
+    println!("Part 2: {}", part_2(INPUT_TXT));
 }
 
 fn part_1(input: &str) -> i64 {
@@ -75,16 +76,13 @@ wvxyz";
     fn test_part_1() {
         assert_eq!(part_1(INPUT_1), 12);
         assert_eq!(part_1(INPUT_2), 0);
-        assert_eq!(part_1(include_str!("../../input/02.txt")), 3952);
+        assert_eq!(part_1(INPUT_TXT), 3952);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(part_2(INPUT_1), "abcde".to_string());
         assert_eq!(part_2(INPUT_2), "fgij".to_string());
-        assert_eq!(
-            part_2(include_str!("../../input/02.txt")),
-            "vtnikorkulbfejvyznqgdxpaw".to_string()
-        );
+        assert_eq!(part_2(INPUT_TXT), "vtnikorkulbfejvyznqgdxpaw".to_string());
     }
 }

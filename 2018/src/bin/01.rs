@@ -1,9 +1,10 @@
 use std::collections::HashSet;
 
+static INPUT_TXT: &str = include_str!("../../input/01.txt");
+
 fn main() {
-    let input = include_str!("../../input/01.txt");
-    println!("Part 1: {}", part_1(input));
-    println!("Part 2: {}", part_2(input));
+    println!("Part 1: {}", part_1(INPUT_TXT));
+    println!("Part 2: {}", part_2(INPUT_TXT));
 }
 
 fn parse_input(input: &str) -> Vec<i64> {
@@ -80,7 +81,7 @@ mod day_1_tests {
         assert_eq!(part_1(INPUT_5), 4);
         assert_eq!(part_1(INPUT_6), 4);
         assert_eq!(part_1(INPUT_7), 1);
-        assert_eq!(part_1(include_str!("../../input/01.txt")), 590);
+        assert_eq!(part_1(INPUT_TXT), 590);
     }
 
     #[test]
@@ -92,6 +93,6 @@ mod day_1_tests {
         assert_eq!(part_2(INPUT_5), 10);
         assert_eq!(part_2(INPUT_6), 5);
         assert_eq!(part_2(INPUT_7), 14);
-        assert_eq!(part_2(include_str!("../../input/01.txt")), 83445);
+        assert_eq!(part_2(INPUT_TXT), 83445);
     }
 }

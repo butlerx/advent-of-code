@@ -1,9 +1,9 @@
 use std::collections::{HashMap, HashSet};
 
+static INPUT_TXT: &str = include_str!("../../input/03.txt");
 fn main() {
-    let input = include_str!("../../input/03.txt");
-    println!("Part 1: {}", part_1(input));
-    println!("Part 2: {}", part_2(input));
+    println!("Part 1: {}", part_1(INPUT_TXT));
+    println!("Part 2: {}", part_2(INPUT_TXT));
 }
 
 fn part_1(input: &str) -> i64 {
@@ -79,12 +79,12 @@ mod day_3_tests {
     #[test]
     fn test_part_1() {
         assert_eq!(part_1(INPUT), 4);
-        assert_eq!(part_1(include_str!("../../input/03.txt")), 118840);
+        assert_eq!(part_1(INPUT_TXT), 118840);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(part_2(INPUT), 3);
-        assert_eq!(part_2(include_str!("../../input/03.txt")), 919);
+        assert_eq!(part_2(INPUT_TXT), 919);
     }
 }
