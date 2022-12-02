@@ -5,28 +5,76 @@ fn main() {
     println!("Part 2: {}", part_2(INPUT_TXT));
 }
 
-fn part_1(_input: &str) -> i64 {
-    0
+fn part_1(input: &str) -> i64 {
+    input.trim().lines().fold(0i64, |score, line| {
+        let (move_a, move_b) = line.split_once(" ").unwrap();
+        (match move_a {
+            "A" => match move_b {
+                "X" => 1 + 3,
+                "Y" => 2 + 6,
+                "Z" => 3 + 0,
+                _ => unreachable!(),
+            },
+            "B" => match move_b {
+                "X" => 1 + 0,
+                "Y" => 2 + 3,
+                "Z" => 3 + 6,
+                _ => unreachable!(),
+            },
+            "C" => match move_b {
+                "X" => 1 + 6,
+                "Y" => 2 + 0,
+                "Z" => 3 + 3,
+                _ => unreachable!(),
+            },
+            _ => unreachable!(),
+        }) + score
+    })
 }
 
-fn part_2(_input: &str) -> i64 {
-    0
+fn part_2(input: &str) -> i64 {
+    input.trim().lines().fold(0i64, |score, line| {
+        let (move_a, move_b) = line.split_once(" ").unwrap();
+        (match move_a {
+            "A" => match move_b {
+                "X" => 0 + 3,
+                "Y" => 3 + 1,
+                "Z" => 6 + 2,
+                _ => unreachable!(),
+            },
+            "B" => match move_b {
+                "X" => 0 + 1,
+                "Y" => 3 + 2,
+                "Z" => 6 + 3,
+                _ => unreachable!(),
+            },
+            "C" => match move_b {
+                "X" => 0 + 2,
+                "Y" => 3 + 3,
+                "Z" => 6 + 1,
+                _ => unreachable!(),
+            },
+            _ => unreachable!(),
+        }) + score
+    })
 }
 
 #[cfg(test)]
 mod day_2_tests {
     use super::*;
-    static INPUT: &str = "";
+    static INPUT: &str = "A Y
+B X
+C Z";
 
     #[test]
     fn test_part_1() {
-        assert_eq!(part_1(INPUT), 0);
-        assert_eq!(part_1(INPUT_TXT), 0);
+        assert_eq!(part_1(INPUT), 15);
+        assert_eq!(part_1(INPUT_TXT), 9651);
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT), 0);
-        assert_eq!(part_2(INPUT_TXT), 0);
+        assert_eq!(part_2(INPUT), 12);
+        assert_eq!(part_2(INPUT_TXT), 10560);
     }
 }
