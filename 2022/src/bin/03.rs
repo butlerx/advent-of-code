@@ -8,40 +8,41 @@ fn main() {
     println!("Part 2: {}", part_2(INPUT_TXT));
 }
 
+fn priority(score: i64, v: &char) -> i64 {
+    score
+        + (match v {
+            'a'..='z' => (*v as u8) - b'a' + 1,
+            'A'..='Z' => (*v as u8) - b'A' + 27,
+            _ => unreachable!(),
+        }) as i64
+}
+
 fn part_1(input: &str) -> i64 {
-    let alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        .chars()
-        .collect::<Vec<char>>();
-    input.trim().lines().fold(0i64, |score, line| {
-        let start = line.chars().take(line.len() / 2).collect::<HashSet<char>>();
-        let end = line.chars().skip(line.len() / 2).collect::<HashSet<char>>();
-        start.intersection(&end).fold(0i64, |count, letter| {
-            count + (alphabet.iter().position(|&r| r == *letter).unwrap() as i64) + 1
-        }) + score
+    input.trim().lines().fold(0, |score, line| {
+        let (start, end) = line
+            .chars()
+            .chunks(line.len() / 2)
+            .into_iter()
+            .map(|part| part.collect::<HashSet<char>>())
+            .collect_tuple()
+            .unwrap();
+        start.intersection(&end).fold(0, priority) + score
     })
 }
 
 fn part_2(input: &str) -> i64 {
-    let alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        .chars()
-        .collect::<Vec<char>>();
     input
         .trim()
         .lines()
         .chunks(3)
         .into_iter()
-        .fold(0i64, |score, lines| {
+        .fold(0, |score, lines| {
             let mut set_lines = lines.map(|line| line.chars().collect::<HashSet<char>>());
             let mut s = set_lines.next().unwrap();
             for line in set_lines {
                 s = s.intersection(&line).copied().collect();
             }
-            score
-                + 1
-                + (alphabet
-                    .iter()
-                    .position(|&r| r == *s.iter().next().unwrap())
-                    .unwrap() as i64)
+            priority(score, s.iter().next().unwrap())
         })
 }
 
