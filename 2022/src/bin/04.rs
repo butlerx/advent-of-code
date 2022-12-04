@@ -16,11 +16,11 @@ fn part_1(input: &str) -> usize {
             let (a, b) = line
                 .split(",")
                 .map(|range| {
-                    let (start, fininsh) = range.split_once("-").unwrap();
-                    (
-                        start.parse::<i64>().unwrap(),
-                        fininsh.parse::<i64>().unwrap(),
-                    )
+                    range
+                        .split("-")
+                        .map(|n| n.parse::<i64>().unwrap())
+                        .collect_tuple::<(i64, i64)>()
+                        .unwrap()
                 })
                 .collect_tuple()
                 .unwrap();
