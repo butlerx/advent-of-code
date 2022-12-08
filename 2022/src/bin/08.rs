@@ -5,28 +5,105 @@ fn main() {
     println!("Part 2: {}", part_2(INPUT_TXT));
 }
 
-fn part_1(_input: &str) -> i64 {
-    0
+fn parse_input(input: &str) -> (Vec<Vec<u32>>, usize, usize) {
+    let grid: Vec<Vec<u32>> = input
+        .trim()
+        .lines()
+        .map(|row| row.chars().map(|c| c.to_digit(10).unwrap()).collect())
+        .collect();
+    let rows = grid.len() - 1;
+    let cols = grid[0].len() - 1;
+    (grid, rows, cols)
 }
 
-fn part_2(_input: &str) -> i64 {
-    0
+fn part_1(input: &str) -> u32 {
+    let (grid, rows, cols) = parse_input(input);
+    (1..rows).fold((2 * (rows + cols)) as u32, |visible, row| {
+        (1..cols).fold(visible, |visible, col| {
+            let height = grid[row][col];
+            if (0..col).all(|i| grid[row][i] < height)
+                || (0..row).all(|j| grid[j][col] < height)
+                || (col + 1..=cols).all(|i| grid[row][i] < height)
+                || (row + 1..=rows).all(|j| grid[j][col] < height)
+            {
+                visible + 1
+            } else {
+                visible
+            }
+        })
+    })
+}
+
+fn part_2(input: &str) -> u32 {
+    let (grid, rows, cols) = parse_input(input);
+    (1..rows).fold(0u32, |score, row| {
+        (1..cols).fold(score, |score, col| {
+            let height = grid[row][col];
+            let left = (0..col)
+                .enumerate()
+                .rev()
+                .find_map(|(i, c)| {
+                    if grid[row][*c] >= height {
+                        Some(col - i)
+                    } else {
+                        None
+                    }
+                })
+                .unwrap_or(col);
+            let right = (col + 1..=cols)
+                .enumerate()
+                .find_map(|(i, c)| {
+                    if grid[row][*c] >= height {
+                        Some(i + 1)
+                    } else {
+                        None
+                    }
+                })
+                .unwrap_or(cols - col);
+            let up = (0..row)
+                .enumerate()
+                .rev()
+                .find_map(|(i, r)| {
+                    if grid[*r][col] >= height {
+                        Some(row - i)
+                    } else {
+                        None
+                    }
+                })
+                .unwrap_or(row);
+            let down = (row + 1..=rows)
+                .enumerate()
+                .find_map(|(i, r)| {
+                    if grid[*r][col] >= height {
+                        Some(i + 1)
+                    } else {
+                        None
+                    }
+                })
+                .unwrap_or(rows - row);
+            score.max((left * up * right * down) as u32)
+        })
+    })
 }
 
 #[cfg(test)]
 mod day_8_tests {
     use super::*;
-    static INPUT: &str = "";
+    static INPUT: &str = "30373
+25512
+65332
+33549
+35390";
 
     #[test]
     fn test_part_1() {
-        assert_eq!(part_1(INPUT), 0);
-        assert_eq!(part_1(INPUT_TXT), 0);
+        assert_eq!(part_1(INPUT), 21);
+        assert_eq!(part_1(INPUT_TXT), 1662);
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT), 0);
-        assert_eq!(part_2(INPUT_TXT), 0);
+        assert_eq!(part_2(INPUT), 8);
+        assert_eq!(part_2(INPUT_TXT), 537600);
     }
 }
