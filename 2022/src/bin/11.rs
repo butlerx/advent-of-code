@@ -12,18 +12,22 @@ enum Operation {
     MultiplySelf,
 }
 
-impl Operation {
-    fn from_str(s: &str) -> Self {
+impl std::str::FromStr for Operation {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         let ops: Vec<_> = s.split(' ').collect();
-        if ops[4] == "*" && ops[5] == "old" {
+        Ok(if ops[4] == "*" && ops[5] == "old" {
             Self::MultiplySelf
         } else if ops[4] == "+" {
             Self::Add(ops[5].parse().unwrap())
         } else {
             Self::Multiply(ops[5].parse().unwrap())
-        }
+        })
     }
+}
 
+impl Operation {
     fn execute(&self, x: i64) -> i64 {
         match self {
             Operation::Add(y) => x + y,
@@ -43,8 +47,10 @@ struct Monkey {
     throws: i64,
 }
 
-impl Monkey {
-    fn from_str(input: &str) -> Monkey {
+impl std::str::FromStr for Monkey {
+    type Err = ();
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
         let lines: Vec<_> = input.lines().map(|x| x.trim()).collect();
         let items: Vec<i64> = lines[1]
             .split_once(": ")
@@ -54,7 +60,7 @@ impl Monkey {
             .map(|x| x.parse().unwrap())
             .collect();
 
-        let operation = Operation::from_str(lines[2]);
+        let operation = lines[2].parse()?;
 
         let test = lines[3].split(' ').nth(3).unwrap().parse::<i64>().unwrap();
         let on_true = lines[4]
@@ -70,14 +76,14 @@ impl Monkey {
             .parse::<usize>()
             .unwrap();
 
-        Self {
+        Ok(Self {
             items,
             operation,
             test,
             on_true,
             on_false,
             throws: 0,
-        }
+        })
     }
 }
 
@@ -115,7 +121,7 @@ fn part_1(input: &str) -> i64 {
     let monkeys: Vec<Monkey> = input
         .trim()
         .split("\n\n")
-        .map(|monkey| Monkey::from_str(monkey))
+        .map(|monkey| monkey.parse().unwrap())
         .collect();
     calculate(monkeys, 20, Divisor::Three)
 }
@@ -124,7 +130,7 @@ fn part_2(input: &str) -> i64 {
     let monkeys: Vec<Monkey> = input
         .trim()
         .split("\n\n")
-        .map(|monkey| Monkey::from_str(monkey))
+        .map(|monkey| monkey.parse().unwrap())
         .collect();
     let mod_product = monkeys.iter().map(|x| x.test).product::<i64>();
     calculate(monkeys, 10_000, Divisor::Custom(mod_product))
