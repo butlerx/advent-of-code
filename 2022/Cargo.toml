@@ -8,3 +8,4 @@ authors = ["butlerx <butlerx@notthe.cloud>"]
 
 [dependencies]
 itertools = "0.10.5"
+serde_json = "1.0"
