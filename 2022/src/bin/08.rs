@@ -42,44 +42,24 @@ fn part_2(input: &str) -> u32 {
             let left = (0..col)
                 .enumerate()
                 .rev()
-                .find_map(|(i, c)| {
-                    if grid[row][*c] >= height {
-                        Some(col - i)
-                    } else {
-                        None
-                    }
-                })
+                .find(|(_, c)| grid[row][*c] >= height )
+                .map(|(i, _)| col-i )
                 .unwrap_or(col);
             let right = (col + 1..=cols)
                 .enumerate()
-                .find_map(|(i, c)| {
-                    if grid[row][*c] >= height {
-                        Some(i + 1)
-                    } else {
-                        None
-                    }
-                })
+                .find(|(_, c)| grid[row][*c] >= height )
+                .map(|(i, _)| i+1 )
                 .unwrap_or(cols - col);
             let up = (0..row)
                 .enumerate()
                 .rev()
-                .find_map(|(i, r)| {
-                    if grid[*r][col] >= height {
-                        Some(row - i)
-                    } else {
-                        None
-                    }
-                })
+                .find(|(_, r)| grid[*r][col] >= height )
+                .map(|(i, _)| row-i )
                 .unwrap_or(row);
             let down = (row + 1..=rows)
                 .enumerate()
-                .find_map(|(i, r)| {
-                    if grid[*r][col] >= height {
-                        Some(i + 1)
-                    } else {
-                        None
-                    }
-                })
+                .find(|(_, r)| grid[*r][col] >= height )
+                .map(|(i, _)| i+1 )
                 .unwrap_or(rows - row);
             score.max((left * up * right * down) as u32)
         })

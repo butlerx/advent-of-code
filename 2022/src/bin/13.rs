@@ -30,17 +30,14 @@ fn part_1(input: &str) -> i64 {
         .trim()
         .split("\n\n")
         .enumerate()
-        .filter_map(|(i, lines)| {
+        .filter(|(_, lines)| {
             let packets = lines
                 .lines()
                 .map(|l| serde_json::from_str::<Value>(l).unwrap())
                 .collect::<Vec<_>>();
-            if compare(&packets[0], &packets[1]) != Ordering::Greater {
-                Some(i as i64 + 1)
-            } else {
-                None
-            }
+            compare(&packets[0], &packets[1]) != Ordering::Greater
         })
+        .map(|(i, _)| i as i64 + 1)
         .sum()
 }
 
@@ -48,13 +45,8 @@ fn part_2(input: &str) -> i64 {
     let mut packets = input
         .trim()
         .lines()
-        .filter_map(|line| {
-            if line.is_empty() {
-                None
-            } else {
-                Some(serde_json::from_str::<Value>(line).unwrap())
-            }
-        })
+        .filter(|line| !line.is_empty())
+        .map(|line| serde_json::from_str::<Value>(line).unwrap())
         .collect::<Vec<_>>();
     let divider_packets = [
         serde_json::from_str::<Value>("[[2]]").unwrap(),
@@ -65,13 +57,8 @@ fn part_2(input: &str) -> i64 {
     packets
         .iter()
         .enumerate()
-        .filter_map(|(i, packet)| {
-            if divider_packets.contains(packet) {
-                Some(i as i64 + 1)
-            } else {
-                None
-            }
-        })
+        .filter(|(_, packet)| divider_packets.contains(packet))
+        .map(|(i, _)| i as i64 + 1)
         .product()
 }
 

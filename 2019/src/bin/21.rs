@@ -4,7 +4,6 @@ fn main() {
     println!("Part 2: {}", part_2(input));
 }
 
-
 pub fn part_1(_input: &str) -> i64 {
     0
 }
@@ -30,4 +29,3 @@ mod tests {
         assert_eq!(part_2(include_str!("../../input/21.txt")), 0);
     }
 }
-

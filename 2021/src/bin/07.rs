@@ -21,7 +21,7 @@ fn run(input: &str, exponential: bool) -> usize {
         .map(|candidate| {
             counts
                 .iter()
-                .map(|(pos, count)| cost((pos - candidate).abs() as usize, exponential) * count)
+                .map(|(pos, count)| cost((pos - candidate).unsigned_abs() as usize, exponential) * count)
                 .sum()
         })
         .min()

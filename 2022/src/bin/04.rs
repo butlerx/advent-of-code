@@ -14,10 +14,10 @@ fn part_1(input: &str) -> usize {
         .lines()
         .filter(|line| {
             let (a, b) = line
-                .split(",")
+                .split(',')
                 .map(|range| {
                     range
-                        .split("-")
+                        .split('-')
                         .map(|n| n.parse::<i64>().unwrap())
                         .collect_tuple::<(i64, i64)>()
                         .unwrap()
@@ -35,9 +35,9 @@ fn part_2(input: &str) -> usize {
         .lines()
         .filter(|line| {
             let (a, b) = line
-                .split(",")
+                .split(',')
                 .map(|range| {
-                    let (start, fininsh) = range.split_once("-").unwrap();
+                    let (start, fininsh) = range.split_once('-').unwrap();
                     (start.parse::<i64>().unwrap()..=fininsh.parse::<i64>().unwrap())
                         .collect::<HashSet<_>>()
                 })

@@ -67,8 +67,8 @@ impl Computer {
                     self.pointer = *self.read(2) as usize;
                     continue;
                 }
-                7 => *self.read(3) = if *self.read(1) < *self.read(2) { 1 } else { 0 },
-                8 => *self.read(3) = if *self.read(1) == *self.read(2) { 1 } else { 0 },
+                7 => *self.read(3) = i64::from(*self.read(1) < *self.read(2)),
+                8 => *self.read(3) = i64::from(*self.read(1) == *self.read(2)),
                 99 => break None,
                 _ => (),
             }

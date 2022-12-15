@@ -29,7 +29,7 @@ fn parse_input(input: &str) -> HashMap<i64, Vec<i64>> {
             if let Some(id) = cap.name("guard") {
                 guard = id.as_str().parse().unwrap();
             } else if cap.name("wakes").is_some() {
-                let timetable = roster.entry(guard).or_insert(vec![0; 60]);
+                let timetable = roster.entry(guard).or_insert_with(|| vec![0; 60]);
                 for time in &mut timetable[timer..now] {
                     *time += 1;
                 }

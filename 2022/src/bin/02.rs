@@ -7,23 +7,23 @@ fn main() {
 
 fn part_1(input: &str) -> i64 {
     input.trim().lines().fold(0i64, |score, line| {
-        let (move_a, move_b) = line.split_once(" ").unwrap();
+        let (move_a, move_b) = line.split_once(' ').unwrap();
         (match move_a {
             "A" => match move_b {
                 "X" => 1 + 3,
                 "Y" => 2 + 6,
-                "Z" => 3 + 0,
+                "Z" => 3,
                 _ => unreachable!(),
             },
             "B" => match move_b {
-                "X" => 1 + 0,
+                "X" => 1,
                 "Y" => 2 + 3,
                 "Z" => 3 + 6,
                 _ => unreachable!(),
             },
             "C" => match move_b {
                 "X" => 1 + 6,
-                "Y" => 2 + 0,
+                "Y" => 2,
                 "Z" => 3 + 3,
                 _ => unreachable!(),
             },
@@ -34,22 +34,22 @@ fn part_1(input: &str) -> i64 {
 
 fn part_2(input: &str) -> i64 {
     input.trim().lines().fold(0i64, |score, line| {
-        let (move_a, move_b) = line.split_once(" ").unwrap();
+        let (move_a, move_b) = line.split_once(' ').unwrap();
         (match move_a {
             "A" => match move_b {
-                "X" => 0 + 3,
+                "X" => 3,
                 "Y" => 3 + 1,
                 "Z" => 6 + 2,
                 _ => unreachable!(),
             },
             "B" => match move_b {
-                "X" => 0 + 1,
+                "X" => 1,
                 "Y" => 3 + 2,
                 "Z" => 6 + 3,
                 _ => unreachable!(),
             },
             "C" => match move_b {
-                "X" => 0 + 2,
+                "X" => 2,
                 "Y" => 3 + 3,
                 "Z" => 6 + 1,
                 _ => unreachable!(),

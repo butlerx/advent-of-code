@@ -14,11 +14,11 @@ fn part_1(input: &str) -> i64 {
             let (_, quor) = line.trim().split_once(" @ ").unwrap();
             let (start_pos, size) = quor.trim().split_once(": ").unwrap();
             let start = start_pos
-                .split(",")
+                .split(',')
                 .map(|n| n.parse::<i64>().unwrap())
                 .collect::<Vec<i64>>();
             let size = size
-                .split("x")
+                .split('x')
                 .map(|n| n.parse::<i64>().unwrap())
                 .collect::<Vec<i64>>();
             for pos_x in start[0]..(start[0] + size[0]) {
@@ -45,11 +45,11 @@ fn part_2(input: &str) -> i64 {
 
         let (start_pos, size) = quor.trim().split_once(": ").unwrap();
         let start = start_pos
-            .split(",")
+            .split(',')
             .map(|n| n.parse::<i64>().unwrap())
             .collect::<Vec<i64>>();
         let size = size
-            .split("x")
+            .split('x')
             .map(|n| n.parse::<i64>().unwrap())
             .collect::<Vec<i64>>();
         for pos_x in start[0]..(start[0] + size[0]) {

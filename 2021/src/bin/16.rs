@@ -76,23 +76,20 @@ fn run(queue: &mut VecDeque<char>) -> Option<(i64, i64)> {
         }
         "101" => {
             let (version, numbers) = solve_operator(queue);
-            Some((
-                version_sum + version,
-                if numbers[0] > numbers[1] { 1 } else { 0 },
-            ))
+            Some((version_sum + version, i64::from(numbers[0] > numbers[1])))
         }
         "110" => {
             let (version, numbers) = solve_operator(queue);
             Some((
                 version_sum + version,
-                if numbers[0] < numbers[1] { 1 } else { 0 },
+                i64::from(numbers[0] < numbers[1]),
             ))
         }
         "111" => {
             let (version, numbers) = solve_operator(queue);
             Some((
                 version_sum + version,
-                if numbers[0] == numbers[1] { 1 } else { 0 },
+                i64::from(numbers[0] == numbers[1]),
             ))
         }
         _ => None,

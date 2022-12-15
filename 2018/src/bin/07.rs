@@ -15,7 +15,7 @@ fn parse_input(input: &str) -> HashMap<char, Vec<char>> {
         .lines()
         .map(|line| {
             let mut chars = line.chars().skip(5);
-            (chars.next().unwrap(), chars.skip(30).next().unwrap())
+            (chars.next().unwrap(), chars.nth(30).unwrap())
         })
         .into_group_map()
 }

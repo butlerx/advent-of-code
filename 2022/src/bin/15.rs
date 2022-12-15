@@ -11,7 +11,7 @@ fn parse_input(input: &str) -> Vec<(i64, i64, i64)> {
         .trim()
         .lines()
         .map(|l| {
-            l.split(|c: char| !c.is_digit(10) && c != '-')
+            l.split(|c: char| !c.is_ascii_digit() && c != '-')
                 .filter_map(|w| w.parse::<i64>().ok())
                 .collect_tuple()
                 .map(|(x, y, dx, dy)| (x, y, (x - dx).abs() + (y - dy).abs()))

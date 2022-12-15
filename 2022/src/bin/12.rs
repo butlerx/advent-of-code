@@ -8,7 +8,9 @@ fn main() {
     println!("Part 2: {}", part_2(INPUT_TXT));
 }
 
-fn find_path(grid: &[Vec<u8>], start: (usize, usize), goal: (usize, usize)) -> Option<usize> {
+type Point = (usize, usize);
+
+fn find_path(grid: &[Vec<u8>], start: Point, goal: Point) -> Option<usize> {
     let mut visited = vec![vec![false; grid[0].len()]; grid.len()];
     let mut queue = vec![(start, 0)].into_iter().collect::<VecDeque<_>>();
     while let Some(((x, y), len)) = queue.pop_front() {
@@ -28,11 +30,11 @@ fn find_path(grid: &[Vec<u8>], start: (usize, usize), goal: (usize, usize)) -> O
     None
 }
 
-fn parse_input(input: &str) -> (Vec<Vec<u8>>, (usize, usize), (usize, usize)) {
+fn parse_input(input: &str) -> (Vec<Vec<u8>>, Point, Point) {
     let mut grid = input
         .trim()
         .lines()
-        .map(|l| l.as_bytes().iter().copied().collect::<Vec<_>>())
+        .map(|l| l.as_bytes().to_vec())
         .collect::<Vec<_>>();
     let start = (0..grid.len())
         .cartesian_product(0..grid[0].len())

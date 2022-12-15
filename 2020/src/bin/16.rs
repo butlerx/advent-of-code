@@ -63,7 +63,7 @@ fn generate_name_index(mut map: HashMap<String, HashSet<usize>>) -> HashMap<Stri
         for (k, v) in map.iter().filter(|(_, v)| v.len() == 1) {
             name_index.insert(k.clone(), v.clone().into_iter().next().unwrap());
         }
-        map = map.into_iter().filter(|(_, v)| v.len() != 1).collect();
+        map.retain(|_, v| v.len() != 1);
         for (_, indexes) in map.iter_mut() {
             for finished in name_index.values() {
                 if indexes.contains(finished) {

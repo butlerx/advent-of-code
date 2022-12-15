@@ -40,8 +40,7 @@ fn unpack(
         .chain(
             inner_bags
                 .iter()
-                .map(|(count, bag)| unpack(bags, bag, multiplier * count))
-                .flatten(),
+                .flat_map(|(count, bag)| unpack(bags, bag, multiplier * count)),
         )
         .collect()
 }

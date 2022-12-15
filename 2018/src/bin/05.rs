@@ -20,7 +20,7 @@ fn part_1(input: &[u8]) -> usize {
 }
 
 fn part_2(input: &[u8]) -> usize {
-    (b'a'..b'z')
+    (b'a'..=b'x')
         .map(|unit| {
             input
                 .iter()

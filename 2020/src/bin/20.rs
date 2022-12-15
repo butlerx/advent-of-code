@@ -218,12 +218,11 @@ fn find_img(tiles: &[Tile]) -> usize {
 fn run(input: &str, part_two: bool) -> i64 {
     let tiles: Vec<Tile> = input
         .split("\n\n")
-        .map(|tile| {
+        .flat_map(|tile| {
             let (tile_id, img) = tile.split(":\n").collect_tuple().unwrap();
             let (_, id) = tile_id.split(' ').collect_tuple().unwrap();
             Tile::new(id.parse::<usize>().unwrap(), img).collection()
         })
-        .flatten()
         .collect();
     (if part_two {
         find_img(&tiles)

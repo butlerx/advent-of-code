@@ -17,13 +17,7 @@ fn run(input: &str, part_2: bool) -> i64 {
                 line.replace('\n', "")
                     .chars()
                     .unique()
-                    .map(|c| {
-                        if line.matches(c).count() == lines {
-                            1
-                        } else {
-                            0
-                        }
-                    })
+                    .map(|c| usize::from(line.matches(c).count() == lines))
                     .sum()
             }
         })

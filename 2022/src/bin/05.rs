@@ -17,7 +17,8 @@ fn parse_input(input: &str) -> (BTreeMap<usize, VecDeque<char>>, &str) {
             for (i, c) in line
                 .chars()
                 .enumerate()
-                .filter_map(|(i, v)| if i % 4 == 1 { Some(v) } else { None })
+                .filter(|(i, _)| i % 4 == 1)
+                .map(|(_, v)| v)
                 .enumerate()
             {
                 if !c.is_whitespace() {
@@ -33,7 +34,7 @@ fn parse_move(line: &str) -> (usize, usize, usize) {
     line.split_whitespace()
         .chunks(2)
         .into_iter()
-        .map(|s| s.skip(1).next().unwrap().parse::<usize>().unwrap())
+        .map(|mut s| s.nth(1).unwrap().parse::<usize>().unwrap())
         .collect_tuple()
         .unwrap()
 }
@@ -54,7 +55,7 @@ fn part_2(input: &str) -> String {
     let (mut stacks, moves) = parse_input(input);
     for line in moves.trim().lines() {
         let (num_to_move, source, dest) = parse_move(line);
-        let crates: Vec<char> = (0..num_to_move)
+        let crates: Vec<_> = (0..num_to_move)
             .map(|_| stacks.get_mut(&source).unwrap().pop_back().unwrap())
             .collect();
         stacks

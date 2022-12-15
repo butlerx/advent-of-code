@@ -14,12 +14,7 @@ fn find_path(input: &str, right: usize, down: usize) -> i64 {
                 let mut chars = line.chars();
                 let len = chars.clone().count();
                 (
-                    num_tree
-                        + if chars.nth(right_count).unwrap() == tree {
-                            1
-                        } else {
-                            0
-                        },
+                    num_tree + i64::from(chars.nth(right_count).unwrap() == tree),
                     (right_count + right) % len,
                 )
             });

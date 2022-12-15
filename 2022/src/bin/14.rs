@@ -29,7 +29,7 @@ impl Map {
     }
 
     fn next_position(&self, xy: (i64, i64), use_floor: bool) -> bool {
-        !self.is_occupied(xy) && !(use_floor && xy.1 == self.1 + 2)
+        !(self.is_occupied(xy) || use_floor && xy.1 == self.1 + 2)
     }
 
     fn drop_sand_floor(&mut self, use_floor: bool) -> i64 {
@@ -63,7 +63,7 @@ impl FromStr for Map {
         for line in s.trim().lines() {
             let mut points = line.split(" -> ").map(|s| {
                 let parts = s
-                    .split(",")
+                    .split(',')
                     .map(|p| p.parse::<i64>().unwrap())
                     .collect::<Vec<_>>();
                 (parts[0], parts[1])
@@ -73,16 +73,16 @@ impl FromStr for Map {
                 depth = depth.max(new.1);
                 result.set(xy);
                 while xy != new {
-                    if xy.0 < new.0 {
-                        xy.0 += 1;
-                    } else if xy.0 > new.0 {
-                        xy.0 -= 1;
-                    }
-                    if xy.1 < new.1 {
-                        xy.1 += 1;
-                    } else if xy.1 > new.1 {
-                        xy.1 -= 1;
-                    }
+                    xy.0 += match xy.0 {
+                        x if x < new.0 => 1,
+                        x if x > new.0 => -1,
+                        _ => 0,
+                    };
+                    xy.1 += match xy.1 {
+                        y if y < new.1 => 1,
+                        y if y > new.1 => -1,
+                        _ => 0,
+                    };
                     result.set(xy);
                 }
             }

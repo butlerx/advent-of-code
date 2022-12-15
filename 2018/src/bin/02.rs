@@ -13,20 +13,12 @@ fn part_1(input: &str) -> i64 {
             *map.entry(c).or_insert(0) += 1;
             map
         });
-        match letter_counts
-            .iter()
-            .find_map(|(_, &value)| if 2 == value { Some(1) } else { None })
-        {
-            Some(x) => count.0 += x,
-            _ => (),
-        };
-        match letter_counts
-            .iter()
-            .find_map(|(_, &value)| if 3 == value { Some(1) } else { None })
-        {
-            Some(x) => count.1 += x,
-            _ => (),
-        };
+        if let Some(_) = letter_counts.iter().find(|(_, &value)| 2 == value) {
+            count.0 += 1;
+        }
+        if let Some(_) = letter_counts.iter().find(|(_, &value)| 3 == value) {
+            count.1 += 1;
+        }
         count
     });
     count.0 * count.1
@@ -45,7 +37,8 @@ fn part_2(input: &str) -> String {
                 break 'outer line
                     .chars()
                     .zip(other_line.chars())
-                    .filter_map(|(c1, c2)| if c1 == c2 { Some(c1) } else { None })
+                    .filter(|(c1, c2)| c1 == c2)
+                    .map(|(c1, _)| c1)
                     .collect::<String>();
             }
         }
