@@ -75,16 +75,14 @@ impl Chamber {
         let points = self.get_points();
         self.x += match direction {
             '>' if !points
-                .clone()
-                .into_iter()
-                .any(|(x, y)| x == 6 || self.is_occupied((x + 1, y))) =>
+                .iter()
+                .any(|&(x, y)| x == 6 || self.is_occupied((x + 1, y))) =>
             {
                 1
             }
             '<' if !points
-                .clone()
-                .into_iter()
-                .any(|(x, y)| x == 0 || self.is_occupied((x - 1, y))) =>
+                .iter()
+                .any(|&(x, y)| x == 0 || self.is_occupied((x - 1, y))) =>
             {
                 -1
             }

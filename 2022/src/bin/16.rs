@@ -23,7 +23,10 @@ fn parse_line(line: &str) -> (String, (i64, Vec<String>)) {
     )
 }
 
-fn get_flowrates(input: &str) -> (HashMap<(i64, String, i64), i64>, HashMap<i64, i64>) {
+type Flowrate = HashMap<(i64, String, i64), i64>;
+type Snapshot = HashMap<i64, i64>;
+
+fn get_flowrates(input: &str) -> (Flowrate, Snapshot) {
     let valves: HashMap<String, (i64, Vec<String>)> =
         input.trim().lines().map(parse_line).collect();
     let idx: HashMap<_, _> = valves
@@ -32,8 +35,8 @@ fn get_flowrates(input: &str) -> (HashMap<(i64, String, i64), i64>, HashMap<i64,
         .map(|(i, (x, _))| (x.as_str(), i))
         .collect();
 
-    let mut snapshot: HashMap<i64, i64> = Default::default();
-    let mut flowrate: HashMap<(i64, String, i64), i64> = Default::default();
+    let mut snapshot: Snapshot = Default::default();
+    let mut flowrate: Flowrate = Default::default();
     flowrate.insert((0, "AA".to_string(), 0), 0);
 
     for time in 1..=30 {
@@ -60,7 +63,7 @@ fn get_flowrates(input: &str) -> (HashMap<(i64, String, i64), i64>, HashMap<i64,
                 let prev: Vec<_> = flowrate
                     .iter()
                     .filter(|((t, ol, _), _)| *t == time - 1 && ol == oldlocn)
-                    .map(|((_t, _ol, opn), flow)| (opn.clone(), *flow))
+                    .map(|((_t, _ol, opn), flow)| (*opn, *flow))
                     .collect();
                 for (opn, flow) in prev {
                     upd!(opn, flow, opn);
@@ -73,7 +76,7 @@ fn get_flowrates(input: &str) -> (HashMap<(i64, String, i64), i64>, HashMap<i64,
                     .filter(|((t, ol, opn), _)| {
                         *t == time - 1 && ol == locn && (opn & (1 << idx[locn.as_str()]) == 0)
                     })
-                    .map(|((_t, _ol, opn), flow)| (opn.clone(), *flow))
+                    .map(|((_t, _ol, opn), flow)| (*opn, *flow))
                     .collect();
                 for (opn, flow) in prev {
                     let newopn: i64 = opn | (1 << idx[locn.as_str()]);

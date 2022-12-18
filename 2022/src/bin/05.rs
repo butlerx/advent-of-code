@@ -55,13 +55,12 @@ fn part_2(input: &str) -> String {
     let (mut stacks, moves) = parse_input(input);
     for line in moves.trim().lines() {
         let (num_to_move, source, dest) = parse_move(line);
-        let crates: Vec<_> = (0..num_to_move)
+        let crates = (0..num_to_move)
             .map(|_| stacks.get_mut(&source).unwrap().pop_back().unwrap())
-            .collect();
-        stacks
-            .get_mut(&dest)
-            .unwrap()
-            .extend(crates.into_iter().rev());
+            .collect::<Vec<_>>()
+            .into_iter()
+            .rev();
+        stacks.get_mut(&dest).unwrap().extend(crates);
     }
     stacks.values().map(|v| v.back().unwrap()).collect()
 }
