@@ -3,6 +3,14 @@
 version = 3
 
 [[package]]
+name = "advent-of-code-2018"
+version = "0.1.0"
+dependencies = [
+ "itertools 0.10.5",
+ "regex",
+]
+
+[[package]]
 name = "advent-of-code-2019"
 version = "0.1.0"
 dependencies = [
@@ -40,14 +48,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "43f6cb1bf222025340178f382c426f13757b2960e89779dfcb319c32542a5a41"
 dependencies = [
  "memchr",
-]
-
-[[package]]
-name = "aoc-2018"
-version = "0.1.0"
-dependencies = [
- "itertools 0.10.5",
- "regex",
 ]
 
 [[package]]
