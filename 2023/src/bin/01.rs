@@ -42,11 +42,7 @@ fn part_1(input: &str) -> u32 {
     input
         .trim()
         .split('\n')
-        .map(|line| {
-            let num = first_num(line);
-            let last_num = first_num(&line.chars().rev().collect::<String>());
-            num * 10 + last_num
-        })
+        .map(|line| first_num(line) * 10 + first_num(&line.chars().rev().collect::<String>()))
         .sum()
 }
 
@@ -54,11 +50,7 @@ fn part_2(input: &str) -> usize {
     input
         .trim()
         .split('\n')
-        .map(|line| {
-            let num = first_num_words(line);
-            let last_num = last_num_words(line);
-            num * 10 + last_num
-        })
+        .map(|line| first_num_words(line) * 10 + last_num_words(line))
         .sum()
 }
 
