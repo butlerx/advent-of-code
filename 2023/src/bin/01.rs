@@ -19,10 +19,7 @@ const NUMBERS: [&str; 10] = [
 fn first_num_words(mut line: &str) -> usize {
     loop {
         for (num, prefix) in NUMBERS.iter().enumerate() {
-            if line.starts_with(prefix) {
-                return num;
-            }
-            if line.starts_with(&format!("{}", num)) {
+            if line.starts_with(prefix) || line.starts_with(&format!("{}", num)) {
                 return num;
             }
         }
@@ -33,10 +30,7 @@ fn first_num_words(mut line: &str) -> usize {
 fn last_num_words(mut line: &str) -> usize {
     loop {
         for (num, suffix) in NUMBERS.iter().enumerate() {
-            if line.ends_with(suffix) {
-                return num;
-            }
-            if line.ends_with(&format!("{}", num)) {
+            if line.ends_with(suffix) || line.ends_with(&format!("{}", num)) {
                 return num;
             }
         }
