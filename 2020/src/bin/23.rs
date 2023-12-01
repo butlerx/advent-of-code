@@ -12,11 +12,11 @@ fn move_cups(input: Vec<i64>, rounds: usize) -> Vec<i64> {
     } else {
         let n = 1_000_000;
         let mut pointers: Vec<i64> = (1..(n + 2)).collect();
-        pointers[n as usize] = input[0] as i64;
+        pointers[n as usize] = input[0];
         (n, pointers)
     };
     for w in input.windows(2) {
-        pointers[w[0] as usize] = w[1] as i64;
+        pointers[w[0] as usize] = w[1];
     }
     pointers[input[input.len() - 1] as usize] = if n == 9 {
         input[0]

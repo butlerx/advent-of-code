@@ -38,7 +38,6 @@ fn part_2(input: &str) -> i64 {
     }
     (0..max_occupied)
         .rev()
-        .into_iter()
         .find(|&seat_id| !occupied[seat_id as usize])
         .unwrap()
 }

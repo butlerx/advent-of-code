@@ -68,7 +68,7 @@ fn execute(memory: Vec<i64>, input: i64) -> i64 {
                 mem[pos] = i64::from(read_mem(&mem, pointer, 1) == read_mem(&mem, pointer, 2));
                 pointer + 4
             }
-            99 => break output as i64,
+            99 => break output,
             _ => unreachable!(),
         }
     }

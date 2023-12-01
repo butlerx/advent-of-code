@@ -31,7 +31,7 @@ fn validate_key_value(kv: &str) -> bool {
         "hcl" => Regex::new(r"^#[0-9a-f]{6}$")
             .unwrap()
             .is_match(key_value[1]),
-        "ecl" => vec!["amb", "blu", "brn", "gry", "grn", "hzl", "oth"].contains(&key_value[1]),
+        "ecl" => ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"].contains(&key_value[1]),
         "pid" => Regex::new(r"^\d{9}$").unwrap().is_match(key_value[1]),
         "cid" => true,
         _ => true,

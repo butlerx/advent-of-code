@@ -36,7 +36,6 @@ fn run(input: &str) -> (i64, i64) {
         .iter()
         .filter_map(|board| {
             (0..numbers.len())
-                .into_iter()
                 .map(|i| &numbers[0..=i])
                 .find(|drawn| has_won(board, drawn))
                 .map(|winning_draws| (board, winning_draws))
@@ -58,7 +57,6 @@ fn has_won(board: &[i64], numbers: &[i64]) -> bool {
 
     any_row_won
         || (0..BOARD_SIZE)
-            .into_iter()
             .map(|offset| {
                 matches
                     .iter()

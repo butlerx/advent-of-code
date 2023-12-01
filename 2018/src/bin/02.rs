@@ -13,10 +13,10 @@ fn part_1(input: &str) -> i64 {
             *map.entry(c).or_insert(0) += 1;
             map
         });
-        if let Some(_) = letter_counts.iter().find(|(_, &value)| 2 == value) {
+        if letter_counts.iter().any(|(_, &value)| 2 == value) {
             count.0 += 1;
         }
-        if let Some(_) = letter_counts.iter().find(|(_, &value)| 3 == value) {
+        if letter_counts.iter().any(|(_, &value)| 3 == value) {
             count.1 += 1;
         }
         count

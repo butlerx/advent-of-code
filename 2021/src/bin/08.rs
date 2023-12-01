@@ -6,7 +6,7 @@ fn main() {
 
 fn parse_digit(letters: &str) -> i64 {
     letters.chars().fold(0, |mut output, letter| {
-        if ('a'..='z').contains(&letter) {
+        if letter.is_ascii_lowercase() {
             output |= 1 << (letter as usize - 'a' as usize);
         }
         output

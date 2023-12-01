@@ -49,7 +49,7 @@ fn follow_directions(
                     pos.1 -= num
                 }
             }
-            'L' => heading = rotate_heading(heading, -num as f32),
+            'L' => heading = rotate_heading(heading, -num),
             'R' => heading = rotate_heading(heading, *num),
             'F' => {
                 pos.1 += num * heading.0;
