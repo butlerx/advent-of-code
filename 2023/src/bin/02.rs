@@ -11,79 +11,103 @@ enum Colour {
     Red,
 }
 
+impl From<&str> for Colour {
+    fn from(s: &str) -> Self {
+        match s {
+            "blue" => Self::Blue,
+            "green" => Self::Green,
+            "red" => Self::Red,
+            _ => panic!("Unknown colour {s}"),
+        }
+    }
+}
+
 struct Block {
     num: i32,
     colour: Colour,
 }
 
-fn parse_line(line: &str) -> (i32, Vec<Vec<Block>>) {
-    let (game, blocks_str) = line.split_once(':').unwrap();
-    let id = game.strip_prefix("Game ").unwrap().parse::<i32>().unwrap();
-    let blocks = blocks_str
-        .split(';')
-        .map(|selection| {
-            selection
-                .trim()
-                .split(',')
-                .map(|block| {
-                    let (num, c) = block.trim().split_once(' ').unwrap();
-                    let num = num.parse::<i32>().unwrap();
-                    let colour = match c.trim() {
-                        "blue" => Colour::Blue,
-                        "green" => Colour::Green,
-                        "red" => Colour::Red,
-                        _ => panic!("Unknown colour {c}"),
-                    };
-                    Block { num, colour }
-                })
-                .collect()
+impl From<&str> for Block {
+    fn from(s: &str) -> Self {
+        let (num, c) = s.trim().split_once(' ').unwrap();
+        let num = num.parse::<i32>().unwrap();
+        let colour = Colour::from(c);
+        Self { num, colour }
+    }
+}
+
+struct Game {
+    id: i32,
+    blocks: Vec<Vec<Block>>,
+}
+
+impl From<&str> for Game {
+    fn from(s: &str) -> Self {
+        let (game, blocks_str) = s.split_once(':').unwrap();
+        let id = game.strip_prefix("Game ").unwrap().parse::<i32>().unwrap();
+        let blocks = blocks_str
+            .split(';')
+            .map(|selection| selection.trim().split(',').map(Block::from).collect())
+            .collect();
+        Self { id, blocks }
+    }
+}
+
+impl Game {
+    fn valid(&self) -> bool {
+        self.blocks.iter().all(|selection| {
+            let (blue, green, red) =
+                selection
+                    .iter()
+                    .fold((0, 0, 0), |(blue, green, red), block| match block.colour {
+                        Colour::Blue => (blue + block.num, green, red),
+                        Colour::Green => (blue, green + block.num, red),
+                        Colour::Red => (blue, green, red + block.num),
+                    });
+            blue <= 14 && green <= 13 && red <= 12
         })
-        .collect();
-    (id, blocks)
+    }
+
+    fn max(&self) -> i32 {
+        let (blue, green, red) =
+            self.blocks
+                .iter()
+                .flatten()
+                .fold((0, 0, 0), |(blue, green, red), block| match block.colour {
+                    Colour::Blue => (blue.max(block.num), green, red),
+                    Colour::Green => (blue, green.max(block.num), red),
+                    Colour::Red => (blue, green, red.max(block.num)),
+                });
+        blue * green * red
+    }
+}
+
+struct Games(Vec<Game>);
+impl From<&str> for Games {
+    fn from(s: &str) -> Self {
+        Self(s.trim().split('\n').map(Game::from).collect())
+    }
+}
+
+impl Games {
+    fn valid(&self) -> impl Iterator<Item = i32> + '_ {
+        self.0
+            .iter()
+            .filter(|game| game.valid())
+            .map(|game| game.id)
+    }
+
+    fn max(&self) -> impl Iterator<Item = i32> + '_ {
+        self.0.iter().map(|game| game.max())
+    }
 }
 
 fn part_1(input: &str) -> i32 {
-    input
-        .trim()
-        .split('\n')
-        .map(|line| {
-            let (id, blocks) = parse_line(line);
-            let valid = blocks.iter().all(|selection| {
-                let (blue, green, red) =
-                    selection
-                        .iter()
-                        .fold((0, 0, 0), |(blue, green, red), block| match block.colour {
-                            Colour::Blue => (blue + block.num, green, red),
-                            Colour::Green => (blue, green + block.num, red),
-                            Colour::Red => (blue, green, red + block.num),
-                        });
-                blue <= 14 && green <= 13 && red <= 12
-            });
-            (id, valid)
-        })
-        .filter(|(_, valid)| *valid)
-        .map(|(id, _)| id)
-        .sum()
+    Games::from(input).valid().sum()
 }
 
 fn part_2(input: &str) -> i32 {
-    input
-        .trim()
-        .split('\n')
-        .map(|line| {
-            let (_, blocks) = parse_line(line);
-            let (blue, green, red) =
-                blocks
-                    .iter()
-                    .flatten()
-                    .fold((0, 0, 0), |(blue, green, red), block| match block.colour {
-                        Colour::Blue => (blue.max(block.num), green, red),
-                        Colour::Green => (blue, green.max(block.num), red),
-                        Colour::Red => (blue, green, red.max(block.num)),
-                    });
-            blue * green * red
-        })
-        .sum()
+    Games::from(input).max().sum()
 }
 
 #[cfg(test)]
