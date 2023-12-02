@@ -188,7 +188,7 @@ mod day_17_tests {
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT), 1514285714288);
-        assert_eq!(part_2(INPUT_TXT), 1566376811584);
+        assert_eq!(part_2(INPUT), 1_514_285_714_288);
+        assert_eq!(part_2(INPUT_TXT), 1_566_376_811_584);
     }
 }

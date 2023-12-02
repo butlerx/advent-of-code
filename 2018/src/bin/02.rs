@@ -27,7 +27,9 @@ fn part_1(input: &str) -> i64 {
 fn part_2(input: &str) -> String {
     let mut lines = input.trim().lines();
     'outer: loop {
-        let Some(line) = lines.next() else {unreachable!()};
+        let Some(line) = lines.next() else {
+            unreachable!()
+        };
         for other_line in input.trim().lines() {
             let mut iter = line
                 .chars()

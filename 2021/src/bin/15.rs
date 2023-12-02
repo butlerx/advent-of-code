@@ -44,7 +44,7 @@ fn get_neighbours(x: usize, y: usize) -> [(usize, usize); 4] {
 fn parse_input(input: &str) -> Vec<Vec<i64>> {
     input
         .lines()
-        .map(|l| l.bytes().map(|c| (c - b'0') as i64).collect())
+        .map(|l| l.bytes().map(|c| i64::from(c - b'0')).collect())
         .collect()
 }
 

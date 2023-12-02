@@ -28,7 +28,7 @@ fn part_1(input: &str, line_num: i64) -> i64 {
         .sorted()
         .fold((-1, 0, 0), |(mut ans, prev, inside), (x, start)| {
             if inside > 0 {
-                ans += x - prev
+                ans += x - prev;
             }
             (ans, x, inside + if start { 1 } else { -1 })
         })
@@ -77,12 +77,12 @@ Sensor at x=20, y=1: closest beacon is at x=15, y=3";
     #[test]
     fn test_part_1() {
         assert_eq!(part_1(INPUT, 10), 26);
-        assert_eq!(part_1(INPUT_TXT, 2_000_000), 5688618);
+        assert_eq!(part_1(INPUT_TXT, 2_000_000), 5_688_618);
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT, 20), 56000011);
-        assert_eq!(part_2(INPUT_TXT, 4_000_000), 12625383204261);
+        assert_eq!(part_2(INPUT, 20), 56_000_011);
+        assert_eq!(part_2(INPUT_TXT, 4_000_000), 12_625_383_204_261);
     }
 }

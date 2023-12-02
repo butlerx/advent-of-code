@@ -95,13 +95,13 @@ mod tests {
         let mut c1 = Computer::new(INPUT[1]);
         assert_eq!(c1.execute(vec![1]).unwrap().to_string().len(), 16);
         let mut c2 = Computer::new(INPUT[2]);
-        assert_eq!(c2.execute(vec![1]).unwrap(), 1125899906842624);
+        assert_eq!(c2.execute(vec![1]).unwrap(), 1_125_899_906_842_624);
     }
 
     #[test]
     fn test_large_input() {
         let mut comp = Computer::new(include_str!("../../input/09.txt"));
-        assert_eq!(comp.execute(vec![1]).unwrap(), 3454977209);
+        assert_eq!(comp.execute(vec![1]).unwrap(), 3_454_977_209);
         assert_eq!(comp.execute(vec![2]).unwrap(), 50120);
     }
 }

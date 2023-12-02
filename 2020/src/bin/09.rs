@@ -82,7 +82,7 @@ mod day_9_tests {
             .lines()
             .map(|line| line.parse::<i64>().unwrap())
             .collect();
-        assert_eq!(find_range(&nums, find_not_sum(&nums, 5)), (15, 47))
+        assert_eq!(find_range(&nums, find_not_sum(&nums, 5)), (15, 47));
     }
 
     #[test]
@@ -96,11 +96,11 @@ mod day_9_tests {
 
     #[test]
     fn test_part_1() {
-        assert_eq!(run(include_str!("../../input/09.txt"), false), 69316178);
+        assert_eq!(run(include_str!("../../input/09.txt"), false), 69_316_178);
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(run(include_str!("../../input/09.txt"), true), 9351526);
+        assert_eq!(run(include_str!("../../input/09.txt"), true), 9_351_526);
     }
 }

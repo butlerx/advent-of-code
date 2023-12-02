@@ -60,11 +60,11 @@ mod day_15_tests {
 
     #[test]
     fn test_part_2() {
-        assert_eq!(run(INPUT, true), 175594);
+        assert_eq!(run(INPUT, true), 175_594);
         assert_eq!(run(INPUT_1, true), 2578);
-        assert_eq!(run(INPUT_2, true), 3544142);
-        assert_eq!(run(INPUT_3, true), 261214);
-        assert_eq!(run(INPUT_4, true), 6895259);
+        assert_eq!(run(INPUT_2, true), 3_544_142);
+        assert_eq!(run(INPUT_3, true), 261_214);
+        assert_eq!(run(INPUT_4, true), 6_895_259);
         assert_eq!(run(INPUT_5, true), 18);
         assert_eq!(run(INPUT_6, true), 362);
         assert_eq!(run(include_str!("../../input/15.txt"), true), 51358);

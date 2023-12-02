@@ -135,15 +135,15 @@ mem[26] = 1";
     fn test_part_1() {
         assert!(run(INPUT, false) == 165);
         let results = run(include_str!("../../input/14.txt"), false);
-        println!("{}", results);
-        assert!(results == 17481577045893);
+        println!("{results}");
+        assert!(results == 17_481_577_045_893);
     }
 
     #[test]
     fn test_part_2() {
         assert!(run(INPUT_2, true) == 208);
         let results = run(include_str!("../../input/14.txt"), true);
-        println!("{}", results);
-        assert!(results == 4160009892257);
+        println!("{results}");
+        assert!(results == 4_160_009_892_257);
     }
 }

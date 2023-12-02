@@ -18,7 +18,10 @@ fn parse_line(line: &str) -> (String, (i64, Vec<String>)) {
         valve_name.to_string(),
         (
             flow_rate.parse().unwrap(),
-            tunnels.split(", ").map(|s| s.to_string()).collect(),
+            tunnels
+                .split(", ")
+                .map(std::string::ToString::to_string)
+                .collect(),
         ),
     )
 }
@@ -88,7 +91,7 @@ fn get_flowrates(input: &str) -> (Flowrate, Snapshot) {
         flowrate.retain(|(t, _, _), _| *t == time);
 
         if time == 26 {
-            for ((t, _l, opn), flow) in flowrate.iter() {
+            for ((t, _l, opn), flow) in &flowrate {
                 if *t == 26 {
                     let s = snapshot.entry(*opn).or_default();
                     *s = (*s).max(*flow);

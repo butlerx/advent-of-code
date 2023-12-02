@@ -95,7 +95,7 @@ mod day_10_tests {
         assert_eq!(run(INPUT_2, true), 19208);
         assert_eq!(
             run(include_str!("../../input/10.txt"), true),
-            453551299002368
+            453_551_299_002_368
         );
     }
 }

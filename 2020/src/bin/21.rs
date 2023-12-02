@@ -25,7 +25,7 @@ fn parse_input(input: &str) -> Ingredients {
             .split(", ")
             .map(String::from)
             .collect::<Vec<_>>();
-        for allergen in allergens.iter() {
+        for allergen in &allergens {
             match allergen_map.entry(allergen.clone()) {
                 Entry::Vacant(entry) => {
                     entry.insert(ingredients.clone());
@@ -36,12 +36,12 @@ fn parse_input(input: &str) -> Ingredients {
             }
         }
 
-        for ingredient in ingredients.iter() {
+        for ingredient in &ingredients {
             *occurrences.entry(ingredient.clone()).or_insert(0) += 1;
         }
     });
     for ingredients in allergen_map.values() {
-        for ingredient in ingredients.iter() {
+        for ingredient in ingredients {
             occurrences.remove(ingredient);
         }
     }
@@ -59,22 +59,22 @@ fn find_danderous_ingrediants(mut allergens: Allergens) -> Vec<String> {
                 .map(|(_, ingredient)| ingredient.clone())
                 .collect();
         }
-        for (allergen, ingredient_set) in allergens.iter() {
+        for (allergen, ingredient_set) in &allergens {
             if ingredient_set.len() == 1 {
                 let ingredient = ingredient_set.iter().next().unwrap();
                 danger_list.push((allergen.clone(), ingredient.clone()));
             }
         }
 
-        danger_list.iter().for_each(|(allergen, _)| {
+        for (allergen, _) in &danger_list {
             allergens.remove(allergen);
-        });
+        }
 
-        allergens.iter_mut().for_each(|(_, ingredient_set)| {
-            danger_list.iter().for_each(|(_, ingredient)| {
+        for (_, ingredient_set) in &mut allergens {
+            for (_, ingredient) in &danger_list {
                 ingredient_set.remove(ingredient);
-            });
-        });
+            }
+        }
     }
 }
 

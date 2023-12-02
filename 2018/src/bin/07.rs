@@ -23,7 +23,7 @@ fn parse_input(input: &str) -> HashMap<char, Vec<char>> {
 fn find_dependencies(graph: &HashMap<char, Vec<char>>) -> HashMap<char, i64> {
     graph.iter().fold(HashMap::new(), |mut deps, (a, b)| {
         deps.entry(*a).or_default();
-        for &node in b.iter() {
+        for &node in b {
             *deps.entry(node).or_default() += 1;
         }
         deps

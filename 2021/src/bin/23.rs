@@ -105,7 +105,7 @@ fn shortest_path(maze: &[Vec<char>]) -> Option<i64> {
         }
         for (step_cost, m) in moves(&pos) {
             let next_cost = -cost + step_cost;
-            if *seen.get(&m).unwrap_or(&1000000) > next_cost {
+            if *seen.get(&m).unwrap_or(&1_000_000) > next_cost {
                 seen.insert(m.clone(), next_cost);
                 heap.push((-next_cost, m));
             }

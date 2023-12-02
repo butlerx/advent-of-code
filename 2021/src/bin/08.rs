@@ -104,6 +104,6 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
     #[test]
     fn test_part_2() {
         assert_eq!(run(INPUT, true), 61229);
-        assert_eq!(run(include_str!("../../input/08.txt"), true), 1009098);
+        assert_eq!(run(include_str!("../../input/08.txt"), true), 1_009_098);
     }
 }

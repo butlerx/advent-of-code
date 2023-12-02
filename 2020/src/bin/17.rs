@@ -167,7 +167,7 @@ mod dat_17_tests {
     fn test_part_1() {
         assert!(run(INPUT, false) == 112);
         let results = run(include_str!("../../input/17.txt"), false);
-        println!("{}", results);
+        println!("{results}");
         assert!(results == 310);
     }
 
@@ -175,7 +175,7 @@ mod dat_17_tests {
     fn test_part_2() {
         assert!(run(INPUT, true) == 848);
         let results = run(include_str!("../../input/17.txt"), true);
-        println!("{}", results);
+        println!("{results}");
         assert!(results == 2056);
     }
 }

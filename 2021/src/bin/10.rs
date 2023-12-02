@@ -87,12 +87,12 @@ mod day_10_tests {
     #[test]
     fn test_part_1() {
         assert_eq!(part_1(INPUT), 26397);
-        assert_eq!(part_1(include_str!("../../input/10.txt")), 462693);
+        assert_eq!(part_1(include_str!("../../input/10.txt")), 462_693);
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT), 288957);
-        assert_eq!(part_2(include_str!("../../input/10.txt")), 3094671161);
+        assert_eq!(part_2(INPUT), 288_957);
+        assert_eq!(part_2(include_str!("../../input/10.txt")), 3_094_671_161);
     }
 }

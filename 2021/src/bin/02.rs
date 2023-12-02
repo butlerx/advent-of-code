@@ -1,7 +1,7 @@
 fn main() {
     let (p1, p2) = run(include_str!("../../input/02.txt"));
-    println!("Part 1: {}", p1);
-    println!("Part 2: {}", p2);
+    println!("Part 1: {p1}");
+    println!("Part 2: {p2}");
 }
 
 fn run(input: &str) -> (i64, i64) {
@@ -36,7 +36,7 @@ forward 2";
     fn test_tun() {
         assert_eq!(run(INPUT), (150, 900));
         let (p1, p2) = run(include_str!("../../input/02.txt"));
-        assert_eq!(p1, 2019945);
-        assert_eq!(p2, 1599311480);
+        assert_eq!(p1, 2_019_945);
+        assert_eq!(p2, 1_599_311_480);
     }
 }

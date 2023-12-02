@@ -47,7 +47,7 @@ b";
     fn test_part_1() {
         assert!(run(INPUT, false) == 11);
         let results = run(include_str!("../../input/06.txt"), false);
-        println!("{}", results);
+        println!("{results}");
         assert!(results == 6742);
     }
 
@@ -55,7 +55,7 @@ b";
     fn test_part_2() {
         assert!(run(INPUT, true) == 6);
         let results = run(include_str!("../../input/06.txt"), true);
-        println!("{}", results);
+        println!("{results}");
         assert!(results == 3447);
     }
 }

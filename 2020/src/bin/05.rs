@@ -5,9 +5,9 @@ fn main() {
 }
 
 fn parse_space_partition(input: &str) -> i64 {
-    input.bytes().fold(0, |seat_id, byte| {
-        b"BR".contains(&byte) as u16 + (seat_id << 1)
-    }) as i64
+    i64::from(input.bytes().fold(0, |seat_id, byte| {
+        u16::from(b"BR".contains(&byte)) + (seat_id << 1)
+    }))
 }
 
 fn run(input: &str, part_two: bool) -> i64 {

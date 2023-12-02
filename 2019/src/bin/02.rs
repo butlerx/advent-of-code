@@ -32,7 +32,7 @@ fn run(input: &str, part_two: bool) -> i64 {
             .split(',')
             .map(|num| num.trim().parse().unwrap())
             .collect();
-        let goal = 19690720;
+        let goal = 19_690_720;
         let (mut noun, mut verb) = (0, 0);
         for n in 0..99 {
             for v in 0..99 {
@@ -65,7 +65,7 @@ mod tests {
     #[test]
     fn test_part_1() {
         assert_eq!(run(INPUT, false), 1600);
-        assert_eq!(run(include_str!("../../input/02.txt"), false), 3850704);
+        assert_eq!(run(include_str!("../../input/02.txt"), false), 3_850_704);
     }
 
     #[test]

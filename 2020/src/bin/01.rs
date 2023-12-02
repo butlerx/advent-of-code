@@ -47,26 +47,26 @@ mod day_1_tests {
     fn test_find_2020_multiple() {
         let input = vec![1721, 979, 366, 299, 675, 1456];
         let result = find_2020_multiple(input, 2);
-        assert!(514579 == result);
+        assert!(514_579 == result);
     }
 
     #[test]
     fn test_find_2020_multple_depth() {
         let input = vec![1721, 979, 366, 299, 675, 1456];
         let result = find_2020_multiple(input, 3);
-        assert!(241861950 == result);
+        assert!(241_861_950 == result);
     }
     #[test]
     fn test_part_1() {
         let results = run(include_str!("../../input/01.txt"), 2);
-        println!("{}", results);
-        assert!(results == 864864);
+        println!("{results}");
+        assert!(results == 864_864);
     }
 
     #[test]
     fn test_part_2() {
         let results = run(include_str!("../../input/01.txt"), 3);
-        println!("{}", results);
-        assert!(results == 281473080);
+        println!("{results}");
+        assert!(results == 281_473_080);
     }
 }

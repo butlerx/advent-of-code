@@ -61,7 +61,7 @@ fn dir_size(
 }
 
 fn part_1(input: &str) -> i64 {
-    parse_input(input).values().filter(|&&s| s <= 100000).sum()
+    parse_input(input).values().filter(|&&s| s <= 100_000).sum()
 }
 
 fn part_2(input: &str) -> i64 {
@@ -69,7 +69,7 @@ fn part_2(input: &str) -> i64 {
     let total_size = sizes.get(&PathBuf::from("/")).unwrap();
     *sizes
         .values()
-        .filter(|&s| 40000000 + s >= *total_size)
+        .filter(|&s| 40_000_000 + s >= *total_size)
         .min()
         .unwrap()
 }
@@ -104,12 +104,12 @@ $ ls
     #[test]
     fn test_part_1() {
         assert_eq!(part_1(INPUT), 95437);
-        assert_eq!(part_1(INPUT_TXT), 1390824);
+        assert_eq!(part_1(INPUT_TXT), 1_390_824);
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT), 24933642);
-        assert_eq!(part_2(INPUT_TXT), 7490863);
+        assert_eq!(part_2(INPUT), 24_933_642);
+        assert_eq!(part_2(INPUT_TXT), 7_490_863);
     }
 }

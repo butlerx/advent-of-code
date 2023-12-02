@@ -34,7 +34,7 @@ fn snafu_to_dec_sum(input: &str) -> i64 {
                 let num = match n {
                     '-' => -1,
                     '=' => -2,
-                    _ => n.to_digit(10).unwrap() as i64,
+                    _ => i64::from(n.to_digit(10).unwrap()),
                 };
                 num + (i * 5)
             })
@@ -66,7 +66,7 @@ mod day_25_tests {
     #[test]
     fn test_snafu_to_dec_sum() {
         assert_eq!(snafu_to_dec_sum(INPUT), 4890);
-        assert_eq!(snafu_to_dec_sum(INPUT_TXT), 29600609295066);
+        assert_eq!(snafu_to_dec_sum(INPUT_TXT), 29_600_609_295_066);
     }
 
     #[test]

@@ -8,15 +8,11 @@ fn main() {
 }
 
 fn calculate(orbits: &HashMap<&str, Vec<&str>>, object: &str, distance: i64) -> i64 {
-    orbits
-        .get(object)
-        .map(|v| {
-            v.iter()
-                .map(|orbit| calculate(orbits, orbit, distance + 1))
-                .sum::<i64>()
-        })
-        .unwrap_or(0)
-        + distance
+    orbits.get(object).map_or(0, |v| {
+        v.iter()
+            .map(|orbit| calculate(orbits, orbit, distance + 1))
+            .sum::<i64>()
+    }) + distance
 }
 
 fn calc_distance(orbits: HashMap<&str, &str>, source: &str, dest: &str) -> i64 {
@@ -88,7 +84,7 @@ I)SAN";
     #[test]
     fn test_part_1() {
         assert_eq!(run(INPUT, false), 42);
-        assert_eq!(run(include_str!("../../input/06.txt"), false), 200001);
+        assert_eq!(run(include_str!("../../input/06.txt"), false), 200_001);
     }
 
     #[test]

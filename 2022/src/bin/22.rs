@@ -233,7 +233,7 @@ fn walk(map: &[Vec<char>], mut path: &str, cube: bool) -> i64 {
                     } else {
                         pos
                     }
-                })
+                });
             }
         }
     }

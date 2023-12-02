@@ -19,34 +19,34 @@ fn follow_directions(
     part_two: bool,
 ) -> (i64, i64) {
     let mut pos = (0.0, 0.0);
-    for (d, num) in directions.iter() {
+    for (d, num) in &directions {
         match d {
             'N' => {
                 if part_two {
-                    heading.1 += num
+                    heading.1 += num;
                 } else {
-                    pos.0 += num
+                    pos.0 += num;
                 }
             }
             'S' => {
                 if part_two {
-                    heading.1 -= num
+                    heading.1 -= num;
                 } else {
-                    pos.0 -= num
+                    pos.0 -= num;
                 }
             }
             'E' => {
                 if part_two {
-                    heading.0 += num
+                    heading.0 += num;
                 } else {
-                    pos.1 += num
+                    pos.1 += num;
                 }
             }
             'W' => {
                 if part_two {
-                    heading.0 -= num
+                    heading.0 -= num;
                 } else {
-                    pos.1 -= num
+                    pos.1 -= num;
                 }
             }
             'L' => heading = rotate_heading(heading, -num),
@@ -87,7 +87,7 @@ F11";
     fn test_part_1() {
         assert!(run(INPUT, false) == 25);
         let results = run(include_str!("../../input/12.txt"), false);
-        println!("{}", results);
+        println!("{results}");
         assert!(results == 1007);
     }
 
@@ -95,7 +95,7 @@ F11";
     fn test_part_2() {
         assert!(run(INPUT, true) == 286);
         let results = run(include_str!("../../input/12.txt"), true);
-        println!("{}", results);
+        println!("{results}");
         assert!(results == 41212);
     }
 }

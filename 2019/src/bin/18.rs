@@ -4,10 +4,12 @@ fn main() {
     println!("Part 2: {}", part_2(input));
 }
 
+#[must_use]
 pub fn part_1(_input: &str) -> i64 {
     0
 }
 
+#[must_use]
 pub fn part_2(_input: &str) -> i64 {
     0
 }

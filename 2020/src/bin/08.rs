@@ -82,7 +82,7 @@ acc +6";
     fn test_part_1() {
         assert!(run(INPUT, false) == 5);
         let results = run(include_str!("../../input/08.txt"), false);
-        println!("{}", results);
+        println!("{results}");
         assert!(results == 1528);
     }
 
@@ -90,7 +90,7 @@ acc +6";
     fn test_part_2() {
         assert!(run(INPUT, true) == 8);
         let results = run(include_str!("../../input/08.txt"), true);
-        println!("{}", results);
+        println!("{results}");
         assert!(results == 640);
     }
 }

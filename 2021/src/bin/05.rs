@@ -29,7 +29,7 @@ fn part_1(lines: Vec<((i64, i64), (i64, i64))>) -> usize {
         lines
             .iter()
             .filter(|((x1, y1), (x2, y2))| y1 == y2 || x1 == x2)
-            .cloned()
+            .copied()
             .collect(),
     )
 }

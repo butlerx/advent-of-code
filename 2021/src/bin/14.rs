@@ -85,7 +85,10 @@ CN -> C";
 
     #[test]
     fn test_part_2() {
-        assert_eq!(run(INPUT, 40), 2188189693529);
-        assert_eq!(run(include_str!("../../input/14.txt"), 40), 2158894777814);
+        assert_eq!(run(INPUT, 40), 2_188_189_693_529);
+        assert_eq!(
+            run(include_str!("../../input/14.txt"), 40),
+            2_158_894_777_814
+        );
     }
 }

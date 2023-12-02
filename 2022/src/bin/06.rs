@@ -33,7 +33,7 @@ fn marker_pos_or(input: &[u8], window_size: usize) -> usize {
         .enumerate()
         .find(|(_, s)| {
             (0..window_size)
-                .fold(0u32, |set, j| set | 1 << (s[j] as u32 - 'a' as u32))
+                .fold(0u32, |set, j| set | 1 << (u32::from(s[j]) - 'a' as u32))
                 .count_ones() as usize
                 == window_size
         })
@@ -45,9 +45,9 @@ fn marker_pos_or(input: &[u8], window_size: usize) -> usize {
 fn marker_pos_xor(input: &[u8], window_size: usize) -> usize {
     let mut set = 0u32;
     for i in 0..input.len() {
-        set ^= 1 << (input[i] as u32 - 'a' as u32);
+        set ^= 1 << (u32::from(input[i]) - 'a' as u32);
         if i >= window_size {
-            set ^= 1 << (input[i - window_size] as u32 - 'a' as u32);
+            set ^= 1 << (u32::from(input[i - window_size]) - 'a' as u32);
         }
         if set.count_ones() as usize == window_size {
             return i + 1;

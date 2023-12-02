@@ -19,7 +19,7 @@ fn part_1(input: &str) -> usize {
         });
         rolls += 3;
         while player_1 > 10 {
-            player_1 -= 10
+            player_1 -= 10;
         }
         scores.0 += player_1;
         if scores.0 >= 1000 {
@@ -85,13 +85,16 @@ Player 2 starting position: 8";
 
     #[test]
     fn test_part_1() {
-        assert_eq!(part_1(INPUT), 739785);
-        assert_eq!(part_1(include_str!("../../input/21.txt")), 893700);
+        assert_eq!(part_1(INPUT), 739_785);
+        assert_eq!(part_1(include_str!("../../input/21.txt")), 893_700);
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT), 444356092776315);
-        assert_eq!(part_2(include_str!("../../input/21.txt")), 568867175661958);
+        assert_eq!(part_2(INPUT), 444_356_092_776_315);
+        assert_eq!(
+            part_2(include_str!("../../input/21.txt")),
+            568_867_175_661_958
+        );
     }
 }

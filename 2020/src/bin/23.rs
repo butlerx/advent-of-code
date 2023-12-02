@@ -29,7 +29,7 @@ fn move_cups(input: Vec<i64>, rounds: usize) -> Vec<i64> {
         let t0 = pointers[cur as usize];
         let t1 = pointers[t0 as usize];
         let t2 = pointers[t1 as usize];
-        let ts: HashSet<i64> = [t0, t1, t2].iter().cloned().collect();
+        let ts: HashSet<i64> = [t0, t1, t2].iter().copied().collect();
 
         pointers[cur as usize] = pointers[t2 as usize];
 
@@ -56,7 +56,7 @@ fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
         .trim()
         .chars()
-        .map(|n| n.to_digit(10).unwrap() as i64)
+        .map(|n| i64::from(n.to_digit(10).unwrap()))
         .collect();
     if part_two {
         let res = move_cups(nums, 10_000_000);
@@ -64,9 +64,8 @@ fn run(input: &str, part_two: bool) -> i64 {
     } else {
         move_cups(nums, 100)
             .iter()
-            .map(|n| n.to_string())
-            .collect::<Vec<String>>()
-            .join("")
+            .map(std::string::ToString::to_string)
+            .collect::<String>()
             .parse::<i64>()
             .unwrap()
     }
@@ -79,13 +78,16 @@ mod day_23_tests {
 
     #[test]
     fn test_part_1() {
-        assert_eq!(run(INPUT, false), 67384529);
-        assert_eq!(run(include_str!("../../input/23.txt"), false), 25398647);
+        assert_eq!(run(INPUT, false), 67_384_529);
+        assert_eq!(run(include_str!("../../input/23.txt"), false), 25_398_647);
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(run(INPUT, true), 149245887792);
-        assert_eq!(run(include_str!("../../input/23.txt"), true), 363807398885);
+        assert_eq!(run(INPUT, true), 149_245_887_792);
+        assert_eq!(
+            run(include_str!("../../input/23.txt"), true),
+            363_807_398_885
+        );
     }
 }

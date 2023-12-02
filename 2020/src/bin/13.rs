@@ -38,7 +38,7 @@ fn chinese_remainder(residues: &[i64], modulii: &[i64]) -> Option<i64> {
 
     for (&residue, &modulus) in residues.iter().zip(modulii) {
         let p = prod / modulus;
-        sum += residue * mod_inv(p, modulus)? * p
+        sum += residue * mod_inv(p, modulus)? * p;
     }
 
     Some(sum % prod)
@@ -73,15 +73,15 @@ mod day_13_tests {
     fn test_part_1() {
         assert!(run(INPUT, false) == 295);
         let results = run(include_str!("../../input/13.txt"), false);
-        println!("{}", results);
+        println!("{results}");
         assert!(results == 2382);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT, true) == 1068781);
+        assert!(run(INPUT, true) == 1_068_781);
         let results = run(include_str!("../../input/13.txt"), true);
-        println!("{}", results);
-        assert!(results == 906332393333683);
+        println!("{results}");
+        assert!(results == 906_332_393_333_683);
     }
 }

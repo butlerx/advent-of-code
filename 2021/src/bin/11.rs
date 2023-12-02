@@ -32,7 +32,7 @@ fn step(grid: &mut Grid) -> usize {
         *flashes += 1;
         if *flashes == 10 {
             total_flashed += 1;
-            queue.append(&mut get_neighbours(cell))
+            queue.append(&mut get_neighbours(cell));
         }
     }
 

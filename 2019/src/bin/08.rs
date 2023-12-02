@@ -15,9 +15,8 @@ fn convert_to_layers(input: &str, pixels_wide: usize, pixels_tall: usize) -> Vec
         .map(|chunk| {
             chunk
                 .iter()
-                .map(|c| c.to_string())
-                .collect::<Vec<String>>()
-                .join("")
+                .map(std::string::ToString::to_string)
+                .collect::<String>()
         })
         .collect::<Vec<String>>()
 }
@@ -33,9 +32,8 @@ fn layers_to_image(layers: Vec<String>) -> String {
     }
     image
         .iter()
-        .map(|c| c.to_string())
-        .collect::<Vec<String>>()
-        .join("")
+        .map(std::string::ToString::to_string)
+        .collect::<String>()
 }
 
 fn print_image(image: &str, pixels_wide: usize) -> String {

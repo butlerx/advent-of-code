@@ -41,7 +41,7 @@ fn execute(memory: Vec<i64>, input: i64) -> i64 {
             }
             4 => {
                 output = read_mem(&mem, pointer, 1);
-                println!("Output: {}", output);
+                println!("Output: {output}");
                 pointer + 2
             }
             5 => {
@@ -92,11 +92,11 @@ mod tests {
 
     #[test]
     fn test_part_1() {
-        assert_eq!(run(include_str!("../../input/05.txt"), false), 13294380);
+        assert_eq!(run(include_str!("../../input/05.txt"), false), 13_294_380);
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(run(include_str!("../../input/05.txt"), true), 11460760);
+        assert_eq!(run(include_str!("../../input/05.txt"), true), 11_460_760);
     }
 }

@@ -104,7 +104,9 @@ fn part_2(input: &str) -> i64 {
         })
         .collect();
 
-    let Value::Operation(left,_, right) = monkeys["root"] else {unreachable!()};
+    let Value::Operation(left, _, right) = monkeys["root"] else {
+        unreachable!()
+    };
     let (mut target_value, container) = if let Some(value) = monkeys[left].get_not_human(&monkeys) {
         (value, right)
     } else {

@@ -16,6 +16,7 @@ pub struct Cube {
     sides: [Point; 6],
 }
 impl Cube {
+    #[must_use]
     pub fn new(position: Point) -> Self {
         let x = position.0 * 2;
         let y = position.1 * 2;
@@ -26,6 +27,7 @@ impl Cube {
         }
     }
 
+    #[must_use]
     pub fn sides((x, y, z): Point) -> [Point; 6] {
         [
             (x - 1, y, z),

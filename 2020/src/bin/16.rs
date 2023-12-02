@@ -64,7 +64,7 @@ fn generate_name_index(mut map: HashMap<String, HashSet<usize>>) -> HashMap<Stri
             name_index.insert(k.clone(), v.clone().into_iter().next().unwrap());
         }
         map.retain(|_, v| v.len() != 1);
-        for (_, indexes) in map.iter_mut() {
+        for (_, indexes) in &mut map {
             for finished in name_index.values() {
                 if indexes.contains(finished) {
                     indexes.remove(finished);
@@ -136,14 +136,14 @@ nearby tickets:
     fn test_part_1() {
         assert!(run(INPUT, false) == 71);
         let results = run(include_str!("../../input/16.txt"), false);
-        println!("{}", results);
+        println!("{results}");
         assert!(results == 22057);
     }
 
     #[test]
     fn test_part_2() {
         let results = run(include_str!("../../input/16.txt"), true);
-        println!("{}", results);
-        assert!(results == 1093427331937);
+        println!("{results}");
+        assert!(results == 1_093_427_331_937);
     }
 }

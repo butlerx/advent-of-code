@@ -6,8 +6,8 @@ type Scan = HashSet<Point>;
 
 fn main() {
     let (p1, p2) = run(include_str!("../../input/19.txt"));
-    println!("Part 1: {}", p1);
-    println!("Part 2: {}", p2);
+    println!("Part 1: {p1}");
+    println!("Part 2: {p2}");
 }
 
 fn merge_scan(scan: &mut Scan, b: &[Point]) -> Option<Point> {

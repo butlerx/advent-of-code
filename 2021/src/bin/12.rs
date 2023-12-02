@@ -35,7 +35,7 @@ fn traverse<'a>(
 ) -> usize {
     if current_pos == END {
         1
-    } else if current_pos.chars().all(|c| c.is_lowercase()) && path.contains(&current_pos) {
+    } else if current_pos.chars().all(char::is_lowercase) && path.contains(&current_pos) {
         if seen_twice || current_pos == START {
             0
         } else {
@@ -115,6 +115,6 @@ start-RW";
         assert_eq!(part_2(INPUT), 36);
         assert_eq!(part_2(MED_INPUT), 103);
         assert_eq!(part_2(LARGE_INPUT), 3509);
-        assert_eq!(part_2(include_str!("../../input/12.txt")), 130493);
+        assert_eq!(part_2(include_str!("../../input/12.txt")), 130_493);
     }
 }

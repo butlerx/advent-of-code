@@ -43,24 +43,20 @@ fn part_2(input: &str) -> u32 {
                 .enumerate()
                 .rev()
                 .find(|(_, c)| grid[row][*c] >= height)
-                .map(|(i, _)| col - i)
-                .unwrap_or(col);
+                .map_or(col, |(i, _)| col - i);
             let right = (col + 1..=cols)
                 .enumerate()
                 .find(|(_, c)| grid[row][*c] >= height)
-                .map(|(i, _)| i + 1)
-                .unwrap_or(cols - col);
+                .map_or(cols - col, |(i, _)| i + 1);
             let up = (0..row)
                 .enumerate()
                 .rev()
                 .find(|(_, r)| grid[*r][col] >= height)
-                .map(|(i, _)| row - i)
-                .unwrap_or(row);
+                .map_or(row, |(i, _)| row - i);
             let down = (row + 1..=rows)
                 .enumerate()
                 .find(|(_, r)| grid[*r][col] >= height)
-                .map(|(i, _)| i + 1)
-                .unwrap_or(rows - row);
+                .map_or(rows - row, |(i, _)| i + 1);
             score.max((left * up * right * down) as u32)
         })
     })
@@ -84,6 +80,6 @@ mod day_8_tests {
     #[test]
     fn test_part_2() {
         assert_eq!(part_2(INPUT), 8);
-        assert_eq!(part_2(INPUT_TXT), 537600);
+        assert_eq!(part_2(INPUT_TXT), 537_600);
     }
 }

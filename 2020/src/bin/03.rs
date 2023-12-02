@@ -56,7 +56,7 @@ mod day_3_tests {
     #[test]
     fn test_part_2() {
         assert!(run(INPUT, true) == 336);
-        assert!(run(include_str!("../../input/03.txt"), true) == 1592662500);
+        assert!(run(include_str!("../../input/03.txt"), true) == 1_592_662_500);
     }
 
     #[test]

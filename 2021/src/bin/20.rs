@@ -53,7 +53,7 @@ fn process_image(input: &str, iterations: usize) -> usize {
                 })
                 .collect(),
             if default {
-                rules[0b111111111]
+                rules[0b1_1111_1111]
             } else if rules[0] {
                 true
             } else {

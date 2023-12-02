@@ -50,7 +50,7 @@ mod day_2_tests {
     #[test]
     fn test_parse_policy() {
         let (low, high, letter, password) = parse_policy("1-3 a: test");
-        assert!(low == 1 && high == 3 && letter == 'a' && password == "test")
+        assert!(low == 1 && high == 3 && letter == 'a' && password == "test");
     }
 
     #[test]
@@ -58,7 +58,7 @@ mod day_2_tests {
         let input = "1-3 a: abcde";
         assert!(valid_policy(input, false));
         assert!(valid_policy(input, true));
-        assert!(!valid_policy("2-9 c: ccccccccc", true))
+        assert!(!valid_policy("2-9 c: ccccccccc", true));
     }
 
     #[test]

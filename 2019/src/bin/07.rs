@@ -139,8 +139,8 @@ mod tests {
 
     #[test]
     fn test_part_2() {
-        assert_eq!(run(INPUT_4, true), 139629729);
+        assert_eq!(run(INPUT_4, true), 139_629_729);
         assert_eq!(run(INPUT_5, true), 18216);
-        assert_eq!(run(include_str!("../../input/07.txt"), true), 1518124);
+        assert_eq!(run(include_str!("../../input/07.txt"), true), 1_518_124);
     }
 }

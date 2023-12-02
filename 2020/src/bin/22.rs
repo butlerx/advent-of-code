@@ -29,8 +29,8 @@ fn recursive_combat(
         let (c_1, c_2) = (player_1.pop_front().unwrap(), player_2.pop_front().unwrap());
         if c_1 <= player_1.len() as i64 && c_2 <= player_2.len() as i64 {
             match recursive_combat(
-                player_1.iter().take(c_1 as usize).cloned().collect(),
-                player_2.iter().take(c_2 as usize).cloned().collect(),
+                player_1.iter().take(c_1 as usize).copied().collect(),
+                player_2.iter().take(c_2 as usize).copied().collect(),
                 false,
             ) {
                 (1, _) => player_1.extend([c_1, c_2].iter()),

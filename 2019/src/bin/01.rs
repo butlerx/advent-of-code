@@ -42,12 +42,12 @@ mod tests {
     #[test]
     fn test_part_1() {
         assert_eq!(run(INPUT, false), 34241);
-        assert_eq!(run(include_str!("../../input/01.txt"), false), 3268951);
+        assert_eq!(run(include_str!("../../input/01.txt"), false), 3_268_951);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(run(INPUT, true), 51316);
-        assert_eq!(run(include_str!("../../input/01.txt"), true), 4900568);
+        assert_eq!(run(include_str!("../../input/01.txt"), true), 4_900_568);
     }
 }

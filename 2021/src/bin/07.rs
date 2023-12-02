@@ -21,7 +21,9 @@ fn run(input: &str, exponential: bool) -> usize {
         .map(|candidate| {
             counts
                 .iter()
-                .map(|(pos, count)| cost((pos - candidate).unsigned_abs() as usize, exponential) * count)
+                .map(|(pos, count)| {
+                    cost((pos - candidate).unsigned_abs() as usize, exponential) * count
+                })
                 .sum()
         })
         .min()
@@ -44,12 +46,12 @@ mod day_7_tests {
     #[test]
     fn test_part_1() {
         assert_eq!(run(INPUT, false), 37);
-        assert_eq!(run(include_str!("../../input/07.txt"), false), 325528);
+        assert_eq!(run(include_str!("../../input/07.txt"), false), 325_528);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(run(INPUT, true), 168);
-        assert_eq!(run(include_str!("../../input/07.txt"), true), 85015836);
+        assert_eq!(run(include_str!("../../input/07.txt"), true), 85_015_836);
     }
 }

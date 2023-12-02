@@ -80,17 +80,11 @@ fn run(queue: &mut VecDeque<char>) -> Option<(i64, i64)> {
         }
         "110" => {
             let (version, numbers) = solve_operator(queue);
-            Some((
-                version_sum + version,
-                i64::from(numbers[0] < numbers[1]),
-            ))
+            Some((version_sum + version, i64::from(numbers[0] < numbers[1])))
         }
         "111" => {
             let (version, numbers) = solve_operator(queue);
-            Some((
-                version_sum + version,
-                i64::from(numbers[0] == numbers[1]),
-            ))
+            Some((version_sum + version, i64::from(numbers[0] == numbers[1])))
         }
         _ => None,
     }
@@ -165,6 +159,9 @@ mod day_16_tests {
         assert_eq!(part_2("F600BC2D8F"), 0);
         assert_eq!(part_2("9C005AC2F8F0"), 0);
         assert_eq!(part_2("9C0141080250320F1802104A08"), 1);
-        assert_eq!(part_2(include_str!("../../input/16.txt")), 1510977819698);
+        assert_eq!(
+            part_2(include_str!("../../input/16.txt")),
+            1_510_977_819_698
+        );
     }
 }

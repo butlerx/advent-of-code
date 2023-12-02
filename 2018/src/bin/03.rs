@@ -79,7 +79,7 @@ mod day_3_tests {
     #[test]
     fn test_part_1() {
         assert_eq!(part_1(INPUT), 4);
-        assert_eq!(part_1(INPUT_TXT), 118840);
+        assert_eq!(part_1(INPUT_TXT), 118_840);
     }
 
     #[test]

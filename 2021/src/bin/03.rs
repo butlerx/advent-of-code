@@ -32,9 +32,9 @@ fn parse_input(input: &str) -> (Vec<i64>, usize) {
 fn most_common_bit(nums: &[i64], bit: usize) -> i64 {
     let mut c = [0, 0];
     for &x in nums {
-        c[(x as usize >> bit) & 1] += 1
+        c[(x as usize >> bit) & 1] += 1;
     }
-    (c[1] >= c[0]) as i64
+    i64::from(c[1] >= c[0])
 }
 
 fn get_rating(nums: &[i64], most_common: i64, bit_length: usize) -> i64 {
@@ -69,12 +69,12 @@ mod day_3_tests {
     #[test]
     fn test_part_1() {
         assert_eq!(part_1(INPUT), 198);
-        assert_eq!(part_1(include_str!("../../input/03.txt")), 3847100);
+        assert_eq!(part_1(include_str!("../../input/03.txt")), 3_847_100);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(part_2(INPUT), 230);
-        assert_eq!(part_2(include_str!("../../input/03.txt")), 4105235);
+        assert_eq!(part_2(include_str!("../../input/03.txt")), 4_105_235);
     }
 }

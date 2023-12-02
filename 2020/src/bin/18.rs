@@ -38,7 +38,7 @@ mod part_1 {
             }
             match chars[i] {
                 '+' | '*' => op = chars[i],
-                '0'..='9' => res = oper(op, res, chars[i].to_digit(10).unwrap() as i64),
+                '0'..='9' => res = oper(op, res, i64::from(chars[i].to_digit(10).unwrap())),
                 '(' => {
                     let end = i + find_matching_par(&chars[i..]);
                     res = oper(op, res, eval(chars[i + 1..end].to_vec()));
@@ -60,7 +60,7 @@ mod part_2 {
                 let j = find_matching_par(&chars[i..]);
                 (eval(chars[i + 1..i + j].to_vec()), j)
             }
-            _ => (chars[i].to_digit(10).unwrap() as i64, 0),
+            _ => (i64::from(chars[i].to_digit(10).unwrap()), 0),
         }
     }
 
@@ -122,7 +122,7 @@ mod day_18_tests {
         assert_eq!(run(INPUT[0], true), 51);
         assert_eq!(run(INPUT[1], true), 46);
         assert_eq!(run(INPUT[2], true), 1445);
-        assert_eq!(run(INPUT[3], true), 669060);
+        assert_eq!(run(INPUT[3], true), 669_060);
         assert_eq!(run(INPUT[4], true), 23340);
     }
 
@@ -130,7 +130,7 @@ mod day_18_tests {
     fn test_part_1() {
         assert_eq!(
             run(include_str!("../../input/18.txt"), false),
-            25190263477788
+            25_190_263_477_788
         );
     }
 
@@ -138,7 +138,7 @@ mod day_18_tests {
     fn test_part_2() {
         assert_eq!(
             run(include_str!("../../input/18.txt"), true),
-            297139939002972
+            297_139_939_002_972
         );
     }
 }

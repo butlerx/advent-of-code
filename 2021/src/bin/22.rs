@@ -167,15 +167,18 @@ off x=-93533..-4276,y=-16170..68771,z=-104985..-24507";
 
     #[test]
     fn test_part_1() {
-        assert_eq!(part_1(SMALL_INPUT), 590784);
-        assert_eq!(part_1(LARGE_INPUT), 474140);
-        assert_eq!(part_1(include_str!("../../input/22.txt")), 606484);
+        assert_eq!(part_1(SMALL_INPUT), 590_784);
+        assert_eq!(part_1(LARGE_INPUT), 474_140);
+        assert_eq!(part_1(include_str!("../../input/22.txt")), 606_484);
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(SMALL_INPUT), 39769202357779);
-        assert_eq!(part_2(LARGE_INPUT), 2758514936282235);
-        assert_eq!(part_2(include_str!("../../input/22.txt")), 1162571910364852);
+        assert_eq!(part_2(SMALL_INPUT), 39_769_202_357_779);
+        assert_eq!(part_2(LARGE_INPUT), 2_758_514_936_282_235);
+        assert_eq!(
+            part_2(include_str!("../../input/22.txt")),
+            1_162_571_910_364_852
+        );
     }
 }

@@ -20,7 +20,9 @@ fn find_path(grid: &[Vec<u8>], start: Point, goal: Point) -> Option<usize> {
         for (dx, dy) in [(0, -1), (-1, 0), (0, 1), (1, 0)] {
             let nx = (x as isize + dx) as usize;
             let ny = (y as isize + dy) as usize;
-            let Some(&next_square) = grid.get(nx).and_then(|row| row.get(ny)) else { continue };
+            let Some(&next_square) = grid.get(nx).and_then(|row| row.get(ny)) else {
+                continue;
+            };
             if grid[x][y] + 1 >= next_square && !visited[nx][ny] {
                 visited[nx][ny] = true;
                 queue.push_back(((nx, ny), len + 1));

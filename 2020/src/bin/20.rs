@@ -30,8 +30,8 @@ impl Tile {
                     .next()
                     .unwrap()
                     .iter()
-                    .cloned()
-                    .fold(0, |a, b| (a << 1) | (b as u16))
+                    .copied()
+                    .fold(0, |a, b| (a << 1) | u16::from(b))
             })
             .collect_tuple()
             .unwrap();
@@ -66,11 +66,13 @@ impl Tile {
     fn matching(&self, side: usize) -> u16 {
         (0..self.data.rows).fold(0, |total, row| {
             (total << 1)
-                | ((if row < 16 {
-                    self.nesw[side] & (1 << row)
-                } else {
-                    0
-                }) != 0) as u16
+                | u16::from(
+                    (if row < 16 {
+                        self.nesw[side] & (1 << row)
+                    } else {
+                        0
+                    }) != 0,
+                )
         })
     }
 
@@ -79,7 +81,7 @@ impl Tile {
         let rotated_2 = rotated_1.rotated();
         let rotated_3 = rotated_2.rotated();
         let mut rotations = vec![self, rotated_1, rotated_2, rotated_3];
-        rotations.extend(rotations.clone().iter().map(|r| r.flipped()));
+        rotations.extend(rotations.clone().iter().map(Tile::flipped));
         rotations
     }
 }
@@ -344,10 +346,10 @@ Tile 3079:
 
     #[test]
     fn test_part_1() {
-        assert_eq!(run(INPUT, false), 20899048083289);
+        assert_eq!(run(INPUT, false), 20_899_048_083_289);
         assert_eq!(
             run(include_str!("../../input/20.txt"), false),
-            15405893262491
+            15_405_893_262_491
         );
     }
 

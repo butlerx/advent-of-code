@@ -5,8 +5,8 @@ static BOARD_SIZE: usize = 5;
 fn main() {
     let input = include_str!("../../input/04.txt");
     let (part1, part2) = run(input);
-    println!("Part 1: {}", part1);
-    println!("Part 2: {}", part2);
+    println!("Part 1: {part1}");
+    println!("Part 2: {part2}");
 }
 
 fn run(input: &str) -> (i64, i64) {

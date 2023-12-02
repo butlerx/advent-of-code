@@ -5,8 +5,8 @@ type Coordinate = (isize, isize);
 fn main() {
     let input = include_str!("../../input/09.txt");
     let (part_1, part_2) = run(input);
-    println!("Part 1: {}", part_1);
-    println!("Part 2: {}", part_2);
+    println!("Part 1: {part_1}");
+    println!("Part 2: {part_2}");
 }
 
 fn run(input: &str) -> (usize, usize) {
@@ -92,6 +92,6 @@ mod day_9_tests {
     fn test_large_input() {
         let (part_1, part_2) = run(include_str!("../../input/09.txt"));
         assert_eq!(part_1, 580);
-        assert_eq!(part_2, 856716);
+        assert_eq!(part_2, 856_716);
     }
 }

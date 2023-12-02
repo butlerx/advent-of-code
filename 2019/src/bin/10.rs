@@ -7,6 +7,7 @@ fn main() {
     println!("Part 2: {}", part_2(INPUT_TXT));
 }
 
+#[must_use]
 pub fn part_1(input: &str) -> usize {
     let asteroids: Vec<_> = input
         .trim()
@@ -32,8 +33,10 @@ pub fn part_1(input: &str) -> usize {
                     if from != to {
                         let relative = (from.0 - to.0, from.1 - to.1);
                         Some(
-                            ((relative.1 as f64).atan2(relative.0 as f64).to_degrees() * 10.0)
-                                as i16,
+                            (f64::from(relative.1)
+                                .atan2(f64::from(relative.0))
+                                .to_degrees()
+                                * 10.0) as i16,
                         )
                     } else {
                         None
@@ -46,6 +49,7 @@ pub fn part_1(input: &str) -> usize {
         .unwrap()
 }
 
+#[must_use]
 pub fn part_2(_input: &str) -> i64 {
     0
 }

@@ -58,7 +58,7 @@ impl Instruction {
             Instruction::Mul(a, b) => regs[*a] *= b.val(regs),
             Instruction::Div(a, b) => regs[*a] /= b.val(regs),
             Instruction::Mod(a, b) => regs[*a] %= b.val(regs),
-            Instruction::Eql(a, b) => regs[*a] = (regs[*a] == b.val(regs)) as i64,
+            Instruction::Eql(a, b) => regs[*a] = i64::from(regs[*a] == b.val(regs)),
             Instruction::Inp(_) => unreachable!(),
         }
     }
@@ -94,7 +94,7 @@ fn find_model_num(
         for &digit in range {
             let mut regs = [digit, 0, 0, z];
             for _ in pc..pc + 17 {
-                instrunctions[pc].exec(&mut regs)
+                instrunctions[pc].exec(&mut regs);
             }
             let z = regs[3];
             if pc + 17 == instrunctions.len() {
@@ -135,11 +135,17 @@ mod day_24_tests {
 
     #[test]
     fn test_part_1() {
-        assert_eq!(part_1(include_str!("../../input/24.txt")), 45989929946199);
+        assert_eq!(
+            part_1(include_str!("../../input/24.txt")),
+            45_989_929_946_199
+        );
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(include_str!("../../input/24.txt")), 11912814611156);
+        assert_eq!(
+            part_2(include_str!("../../input/24.txt")),
+            11_912_814_611_156
+        );
     }
 }

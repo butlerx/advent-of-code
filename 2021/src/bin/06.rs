@@ -29,13 +29,13 @@ mod day_6_tests {
     fn test_small_input() {
         let input = parse_input(INPUT);
         assert_eq!(calculate(&mut input.clone(), 80), 5934);
-        assert_eq!(calculate(&mut input.clone(), 256), 26984457539);
+        assert_eq!(calculate(&mut input.clone(), 256), 26_984_457_539);
     }
 
     #[test]
     fn test_large_input() {
         let input = parse_input(include_str!("../../input/06.txt"));
-        assert_eq!(calculate(&mut input.clone(), 80), 361169);
-        assert_eq!(calculate(&mut input.clone(), 256), 1634946868992);
+        assert_eq!(calculate(&mut input.clone(), 80), 361_169);
+        assert_eq!(calculate(&mut input.clone(), 256), 1_634_946_868_992);
     }
 }

@@ -14,7 +14,7 @@ fn count_neighbors(map: &[Vec<char>], y: usize, x: usize) -> usize {
         }
 
         if map[ny][nx] == '#' {
-            total += 1
+            total += 1;
         }
     }
     total
@@ -107,7 +107,7 @@ L.LLLLL.LL";
     fn test_part_1() {
         assert!(run(INPUT, false) == 37);
         let results = run(include_str!("../../input/11.txt"), false);
-        println!("{}", results);
+        println!("{results}");
         assert!(results == 2438);
     }
 
@@ -115,7 +115,7 @@ L.LLLLL.LL";
     fn test_part_2() {
         assert!(run(INPUT, true) == 26);
         let results = run(include_str!("../../input/11.txt"), true);
-        println!("{}", results);
+        println!("{results}");
         assert!(results == 2174);
     }
 }

@@ -51,7 +51,7 @@ impl std::str::FromStr for Monkey {
     type Err = ();
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
-        let lines: Vec<_> = input.lines().map(|x| x.trim()).collect();
+        let lines: Vec<_> = input.lines().map(str::trim).collect();
         let items: Vec<i64> = lines[1]
             .split_once(": ")
             .unwrap()
@@ -175,7 +175,7 @@ Monkey 3:
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT), 2713310158);
-        assert_eq!(part_2(INPUT_TXT), 15048718170);
+        assert_eq!(part_2(INPUT), 2_713_310_158);
+        assert_eq!(part_2(INPUT_TXT), 15_048_718_170);
     }
 }
