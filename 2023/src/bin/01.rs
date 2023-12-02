@@ -7,7 +7,7 @@ fn main() {
 
 fn first_num(line: &str) -> u32 {
     line.chars()
-        .find(|c| c.is_ascii_digit())
+        .find(char::is_ascii_digit)
         .and_then(|c| c.to_digit(10))
         .unwrap_or(0)
 }
@@ -19,7 +19,7 @@ const NUMBERS: [&str; 10] = [
 fn first_num_words(mut line: &str) -> usize {
     loop {
         for (num, prefix) in NUMBERS.iter().enumerate() {
-            if line.starts_with(prefix) || line.starts_with(&format!("{}", num)) {
+            if line.starts_with(prefix) || line.starts_with(&format!("{num}")) {
                 return num;
             }
         }
@@ -30,7 +30,7 @@ fn first_num_words(mut line: &str) -> usize {
 fn last_num_words(mut line: &str) -> usize {
     loop {
         for (num, suffix) in NUMBERS.iter().enumerate() {
-            if line.ends_with(suffix) || line.ends_with(&format!("{}", num)) {
+            if line.ends_with(suffix) || line.ends_with(&format!("{num}")) {
                 return num;
             }
         }
