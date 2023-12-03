@@ -62,7 +62,9 @@ fn parse_input(input: &str) -> (Vec<Number>, HashMap<Point, char>) {
 
 fn part_1(input: &str) -> u32 {
     let (numbers, symbols) = parse_input(input);
-    symbols.keys().map(|pos| {
+    symbols
+        .keys()
+        .map(|pos| {
             numbers
                 .iter()
                 .filter(|n| n.is_adjacent(pos))
