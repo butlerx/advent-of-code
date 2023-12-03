@@ -98,7 +98,7 @@ impl Games {
     }
 
     fn max(&self) -> impl Iterator<Item = i32> + '_ {
-        self.0.iter().map(|game| game.max())
+        self.0.iter().map(Game::max)
     }
 }
 
