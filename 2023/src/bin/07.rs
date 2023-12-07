@@ -165,15 +165,32 @@ KK677 28
 KTJJT 220
 QQQJA 483";
 
+    static COMMUNITY_CARDS: &str = "AAAAA 2
+22222 3
+AAAAK 5
+22223 7
+AAAKK 11
+22233 13
+AAAKQ 17
+22234 19
+AAKKQ 23
+22334 29
+AAKQJ 31
+22345 37
+AKQJT 41
+23456 43";
+
     #[test]
     fn test_part_1() {
         assert_eq!(part_1(INPUT), 6440);
+        assert_eq!(part_1(COMMUNITY_CARDS), 1343);
         assert_eq!(part_1(INPUT_TXT), 250_946_742);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(part_2(INPUT), 5905);
+        assert_eq!(part_1(COMMUNITY_CARDS), 1343);
         assert_eq!(part_2(INPUT_TXT), 251_824_095);
     }
 }
