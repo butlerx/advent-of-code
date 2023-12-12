@@ -33,29 +33,23 @@ fn star_distance(stars: &[Star], expansion_factor: i64) -> i64 {
 
     stars.iter().enumerate().fold(0, |total, (idx, left_star)| {
         stars.iter().skip(idx + 1).fold(total, |total, right_star| {
-            let empty_cols_count = i64::try_from(
-                empty_columns
-                    .iter()
-                    .filter(|x| {
-                        **x > i64::min(left_star.x, right_star.x)
-                            && **x < i64::max(left_star.x, right_star.x)
-                    })
-                    .count(),
-            )
-            .unwrap();
-            let empty_rows_count = i64::try_from(
-                empty_rows
-                    .iter()
-                    .filter(|y| {
-                        **y > i64::min(left_star.y, right_star.y)
-                            && **y < i64::max(left_star.y, right_star.y)
-                    })
-                    .count(),
-            )
-            .unwrap();
+            let empty_cols_count = empty_columns
+                .iter()
+                .filter(|x| {
+                    **x > i64::min(left_star.x, right_star.x)
+                        && **x < i64::max(left_star.x, right_star.x)
+                })
+                .count();
+            let empty_rows_count = empty_rows
+                .iter()
+                .filter(|y| {
+                    **y > i64::min(left_star.y, right_star.y)
+                        && **y < i64::max(left_star.y, right_star.y)
+                })
+                .count();
             total
                 + left_star.manhattan_distance(right_star)
-                + (empty_cols_count + empty_rows_count) * expansion_factor
+                + i64::try_from(empty_cols_count + empty_rows_count).unwrap() * expansion_factor
         })
     })
 }
