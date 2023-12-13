@@ -23,8 +23,8 @@ fn possible_ways(springs: &[char], counts: &[usize]) -> usize {
     results[s_len][c_len - 1][counts[c_len - 1]] = 1;
 
     (0..s_len).rev().fold(results, |mut results, pos| {
-        for group in 0..c_len {
-            for count in 0..=counts[group] {
+        for (group, max) in counts.iter().enumerate().take(c_len) {
+            for count in 0..=*max {
                 for c in ['.', '#'] {
                     if springs[pos] == c || springs[pos] == '?' {
                         let num = match c {
