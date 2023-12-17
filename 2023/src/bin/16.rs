@@ -34,8 +34,8 @@ fn energized_tiles(grid: &[Vec<char>], start: (usize, usize, usize)) -> usize {
         beams = beams
             .into_iter()
             .filter(|&(row, col, dir)| {
-                if r < grid.len() && c < grid[0].len() && !seen[row][col][dir] {
-                    seen[r][c][d] = true;
+                if row < grid.len() && col < grid[0].len() && !seen[row][col][dir] {
+                    seen[row][col][dir] = true;
                     true
                 } else {
                     false
