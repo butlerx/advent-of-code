@@ -16,49 +16,53 @@ enum Module<'a> {
 }
 
 fn parse_input(input: &str) -> HashMap<&str, Module> {
-    let mut modules = input
+    let modules = input
         .trim()
         .lines()
         .map(|l| {
             let (n, t) = l.split_once(" -> ").unwrap();
             let targets = t.split(',').map(str::trim).collect::<Vec<_>>();
-            if n == "broadcaster" {
-                (n, Module::Broadcaster(targets))
-            } else if let Some(name) = n.strip_prefix('%') {
-                (name, Module::Flipflop(false, targets))
-            } else if let Some(name) = n.strip_prefix('&') {
-                (name, Module::Conjunction(HashMap::new(), targets))
-            } else {
-                unreachable!()
+            match n {
+                "broadcaster" => (n, Module::Broadcaster(targets)),
+                name if name.starts_with('%') => (
+                    name.strip_prefix('%').unwrap(),
+                    Module::Flipflop(false, targets),
+                ),
+                name if name.starts_with('&') => (
+                    name.strip_prefix('&').unwrap(),
+                    Module::Conjunction(HashMap::new(), targets),
+                ),
+                _ => unreachable!(),
             }
         })
+        .chain(std::iter::once(("output", Module::Noop)))
         .collect::<HashMap<_, _>>();
 
-    modules.insert("output", Module::Noop);
-    modules
+    let target_links: Vec<(&str, &str)> = modules
+        .iter()
+        .flat_map(|(source_name, source_module)| match source_module {
+            Module::Noop => Vec::new(),
+            Module::Broadcaster(t) | Module::Flipflop(_, t) | Module::Conjunction(_, t) => t
+                .iter()
+                .map(move |target_name| (*source_name, *target_name))
+                .collect(),
+        })
+        .collect();
+
+    target_links
+        .iter()
+        .fold(modules, |mut acc_modules, (source_name, target_name)| {
+            if let Entry::Occupied(mut target_module) = acc_modules.entry(*target_name) {
+                if let Module::Conjunction(ref mut inputs, _) = target_module.get_mut() {
+                    inputs.insert(*source_name, false);
+                }
+            }
+            acc_modules
+        })
 }
 
 fn part_1(input: &str) -> u32 {
     let mut modules = parse_input(input);
-    let mut target_links = vec![];
-    for (source_name, source_module) in &modules {
-        match source_module {
-            Module::Noop => {}
-            Module::Broadcaster(t) | Module::Flipflop(_, t) | Module::Conjunction(_, t) => {
-                for target_name in t {
-                    target_links.push((*source_name, *target_name));
-                }
-            }
-        };
-    }
-
-    for (source_name, target_name) in target_links {
-        if let Entry::Occupied(mut target_module) = modules.entry(target_name) {
-            if let Module::Conjunction(ref mut inputs, _) = target_module.get_mut() {
-                inputs.insert(source_name, false);
-            }
-        }
-    }
 
     let mut low_signals_sent = 0;
     let mut high_signals_sent = 0;
@@ -79,9 +83,8 @@ fn part_1(input: &str) -> u32 {
             } else {
                 low_signals_sent += 1;
             }
-            let target_module = modules.entry(dest).or_insert(Module::Noop);
 
-            match target_module {
+            match modules.entry(dest).or_insert(Module::Noop) {
                 Module::Flipflop(ref mut ff_is_on, ff_targets) => {
                     if !sig_is_high {
                         *ff_is_on = !*ff_is_on;
@@ -106,8 +109,74 @@ fn part_1(input: &str) -> u32 {
     low_signals_sent * high_signals_sent
 }
 
-fn part_2(_input: &str) -> u32 {
-    0
+fn gcd(a: usize, b: usize) -> usize {
+    match ((a, b), (a & 1, b & 1)) {
+        _ if a == b => a,
+        ((_, 0), _) => a,
+        ((0, _), _) => b,
+        (_, (0, 1) | (1, 0)) => gcd(a >> 1, b),
+        (_, (0, 0)) => gcd(a >> 1, b >> 1) << 1,
+        (_, (1, 1)) => {
+            let (a, b) = (a.min(b), a.max(b));
+            gcd((b - a) >> 1, a)
+        }
+        _ => unreachable!(),
+    }
+}
+
+fn lcm(vals: impl Iterator<Item = usize>) -> usize {
+    vals.fold(1, |ans, x| (x * ans) / gcd(x, ans))
+}
+
+fn part_2(input: &str) -> usize {
+    let mut modules = parse_input(input);
+    let mut cycles = [None; 4];
+    for button_presses in 0.. {
+        let mut queue = VecDeque::new();
+        let Module::Broadcaster(broadcast_targets) = &modules["broadcaster"] else {
+            unreachable!()
+        };
+        for bt in broadcast_targets {
+            queue.push_back(("broadcaster", *bt, false));
+        }
+
+        while let Some((source, dest, sig_is_high)) = queue.pop_front() {
+            if sig_is_high && dest == "bn" {
+                let i = match source {
+                    "pl" => 0,
+                    "mz" => 1,
+                    "lz" => 2,
+                    "zm" => 3,
+                    _ => unreachable!(),
+                };
+                cycles[i] = cycles[i].or(Some(button_presses + 1));
+            }
+
+            match modules.entry(dest).or_insert(Module::Noop) {
+                Module::Flipflop(ref mut ff_is_on, ff_targets) => {
+                    if !sig_is_high {
+                        *ff_is_on = !*ff_is_on;
+                        for t in ff_targets {
+                            queue.push_back((dest, t, *ff_is_on));
+                        }
+                    }
+                }
+                Module::Conjunction(ref mut inputs, c_targets) => {
+                    inputs.insert(source, sig_is_high);
+                    let output_is_high = !inputs.values().all(|i| *i);
+
+                    for t in c_targets {
+                        queue.push_back((dest, t, output_is_high));
+                    }
+                }
+                _ => {}
+            }
+        }
+        if cycles.iter().all(std::option::Option::is_some) {
+            break;
+        }
+    }
+    lcm(cycles.iter().map(|o| o.unwrap()))
 }
 
 #[cfg(test)]
@@ -133,6 +202,6 @@ mod tests {
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT_TXT), 0);
+        assert_eq!(part_2(INPUT_TXT), 225_514_321_828_633);
     }
 }
