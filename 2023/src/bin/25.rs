@@ -7,13 +7,13 @@ fn main() {
 }
 
 type Graph<'a> = HashMap<&'a str, HashSet<&'a str>>;
-type Edge<'a> = [&'a str; 2];
+type Edge<'a> = (&'a str, &'a str);
 
 fn parse_input(input: &str) -> Graph<'_> {
     let mut graph = HashMap::<_, HashSet<_>>::new();
     for l in input.trim().lines() {
         let (a, rest) = l.split_once(": ").unwrap();
-        for b in rest.split(' ') {
+        for b in rest.split_whitespace() {
             graph.entry(a).or_default().insert(b);
             graph.entry(b).or_default().insert(a);
         }
@@ -25,16 +25,13 @@ fn calculate_frequencies<'a>(edges: &'a Graph<'a>) -> Vec<(Edge<'a>, usize)> {
     let mut freq = HashMap::new();
 
     for &start in edges.keys() {
-        let mut todo = VecDeque::new();
-        todo.push_back(start);
-
-        let mut seen = HashSet::new();
-        seen.insert(start);
+        let mut todo = VecDeque::from([start]);
+        let mut seen = HashSet::from([start]);
 
         while let Some(pos) = todo.pop_front() {
             for &next in &edges[pos] {
                 if seen.insert(next) {
-                    let key = if pos < next { [pos, next] } else { [next, pos] };
+                    let key = if pos < next { (pos, next) } else { (next, pos) };
 
                     let entry = freq.entry(key).or_insert(0);
                     *entry += 1;
@@ -56,22 +53,13 @@ fn calculate_frequencies<'a>(edges: &'a Graph<'a>) -> Vec<(Edge<'a>, usize)> {
 
 fn calculate_group_size(edges: &Graph, cut: &[Edge], start: &str) -> usize {
     let mut size = 1;
-
-    let mut todo = VecDeque::new();
-    todo.push_back(start);
-
-    let mut seen = HashSet::new();
-    seen.insert(start);
+    let mut todo = VecDeque::from([start]);
+    let mut seen = HashSet::from([start]);
 
     while let Some(pos) = todo.pop_front() {
         for &next in &edges[pos] {
-            let key = if pos < next { [pos, next] } else { [next, pos] };
-
-            if cut.contains(&key) {
-                continue;
-            }
-
-            if seen.insert(next) {
+            let key = if pos < next { (pos, next) } else { (next, pos) };
+            if !cut.contains(&key) && seen.insert(next) {
                 size += 1;
                 todo.push_back(next);
             }
