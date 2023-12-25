@@ -191,6 +191,6 @@ mod tests {
     #[test]
     fn test_part_2() {
         assert_eq!(part_2(INPUT), 47.0);
-        assert_eq!(part_2(INPUT_TXT), 652666650475950.0);
+        assert_eq!(part_2(INPUT_TXT), 652_666_650_475_950.0);
     }
 }
