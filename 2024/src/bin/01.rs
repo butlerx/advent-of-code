@@ -36,11 +36,13 @@ fn part_1(input: &str) -> u32 {
 
 fn part_2(input: &str) -> u32 {
     let (col_a, col_b) = parse_input(input);
+    let mut cache = std::collections::HashMap::new();
     col_a
         .iter()
         .map(|a| {
-            let c = col_b.iter().filter(|&b| b == a).count() as u32;
-            a * c
+            *a * *cache
+                .entry(a)
+                .or_insert_with(|| col_b.iter().filter(|&b| b == a).count() as u32)
         })
         .sum()
 }
