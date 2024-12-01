@@ -4,6 +4,84 @@ Solutions for [adventofcode.com](https://adventofcode.com)
 
  <!-- AOC TILES BEGIN -->
 <h1 align="center">
+  2024 - 50 ⭐
+</h1>
+<a href="2024/src/bin/01.rs">
+  <img src=".aoc_tiles/tiles/2024/01.png" width="161px">
+</a>
+<a href="2024/src/bin/02.rs">
+  <img src=".aoc_tiles/tiles/2024/02.png" width="161px">
+</a>
+<a href="2024/src/bin/03.rs">
+  <img src=".aoc_tiles/tiles/2024/03.png" width="161px">
+</a>
+<a href="2024/src/bin/04.rs">
+  <img src=".aoc_tiles/tiles/2024/04.png" width="161px">
+</a>
+<a href="2024/src/bin/05.rs">
+  <img src=".aoc_tiles/tiles/2024/05.png" width="161px">
+</a>
+<a href="2024/src/bin/06.rs">
+  <img src=".aoc_tiles/tiles/2024/06.png" width="161px">
+</a>
+<a href="2024/src/bin/07.rs">
+  <img src=".aoc_tiles/tiles/2024/07.png" width="161px">
+</a>
+<a href="2024/src/bin/08.rs">
+  <img src=".aoc_tiles/tiles/2024/08.png" width="161px">
+</a>
+<a href="2024/src/bin/09.rs">
+  <img src=".aoc_tiles/tiles/2024/09.png" width="161px">
+</a>
+<a href="2024/src/bin/10.rs">
+  <img src=".aoc_tiles/tiles/2024/10.png" width="161px">
+</a>
+<a href="2024/src/bin/11.rs">
+  <img src=".aoc_tiles/tiles/2024/11.png" width="161px">
+</a>
+<a href="2024/src/bin/12.rs">
+  <img src=".aoc_tiles/tiles/2024/12.png" width="161px">
+</a>
+<a href="2024/src/bin/13.rs">
+  <img src=".aoc_tiles/tiles/2024/13.png" width="161px">
+</a>
+<a href="2024/src/bin/14.rs">
+  <img src=".aoc_tiles/tiles/2024/14.png" width="161px">
+</a>
+<a href="2024/src/bin/15.rs">
+  <img src=".aoc_tiles/tiles/2024/15.png" width="161px">
+</a>
+<a href="2024/src/bin/16.rs">
+  <img src=".aoc_tiles/tiles/2024/16.png" width="161px">
+</a>
+<a href="2024/src/bin/17.rs">
+  <img src=".aoc_tiles/tiles/2024/17.png" width="161px">
+</a>
+<a href="2024/src/bin/18.rs">
+  <img src=".aoc_tiles/tiles/2024/18.png" width="161px">
+</a>
+<a href="2024/src/bin/19.rs">
+  <img src=".aoc_tiles/tiles/2024/19.png" width="161px">
+</a>
+<a href="2024/src/bin/20.rs">
+  <img src=".aoc_tiles/tiles/2024/20.png" width="161px">
+</a>
+<a href="2024/src/bin/21.rs">
+  <img src=".aoc_tiles/tiles/2024/21.png" width="161px">
+</a>
+<a href="2024/src/bin/22.rs">
+  <img src=".aoc_tiles/tiles/2024/22.png" width="161px">
+</a>
+<a href="2024/src/bin/23.rs">
+  <img src=".aoc_tiles/tiles/2024/23.png" width="161px">
+</a>
+<a href="2024/src/bin/24.rs">
+  <img src=".aoc_tiles/tiles/2024/24.png" width="161px">
+</a>
+<a href="2024/src/bin/25.rs">
+  <img src=".aoc_tiles/tiles/2024/25.png" width="161px">
+</a>
+<h1 align="center">
   2023 - 50 ⭐
 </h1>
 <a href="2023/src/bin/01.rs">

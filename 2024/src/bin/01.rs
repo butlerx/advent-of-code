@@ -1,8 +1,9 @@
 static INPUT_TXT: &str = include_str!("../../input/01.txt");
 
 fn main() {
-    println!("Part 1: {}", part_1(INPUT_TXT));
-    println!("Part 2: {}", part_2(INPUT_TXT));
+    println!("🌟 --- Day 1 Results --- 🌟");
+    println!("📌 Part 1: {}", part_1(INPUT_TXT));
+    println!("📌 Part 2: {}", part_2(INPUT_TXT));
 }
 
 fn parse_input(input: &str) -> (Vec<u32>, Vec<u32>) {
