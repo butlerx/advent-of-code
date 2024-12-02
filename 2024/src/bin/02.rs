@@ -6,10 +6,22 @@ fn main() {
     println!("📌 Part 2: {}", part_2(INPUT_TXT));
 }
 
+fn is_increasing(pairs: &[(i32, i32)]) -> bool {
+    pairs.iter().all(|(a, b)| a < b)
+}
+
+fn is_decreasing(pairs: &[(i32, i32)]) -> bool {
+    pairs.iter().all(|(a, b)| a > b)
+}
+
+fn is_monotonic(pairs: &[(i32, i32)]) -> bool {
+    is_increasing(pairs) || is_decreasing(pairs)
+}
+
 fn is_safe(arr: &[i32]) -> bool {
     let pairs: Vec<_> = arr.windows(2).map(|w| (w[0], w[1])).collect();
 
-    (pairs.iter().all(|(a, b)| a < b) || pairs.iter().all(|(a, b)| a > b))
+    is_monotonic(&pairs)
         && pairs.iter().all(|(a, b)| {
             let c = (a - b).abs();
             (1..=3).contains(&c)
