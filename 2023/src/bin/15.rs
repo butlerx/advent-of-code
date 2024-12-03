@@ -9,7 +9,7 @@ fn main() {
 
 fn hash(s: &str) -> u32 {
     s.chars().fold(0, |acc, c| {
-        ((acc + u32::try_from(c).expect("failed to get ascii value")) * 17) % 256
+        ((acc + u32::from(c)) * 17) % 256
     })
 }
 

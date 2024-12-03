@@ -70,7 +70,7 @@ fn find_danderous_ingrediants(mut allergens: Allergens) -> Vec<String> {
             allergens.remove(allergen);
         }
 
-        for (_, ingredient_set) in &mut allergens {
+        for ingredient_set in allergens.values_mut() {
             for (_, ingredient) in &danger_list {
                 ingredient_set.remove(ingredient);
             }

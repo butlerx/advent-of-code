@@ -70,7 +70,7 @@ fn part_2(input: &str) -> i64 {
     shoe_string(input, |l| {
         let (_, hex_str) = l.split_once('#').expect("failed to split line no #");
         let hex = u32::from_str_radix(&hex_str[..6], 16).expect("failed to parse hex");
-        let steps = i64::try_from(hex >> 4).expect("failed to convert hex to int");
+        let steps = i64::from(hex >> 4);
         (Direction::from(hex & 3), steps)
     })
 }
