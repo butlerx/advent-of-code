@@ -33,21 +33,15 @@ fn part_1(input: &str) -> u32 {
 
     (0..rows)
         .flat_map(|r| (0..cols).map(move |c| (r, c)))
+        .filter(|&(r, c)| grid[r][c] == 'X')
         .map(|(row, col)| {
             DIRECTIONS
                 .iter()
                 .filter(|(dx, dy)| {
-                    let rows = grid.len() as i32;
-                    let cols = grid[0].len() as i32;
-
                     WORD.iter().enumerate().all(|(i, item)| {
-                        let new_row = row as i32 + dx * i as i32;
-                        let new_col = col as i32 + dy * i as i32;
-                        new_row >= 0
-                            && new_row < rows
-                            && new_col >= 0
-                            && new_col < cols
-                            && grid[new_row as usize][new_col as usize] == *item
+                        let new_row = (row as i32 + dx * i as i32) as usize;
+                        let new_col = (col as i32 + dy * i as i32) as usize;
+                        new_row < rows && new_col < cols && grid[new_row][new_col] == *item
                     })
                 })
                 .count() as u32
@@ -57,11 +51,9 @@ fn part_1(input: &str) -> u32 {
 
 fn part_2(input: &str) -> u32 {
     let grid = parse_input(input);
-    let rows = grid.len();
-    let cols = grid[0].len();
 
-    (1..rows - 1)
-        .flat_map(|r| (1..cols - 1).map(move |c| (r, c)))
+    (1..grid.len() - 1)
+        .flat_map(|r| (1..grid[0].len() - 1).map(move |c| (r, c)))
         .filter(|&(r, c)| grid[r][c] == 'A')
         .map(|(r, c)| {
             [
