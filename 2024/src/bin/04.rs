@@ -1,7 +1,7 @@
 static INPUT_TXT: &str = include_str!("../../input/04.txt");
 
 fn main() {
-    println!("🌟 --- Day 3 Results --- 🌟");
+    println!("🌟 --- Day 4 Results --- 🌟");
     println!("📌 Part 1: {}", part_1(INPUT_TXT));
     println!("📌 Part 2: {}", part_2(INPUT_TXT));
 }
