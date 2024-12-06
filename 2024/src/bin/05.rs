@@ -57,7 +57,7 @@ fn part_2(input: &str) -> u32 {
         .filter(|line| !check_order(&orders, line))
         .map(|line| {
             line.sort_by(|a, b| match orders.get(a) {
-                Some(must_go_befores) if must_go_befores.contains(b) => return Ordering::Less,
+                Some(must_go_befores) if must_go_befores.contains(b) => Ordering::Less,
                 _ => Ordering::Greater,
             });
             line.get(line.len() / 2).expect("line length is not odd")
