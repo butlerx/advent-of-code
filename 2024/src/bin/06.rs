@@ -10,8 +10,8 @@ fn main() {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 struct Position {
-    row: i32,
-    col: i32,
+    row: usize,
+    col: usize,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -36,22 +36,22 @@ impl Direction {
 #[derive(Debug, Clone)]
 struct Grid {
     cells: Vec<char>,
-    rows: i32,
-    cols: i32,
+    rows: usize,
+    cols: usize,
 }
 
 impl Grid {
     fn new(input: &str) -> (Self, Position, Direction) {
-        let cols = input.lines().next().unwrap().len() as i32;
+        let cols = input.lines().next().unwrap().len();
         let cells: Vec<char> = input.lines().flat_map(|line| line.chars()).collect();
-        let rows = (cells.len() as i32) / cols;
+        let rows = cells.len() / cols;
 
         let start_pos = cells
             .iter()
             .position(|&c| c == '^')
             .map(|i| Position {
-                row: (i as i32) / cols,
-                col: (i as i32) % cols,
+                row: i / cols,
+                col: i % cols,
             })
             .expect("no start position found");
 
@@ -59,48 +59,47 @@ impl Grid {
     }
 
     fn get(&self, pos: Position) -> char {
-        self.cells[(pos.row * self.cols + pos.col) as usize]
+        self.cells[pos.row * self.cols + pos.col]
     }
 
     fn set(&mut self, pos: Position, value: char) {
-        self.cells[(pos.row * self.cols + pos.col) as usize] = value;
+        self.cells[pos.row * self.cols + pos.col] = value;
     }
 
-    fn is_valid(&self, pos: Position) -> bool {
-        pos.row >= 0 && pos.row < self.rows && pos.col >= 0 && pos.col < self.cols
-    }
-
-    fn next_position(&self, pos: Position, dir: Direction) -> Position {
+    fn next_position(&self, pos: Position, dir: Direction) -> Option<Position> {
         match dir {
-            Direction::North => Position {
+            Direction::North if pos.row == 0 => None,
+            Direction::North => Some(Position {
                 row: pos.row - 1,
                 col: pos.col,
-            },
-            Direction::East => Position {
+            }),
+            Direction::East if pos.col == self.cols - 1 => None,
+            Direction::East => Some(Position {
                 row: pos.row,
                 col: pos.col + 1,
-            },
-            Direction::South => Position {
+            }),
+            Direction::South if pos.row == self.rows - 1 => None,
+            Direction::South => Some(Position {
                 row: pos.row + 1,
                 col: pos.col,
-            },
-            Direction::West => Position {
+            }),
+            Direction::West if pos.col == 0 => None,
+            Direction::West => Some(Position {
                 row: pos.row,
                 col: pos.col - 1,
-            },
+            }),
         }
     }
 
     fn simulate_path(&self, start: Position, mut dir: Direction) -> HashSet<Position> {
-        let mut visited = HashSet::with_capacity((self.rows * self.cols) as usize);
+        let mut visited = HashSet::with_capacity(self.rows * self.cols);
         let mut current = start;
         visited.insert(current);
 
         loop {
-            let next = self.next_position(current, dir);
-            if !self.is_valid(next) {
+            let Some(next) = self.next_position(current, dir) else {
                 break visited;
-            }
+            };
 
             if self.get(next) == '#' {
                 dir = dir.turn_right();
@@ -121,10 +120,11 @@ fn part_2(input: &str) -> usize {
     let (grid, start, start_dir) = Grid::new(input);
 
     let mut test_grid = grid.clone();
-    let mut visited = HashSet::with_capacity((grid.rows * grid.cols) as usize);
-    (0..grid.rows)
-        .flat_map(|r| (0..grid.cols).map(move |c| Position { row: r, col: c }))
-        .filter(|&pos| grid.get(pos) == '.')
+    let mut visited = HashSet::with_capacity(grid.rows * grid.cols);
+
+    grid.simulate_path(start, start_dir)
+        .into_iter()
+        .filter(|&pos| pos != start)
         .filter(|&pos| {
             visited.clear();
             test_grid.set(pos, '#');
@@ -138,11 +138,10 @@ fn part_2(input: &str) -> usize {
                     break true;
                 }
 
-                let next = test_grid.next_position(current, dir);
-                if !test_grid.is_valid(next) {
+                let Some(next) = test_grid.next_position(current, dir) else {
                     test_grid.set(pos, '.');
                     break false;
-                }
+                };
 
                 if test_grid.get(next) == '#' {
                     dir = dir.turn_right();
