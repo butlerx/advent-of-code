@@ -1,9 +1,18 @@
+use std::time::Instant;
+
 static INPUT_TXT: &str = include_str!("../../input/07.txt");
 
 fn main() {
     println!("🌟 --- Day 7 Results --- 🌟");
-    println!("📌 Part 1: {}", part_1(INPUT_TXT));
-    println!("📌 Part 2: {}", part_2(INPUT_TXT));
+    let start_1 = Instant::now();
+    let res_1 = part_1(INPUT_TXT);
+    let duration_1 = start_1.elapsed().as_millis();
+    println!("📌 Part 1: {res_1}, complete in {duration_1} ms");
+
+    let start_2 = Instant::now();
+    let res_2 = part_2(INPUT_TXT);
+    let duration_2 = start_2.elapsed().as_millis();
+    println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
 }
 
 fn calibration(
@@ -40,25 +49,20 @@ fn calibration(
     }
 }
 
-fn parse_input(input: &str) -> Vec<(usize, Vec<usize>)> {
-    input
-        .trim()
-        .lines()
-        .map(|l| {
-            let (a, nums_str) = l.split_once(": ").expect("no : found");
-            let ans = a.parse::<usize>().expect("not a number");
-            let nums = nums_str
-                .split_whitespace()
-                .map(|n| n.parse::<usize>().expect("not a number"))
-                .collect::<Vec<usize>>();
-            (ans, nums)
-        })
-        .collect()
+fn parse_input(input: &str) -> impl Iterator<Item = (usize, Vec<usize>)> + '_ {
+    input.trim().lines().map(|l| {
+        let (a, nums_str) = l.split_once(": ").expect("no : found");
+        let ans = a.parse::<usize>().expect("not a number");
+        let nums = nums_str
+            .split_whitespace()
+            .map(|n| n.parse::<usize>().expect("not a number"))
+            .collect::<Vec<usize>>();
+        (ans, nums)
+    })
 }
 
 fn part_1(input: &str) -> usize {
     parse_input(input)
-        .iter()
         .filter(|(ans, nums)| {
             let mut results = Vec::new();
             calibration(nums, 1, nums[0], &mut results, ans, false)
@@ -69,7 +73,6 @@ fn part_1(input: &str) -> usize {
 
 fn part_2(input: &str) -> usize {
     parse_input(input)
-        .iter()
         .filter(|(ans, nums)| {
             let mut results = Vec::new();
             calibration(nums, 1, nums[0], &mut results, ans, true)

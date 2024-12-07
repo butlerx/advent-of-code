@@ -1,11 +1,19 @@
 use std::collections::{HashMap, HashSet};
+use std::time::Instant;
 
 static INPUT_TXT: &str = include_str!("../../input/06.txt");
 
 fn main() {
     println!("🌟 --- Day 6 Results --- 🌟");
-    println!("📌 Part 1: {}", part_1(INPUT_TXT));
-    println!("📌 Part 2: {}", part_2(INPUT_TXT));
+    let start_1 = Instant::now();
+    let res_1 = part_1(INPUT_TXT);
+    let duration_1 = start_1.elapsed().as_millis();
+    println!("📌 Part 1: {res_1}, complete in {duration_1} ms");
+
+    let start_2 = Instant::now();
+    let res_2 = part_2(INPUT_TXT);
+    let duration_2 = start_2.elapsed().as_millis();
+    println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
