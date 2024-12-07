@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 static INPUT_TXT: &str = include_str!("../../input/06.txt");
 
@@ -23,6 +23,7 @@ enum Direction {
 }
 
 impl Direction {
+    #[inline(always)]
     fn turn_right(self) -> Direction {
         match self {
             Direction::North => Direction::East,
@@ -35,7 +36,7 @@ impl Direction {
 
 #[derive(Debug, Clone)]
 struct Grid {
-    cells: Vec<char>,
+    cells: Vec<bool>,
     rows: usize,
     cols: usize,
 }
@@ -43,51 +44,56 @@ struct Grid {
 impl Grid {
     fn new(input: &str) -> (Self, Position, Direction) {
         let cols = input.lines().next().unwrap().len();
-        let cells: Vec<char> = input.lines().flat_map(|line| line.chars()).collect();
+        let cells: Vec<bool> = input
+            .lines()
+            .flat_map(|line| line.chars())
+            .map(|c| c == '#')
+            .collect();
         let rows = cells.len() / cols;
 
-        let start_pos = cells
-            .iter()
-            .position(|&c| c == '^')
-            .map(|i| Position {
-                row: i / cols,
-                col: i % cols,
+        let start_pos = input
+            .lines()
+            .enumerate()
+            .find_map(|(row, line)| {
+                line.chars()
+                    .position(|c| c == '^')
+                    .map(|col| Position { row, col })
             })
             .expect("no start position found");
 
         (Self { cells, rows, cols }, start_pos, Direction::North)
     }
 
-    fn get(&self, pos: Position) -> char {
+    #[inline(always)]
+    fn is_wall(&self, pos: Position) -> bool {
         self.cells[pos.row * self.cols + pos.col]
     }
 
-    fn set(&mut self, pos: Position, value: char) {
-        self.cells[pos.row * self.cols + pos.col] = value;
+    #[inline(always)]
+    fn set_wall(&mut self, pos: Position, is_wall: bool) {
+        self.cells[pos.row * self.cols + pos.col] = is_wall;
     }
 
+    #[inline(always)]
     fn next_position(&self, pos: Position, dir: Direction) -> Option<Position> {
         match dir {
-            Direction::North if pos.row == 0 => None,
-            Direction::North => Some(Position {
+            Direction::North if pos.row > 0 => Some(Position {
                 row: pos.row - 1,
                 col: pos.col,
             }),
-            Direction::East if pos.col == self.cols - 1 => None,
-            Direction::East => Some(Position {
+            Direction::East if pos.col < self.cols - 1 => Some(Position {
                 row: pos.row,
                 col: pos.col + 1,
             }),
-            Direction::South if pos.row == self.rows - 1 => None,
-            Direction::South => Some(Position {
+            Direction::South if pos.row < self.rows - 1 => Some(Position {
                 row: pos.row + 1,
                 col: pos.col,
             }),
-            Direction::West if pos.col == 0 => None,
-            Direction::West => Some(Position {
+            Direction::West if pos.col > 0 => Some(Position {
                 row: pos.row,
                 col: pos.col - 1,
             }),
+            _ => None,
         }
     }
 
@@ -97,14 +103,10 @@ impl Grid {
 
         loop {
             visited.insert(current);
-            let Some(next) = self.next_position(current, dir) else {
-                break visited;
-            };
-
-            if self.get(next) == '#' {
-                dir = dir.turn_right();
-            } else {
-                current = next;
+            match self.next_position(current, dir) {
+                Some(next) if self.is_wall(next) => dir = dir.turn_right(),
+                Some(next) => current = next,
+                None => break visited,
             }
         }
     }
@@ -120,32 +122,40 @@ fn part_2(input: &str) -> usize {
 
     let mut test_grid = grid.clone();
     let mut visited = HashSet::with_capacity(grid.rows * grid.cols);
+    let mut collision_map = HashMap::with_capacity(grid.rows * grid.cols);
 
     grid.simulate_path(start, start_dir)
         .into_iter()
         .filter(|&pos| pos != start)
         .filter(|&pos| {
             visited.clear();
-            test_grid.set(pos, '#');
+            collision_map.clear();
+            test_grid.set_wall(pos, true);
 
-            let mut current = start;
-            let mut dir = start_dir;
+            let mut current = (start, start_dir);
+
+            while visited.insert(current) {
+                let mut next = current.0;
+                while let Some(pos) = test_grid.next_position(next, current.1) {
+                    if test_grid.is_wall(pos) {
+                        let next_state = (next, current.1.turn_right());
+                        collision_map.insert(current, next_state);
+                        current = next_state;
+                        break;
+                    }
+                    next = pos;
+                }
+            }
+            visited.clear();
+            test_grid.set_wall(pos, false);
 
             loop {
-                if !visited.insert((current, dir)) {
-                    test_grid.set(pos, '.');
+                if !visited.insert(current) {
                     break true;
                 }
-
-                let Some(next) = test_grid.next_position(current, dir) else {
-                    test_grid.set(pos, '.');
-                    break false;
-                };
-
-                if test_grid.get(next) == '#' {
-                    dir = dir.turn_right();
-                } else {
-                    current = next;
+                match collision_map.get(&current) {
+                    Some(&next) => current = next,
+                    None => break false,
                 }
             }
         })
