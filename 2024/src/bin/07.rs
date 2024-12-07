@@ -31,11 +31,7 @@ fn calibration(
         return current == *ans;
     }
 
-    if calibration(nums, idx + 1, current + nums[idx], results, ans, part_2)
-        || calibration(nums, idx + 1, current * nums[idx], results, ans, part_2)
-    {
-        true
-    } else if part_2 {
+    if part_2 {
         let mut combined = current;
         let mut temp = nums[idx];
         while temp > 0 {
@@ -43,12 +39,15 @@ fn calibration(
             temp /= 10;
         }
         combined += nums[idx];
-        calibration(nums, idx + 1, combined, results, ans, part_2)
-    } else {
-        false
+        if calibration(nums, idx + 1, combined, results, ans, part_2) {
+            return true;
+        }
     }
+    return calibration(nums, idx + 1, current * nums[idx], results, ans, part_2)
+        || calibration(nums, idx + 1, current + nums[idx], results, ans, part_2);
 }
 
+#[inline(always)]
 fn parse_input(input: &str) -> impl Iterator<Item = (usize, Vec<usize>)> + '_ {
     input.trim().lines().map(|l| {
         let (a, nums_str) = l.split_once(": ").expect("no : found");
