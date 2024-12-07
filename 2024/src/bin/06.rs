@@ -94,9 +94,9 @@ impl Grid {
     fn simulate_path(&self, start: Position, mut dir: Direction) -> HashSet<Position> {
         let mut visited = HashSet::with_capacity(self.rows * self.cols);
         let mut current = start;
-        visited.insert(current);
 
         loop {
+            visited.insert(current);
             let Some(next) = self.next_position(current, dir) else {
                 break visited;
             };
@@ -105,7 +105,6 @@ impl Grid {
                 dir = dir.turn_right();
             } else {
                 current = next;
-                visited.insert(current);
             }
         }
     }
