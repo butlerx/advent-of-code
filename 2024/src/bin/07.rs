@@ -43,8 +43,8 @@ fn calibration(
             return true;
         }
     }
-    return calibration(nums, idx + 1, current * nums[idx], results, ans, part_2)
-        || calibration(nums, idx + 1, current + nums[idx], results, ans, part_2);
+    calibration(nums, idx + 1, current * nums[idx], results, ans, part_2)
+        || calibration(nums, idx + 1, current + nums[idx], results, ans, part_2)
 }
 
 #[inline(always)]
