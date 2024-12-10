@@ -1,5 +1,8 @@
-use std::collections::{HashMap, HashSet};
-use std::time::Instant;
+use aoc_2024::Point;
+use std::{
+    collections::{HashMap, HashSet},
+    time::Instant,
+};
 
 static INPUT_TXT: &str = include_str!("../../input/06.txt");
 
@@ -14,12 +17,6 @@ fn main() {
     let res_2 = part_2(INPUT_TXT);
     let duration_2 = start_2.elapsed().as_millis();
     println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-struct Position {
-    row: usize,
-    col: usize,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -50,7 +47,7 @@ struct Grid {
 }
 
 impl Grid {
-    fn new(input: &str) -> (Self, Position, Direction) {
+    fn new(input: &str) -> (Self, Point, Direction) {
         let cols = input.lines().next().unwrap().len();
         let cells: Vec<bool> = input
             .lines()
@@ -65,7 +62,7 @@ impl Grid {
             .find_map(|(row, line)| {
                 line.chars()
                     .position(|c| c == '^')
-                    .map(|col| Position { row, col })
+                    .map(|col| Point::from((row, col)))
             })
             .expect("no start position found");
 
@@ -73,39 +70,33 @@ impl Grid {
     }
 
     #[inline(always)]
-    fn is_wall(&self, pos: Position) -> bool {
-        self.cells[pos.row * self.cols + pos.col]
+    fn is_wall(&self, pos: Point) -> bool {
+        let idx = (pos.x * self.cols as i32 + pos.y) as usize;
+        self.cells[idx]
     }
 
     #[inline(always)]
-    fn set_wall(&mut self, pos: Position, is_wall: bool) {
-        self.cells[pos.row * self.cols + pos.col] = is_wall;
+    fn set_wall(&mut self, pos: Point, is_wall: bool) {
+        let idx = (pos.x * self.cols as i32 + pos.y) as usize;
+        self.cells[idx] = is_wall;
     }
 
     #[inline(always)]
-    fn next_position(&self, pos: Position, dir: Direction) -> Option<Position> {
+    fn next_position(&self, pos: Point, dir: Direction) -> Option<Point> {
         match dir {
-            Direction::North if pos.row > 0 => Some(Position {
-                row: pos.row - 1,
-                col: pos.col,
-            }),
-            Direction::East if pos.col < self.cols - 1 => Some(Position {
-                row: pos.row,
-                col: pos.col + 1,
-            }),
-            Direction::South if pos.row < self.rows - 1 => Some(Position {
-                row: pos.row + 1,
-                col: pos.col,
-            }),
-            Direction::West if pos.col > 0 => Some(Position {
-                row: pos.row,
-                col: pos.col - 1,
-            }),
+            Direction::North if pos.x > 0 => Some(Point::from((pos.x - 1, pos.y))),
+            Direction::East if (pos.y as usize) < self.cols - 1 => {
+                Some(Point::from((pos.x, pos.y + 1)))
+            }
+            Direction::South if (pos.x as usize) < self.rows - 1 => {
+                Some(Point::from((pos.x + 1, pos.y)))
+            }
+            Direction::West if pos.y > 0 => Some(Point::from((pos.x, pos.y - 1))),
             _ => None,
         }
     }
 
-    fn simulate_path(&self, start: Position, mut dir: Direction) -> HashSet<Position> {
+    fn simulate_path(&self, start: Point, mut dir: Direction) -> HashSet<Point> {
         let mut visited = HashSet::with_capacity(self.rows * self.cols);
         let mut current = start;
 

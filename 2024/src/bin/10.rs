@@ -1,6 +1,6 @@
+use aoc_2024::Point;
 use std::{
     collections::{HashSet, VecDeque},
-    ops::Add,
     time::Instant,
 };
 
@@ -17,29 +17,6 @@ fn main() {
     let res_2 = part_2(INPUT_TXT);
     let duration_2 = start_2.elapsed().as_millis();
     println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
-}
-
-#[derive(Debug, Hash, Eq, PartialEq, Clone, Copy)]
-struct Point {
-    x: i32,
-    y: i32,
-}
-
-impl From<(i32, i32)> for Point {
-    fn from((x, y): (i32, i32)) -> Self {
-        Self { x, y }
-    }
-}
-
-impl Add for Point {
-    type Output = Self;
-
-    fn add(self, other: Self) -> Self {
-        Self {
-            x: self.x + other.x,
-            y: self.y + other.y,
-        }
-    }
 }
 
 const DIRECTIONS: [(i32, i32); 4] = [(0, -1), (1, 0), (0, 1), (-1, 0)];

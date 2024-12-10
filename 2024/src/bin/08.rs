@@ -1,6 +1,6 @@
+use aoc_2024::Point;
 use std::{
     collections::{HashMap, HashSet},
-    ops::{Add, Neg, Sub},
     time::Instant,
 };
 
@@ -19,70 +19,6 @@ fn main() {
     println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-struct Point {
-    x: i32,
-    y: i32,
-}
-
-impl Point {
-    fn new(x: usize, y: usize) -> Self {
-        Self {
-            x: x as i32,
-            y: y as i32,
-        }
-    }
-
-    fn in_bounds(&self, x: i32, y: i32) -> bool {
-        (0..=x).contains(&self.x) && (0..=y).contains(&self.y)
-    }
-
-    fn generate_sequence(
-        self,
-        delta: Self,
-        x: i32,
-        y: i32,
-    ) -> impl Iterator<Item = Self> + 'static {
-        std::iter::successors(Some(self), move |&point| {
-            let next = point + delta;
-            next.in_bounds(x, y).then_some(next)
-        })
-    }
-}
-
-impl Sub for Point {
-    type Output = Self;
-
-    fn sub(self, other: Self) -> Self::Output {
-        Self {
-            x: self.x - other.x,
-            y: self.y - other.y,
-        }
-    }
-}
-
-impl Add for Point {
-    type Output = Self;
-
-    fn add(self, other: Self) -> Self {
-        Self {
-            x: self.x + other.x,
-            y: self.y + other.y,
-        }
-    }
-}
-
-impl Neg for Point {
-    type Output = Self;
-
-    fn neg(self) -> Self::Output {
-        Self {
-            x: -self.x,
-            y: -self.y,
-        }
-    }
-}
-
 struct Map {
     antenna: HashMap<char, Vec<Point>>,
     max_x: i32,
@@ -98,7 +34,7 @@ impl From<&str> for Map {
                 line.chars()
                     .enumerate()
                     .filter(|(_, c)| c.is_ascii_alphanumeric())
-                    .map(move |(x, c)| (c, Point::new(x, y)))
+                    .map(move |(x, c)| (c, Point::from((x, y))))
             })
             .fold(
                 HashMap::new(),
@@ -107,10 +43,10 @@ impl From<&str> for Map {
                     map
                 },
             );
-        let max_boundary = Point::new(
+        let max_boundary = Point::from((
             input.lines().next().map_or(0, |line| line.len() - 1),
             input.lines().count() - 1,
-        );
+        ));
         Self {
             antenna,
             max_x: max_boundary.x,
