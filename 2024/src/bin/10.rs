@@ -1,4 +1,4 @@
-use aoc_2024::Point;
+use aoc_2024::{Grid, Point};
 use std::{
     collections::{HashSet, VecDeque},
     time::Instant,
@@ -21,15 +21,13 @@ fn main() {
 
 const DIRECTIONS: [(i32, i32); 4] = [(0, -1), (1, 0), (0, 1), (-1, 0)];
 
-struct Grid {
-    data: Vec<Vec<usize>>,
-    height: usize,
-    width: usize,
+struct Map {
+    grid: Grid<usize>,
 }
 
-impl From<&str> for Grid {
+impl From<&str> for Map {
     fn from(input: &str) -> Self {
-        let data: Vec<Vec<usize>> = input
+        let grid: Grid<usize> = input
             .trim()
             .lines()
             .map(|line| {
@@ -38,31 +36,15 @@ impl From<&str> for Grid {
                     .collect()
             })
             .collect();
-        let height = data.len();
-        let width = data[0].len();
-        Self {
-            data,
-            height,
-            width,
-        }
+        Self { grid }
     }
 }
 
-impl Grid {
-    fn get(&self, p: &Point) -> Option<usize> {
-        let x = p.x as usize;
-        let y = p.y as usize;
-        if p.x >= 0 && p.y >= 0 && x < self.width && y < self.height {
-            Some(self.data[y][x])
-        } else {
-            None
-        }
-    }
-
+impl Map {
     fn rate_map(&self, part_2: bool) -> usize {
-        (0..self.height)
-            .flat_map(|y| (0..self.width).map(move |x| Point::from((x as i32, y as i32))))
-            .filter(|xy| matches!(self.get(xy), Some(0)))
+        (0..self.grid.height)
+            .flat_map(|y| (0..self.grid.width).map(move |x| Point::from((x as i32, y as i32))))
+            .filter(|xy| matches!(self.grid.get(*xy), Some(0)))
             .collect::<HashSet<_>>()
             .into_iter()
             .map(|start| {
@@ -73,7 +55,7 @@ impl Grid {
                     if height == 10 {
                         scores.push(xy);
                     }
-                    todo.extend(self.get_valid_paths(&xy, height))
+                    todo.extend(self.get_valid_paths(&xy, height));
                 }
 
                 if part_2 {
@@ -92,19 +74,19 @@ impl Grid {
         height: usize,
     ) -> impl Iterator<Item = (Point, usize)> + '_ {
         DIRECTIONS
-            .iter()
-            .map(|(dx, dy)| *xy + Point::from((*dx, *dy)))
-            .filter(move |p| self.get(p).map_or(false, |digit| height == digit))
+            .into_iter()
+            .map(|(dx, dy)| *xy + Point::from((dx, dy)))
+            .filter(move |p| self.grid.get(*p).map_or(false, |digit| height == digit))
             .map(move |p| (p, height + 1))
     }
 }
 
 fn part_1(input: &str) -> usize {
-    Grid::from(input).rate_map(false)
+    Map::from(input).rate_map(false)
 }
 
 fn part_2(input: &str) -> usize {
-    Grid::from(input).rate_map(true)
+    Map::from(input).rate_map(true)
 }
 
 #[cfg(test)]
