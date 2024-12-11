@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+#![allow(clippy::missing_panics_doc)]
 use std::{collections::HashMap, time::Instant};
 
 static INPUT_TXT: &str = include_str!("../../input/11.txt");
@@ -68,12 +70,12 @@ mod tests {
     #[test]
     fn test_part_1() {
         assert_eq!(part_1(INPUT), 55312);
-        assert_eq!(part_1(INPUT_TXT), 199986);
+        assert_eq!(part_1(INPUT_TXT), 199_986);
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT), 65601038650482);
-        assert_eq!(part_2(INPUT_TXT), 236804088748754);
+        assert_eq!(part_2(INPUT), 65_601_038_650_482);
+        assert_eq!(part_2(INPUT_TXT), 236_804_088_748_754);
     }
 }

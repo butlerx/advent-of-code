@@ -165,7 +165,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic]
+    #[should_panic(expected = "index out of bounds: the len is 4 but the index is 6")]
     fn test_grid_set_out_of_bounds() {
         let mut grid = Grid {
             cells: vec![1, 2, 3, 4],

@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+#![allow(clippy::missing_panics_doc)]
 use std::time::Instant;
 
 static INPUT_TXT: &str = include_str!("../../input/09.txt");
@@ -89,12 +91,12 @@ mod tests {
     #[test]
     fn test_part_1() {
         assert_eq!(part_1(INPUT), 1928);
-        assert_eq!(part_1(INPUT_TXT), 6323641412437);
+        assert_eq!(part_1(INPUT_TXT), 6_323_641_412_437);
     }
 
     #[test]
     fn test_part_2() {
         assert_eq!(part_2(INPUT), 2858);
-        assert_eq!(part_2(INPUT_TXT), 6351801932670);
+        assert_eq!(part_2(INPUT_TXT), 6_351_801_932_670);
     }
 }
