@@ -62,7 +62,6 @@ fn part_1(input: &str, width: i32, height: i32) -> i32 {
 
 fn part_2(input: &str, width: i32, height: i32) -> i32 {
     let robots = parse_input(input);
-    let half = robots.len() / 2;
     (0..10_000) // arbitrary limit
         .find(|&seconds| {
             let occupied = robots
@@ -72,11 +71,7 @@ fn part_2(input: &str, width: i32, height: i32) -> i32 {
                     y: (pos.y + (vel.y * seconds)).rem_euclid(height),
                 })
                 .collect::<HashSet<Point>>();
-            occupied
-                .iter()
-                .filter(|c| c.neighbours().iter().any(|n| occupied.contains(n)))
-                .count()
-                >= half
+            occupied.len() == robots.len()
         })
         .expect("no solution in 10,000 seconds")
 }
