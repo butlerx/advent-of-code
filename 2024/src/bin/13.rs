@@ -95,6 +95,7 @@ impl From<&str> for ClawMachine {
 
         let location = prize
             .strip_prefix("Prize: ")
+            .map(str::trim)
             .expect("Expected \"Prize: \" label in the third row");
         let (x, y) = location
             .split_once(", ")

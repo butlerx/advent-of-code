@@ -1,4 +1,7 @@
-use std::ops::{Add, Neg, Sub};
+use std::{
+    fmt::Display,
+    ops::{Add, Neg, Sub},
+};
 
 #[derive(Debug, Hash, Eq, PartialEq, Clone, Copy)]
 pub struct Point {
@@ -22,6 +25,34 @@ impl Point {
             let next = point + delta;
             next.in_bounds(x, y).then_some(next)
         })
+    }
+
+    #[must_use]
+    pub fn neighbours(&self) -> Vec<Self> {
+        vec![
+            Self {
+                x: self.x - 1,
+                y: self.y,
+            },
+            Self {
+                x: self.x + 1,
+                y: self.y,
+            },
+            Self {
+                x: self.x,
+                y: self.y - 1,
+            },
+            Self {
+                x: self.x,
+                y: self.y + 1,
+            },
+        ]
+    }
+}
+
+impl Display for Point {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "({},{})", self.x, self.y)
     }
 }
 
