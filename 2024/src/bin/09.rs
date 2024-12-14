@@ -1,23 +1,19 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::missing_panics_doc)]
-use std::time::Instant;
+use aoc_2024::time_execution;
 
 static INPUT_TXT: &str = include_str!("../../input/09.txt");
 
 fn main() {
     println!("🌟 --- Day 9 Results --- 🌟");
-    let start_1 = Instant::now();
-    let res_1 = part_1(INPUT_TXT);
-    let duration_1 = start_1.elapsed().as_millis();
+    let (res_1, duration_1) = time_execution(|| part_1(INPUT_TXT));
     println!("📌 Part 1: {res_1}, complete in {duration_1} ms");
 
-    let start_2 = Instant::now();
-    let res_2 = part_2(INPUT_TXT);
-    let duration_2 = start_2.elapsed().as_millis();
+    let (res_2, duration_2) = time_execution(|| part_2(INPUT_TXT));
     println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
 }
 
-fn compact_disk(disk: Vec<(usize, i32)>) -> usize {
+fn compact_disk(disk: Vec<(usize, i64)>) -> i64 {
     (0..disk.len())
         .rev()
         .fold(disk, |mut acc, i| {
@@ -39,11 +35,11 @@ fn compact_disk(disk: Vec<(usize, i32)>) -> usize {
         .flat_map(|&(s, id)| std::iter::repeat(id).take(s))
         .enumerate()
         .filter(|&(_, id)| id != -1)
-        .map(|(i, id)| i * id as usize)
+        .map(|(i, id)| i64::try_from(i).unwrap() * id)
         .sum()
 }
 
-fn part_1(input: &str) -> usize {
+fn part_1(input: &str) -> i64 {
     let mut id = 0;
     compact_disk(
         input
@@ -63,7 +59,7 @@ fn part_1(input: &str) -> usize {
     )
 }
 
-fn part_2(input: &str) -> usize {
+fn part_2(input: &str) -> i64 {
     let mut id = 0;
     compact_disk(
         input

@@ -1,5 +1,6 @@
 use crate::Point;
 
+#[derive(Debug, Clone)]
 pub struct Grid<T> {
     cells: Vec<T>,
     pub height: usize,

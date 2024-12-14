@@ -1,9 +1,15 @@
+#![warn(clippy::pedantic)]
+#![allow(clippy::missing_panics_doc)]
+use aoc_2024::time_execution;
 static INPUT_TXT: &str = include_str!("../../input/04.txt");
 
 fn main() {
     println!("🌟 --- Day 4 Results --- 🌟");
-    println!("📌 Part 1: {}", part_1(INPUT_TXT));
-    println!("📌 Part 2: {}", part_2(INPUT_TXT));
+    let (res_1, duration_1) = time_execution(|| part_1(INPUT_TXT));
+    println!("📌 Part 1: {res_1}, complete in {duration_1} ms");
+
+    let (res_2, duration_2) = time_execution(|| part_2(INPUT_TXT));
+    println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
 }
 
 type Grid = Vec<Vec<char>>;
@@ -26,7 +32,7 @@ fn parse_input(input: &str) -> Grid {
     input.lines().map(|l| l.chars().collect()).collect()
 }
 
-fn part_1(input: &str) -> u32 {
+fn part_1(input: &str) -> usize {
     let grid = parse_input(input);
     let rows = grid.len();
     let cols = grid[0].len();
@@ -39,12 +45,15 @@ fn part_1(input: &str) -> u32 {
                 .iter()
                 .filter(|(dx, dy)| {
                     WORD.iter().enumerate().all(|(i, item)| {
-                        let new_row = (row as i32 + dx * i as i32) as usize;
-                        let new_col = (col as i32 + dy * i as i32) as usize;
+                        let i = i32::try_from(i).expect("number too large");
+                        let new_row =
+                            (i32::try_from(row).expect("number too large") + dx * i) as usize;
+                        let new_col =
+                            (i32::try_from(col).expect("number too large") + dy * i) as usize;
                         new_row < rows && new_col < cols && grid[new_row][new_col] == *item
                     })
                 })
-                .count() as u32
+                .count()
         })
         .sum()
 }
@@ -56,27 +65,28 @@ fn part_2(input: &str) -> u32 {
         .flat_map(|r| (1..grid[0].len() - 1).map(move |c| (r, c)))
         .filter(|&(r, c)| grid[r][c] == 'A')
         .map(|(r, c)| {
-            [
-                (
-                    (r - 1, c - 1, 'M', r + 1, c + 1, 'S'),
-                    (r - 1, c + 1, 'M', r + 1, c - 1, 'S'),
-                ),
-                (
-                    (r - 1, c - 1, 'M', r + 1, c + 1, 'S'),
-                    (r + 1, c - 1, 'M', r - 1, c + 1, 'S'),
-                ),
-                (
-                    (r + 1, c + 1, 'M', r - 1, c - 1, 'S'),
-                    (r + 1, c - 1, 'M', r - 1, c + 1, 'S'),
-                ),
-                (
-                    (r + 1, c + 1, 'M', r - 1, c - 1, 'S'),
-                    (r - 1, c + 1, 'M', r + 1, c - 1, 'S'),
-                ),
-            ]
-            .iter()
-            .any(|&(p1, p2)| check_pattern(&grid, p1) && check_pattern(&grid, p2))
-                as u32
+            u32::from(
+                [
+                    (
+                        (r - 1, c - 1, 'M', r + 1, c + 1, 'S'),
+                        (r - 1, c + 1, 'M', r + 1, c - 1, 'S'),
+                    ),
+                    (
+                        (r - 1, c - 1, 'M', r + 1, c + 1, 'S'),
+                        (r + 1, c - 1, 'M', r - 1, c + 1, 'S'),
+                    ),
+                    (
+                        (r + 1, c + 1, 'M', r - 1, c - 1, 'S'),
+                        (r + 1, c - 1, 'M', r - 1, c + 1, 'S'),
+                    ),
+                    (
+                        (r + 1, c + 1, 'M', r - 1, c - 1, 'S'),
+                        (r - 1, c + 1, 'M', r + 1, c - 1, 'S'),
+                    ),
+                ]
+                .iter()
+                .any(|&(p1, p2)| check_pattern(&grid, p1) && check_pattern(&grid, p2)),
+            )
         })
         .sum()
 }

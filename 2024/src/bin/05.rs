@@ -1,10 +1,16 @@
+#![warn(clippy::pedantic)]
+#![allow(clippy::missing_panics_doc)]
+use aoc_2024::time_execution;
 use std::{cmp::Ordering, collections::HashMap};
 static INPUT_TXT: &str = include_str!("../../input/05.txt");
 
 fn main() {
     println!("🌟 --- Day 5 Results --- 🌟");
-    println!("📌 Part 1: {}", part_1(INPUT_TXT));
-    println!("📌 Part 2: {}", part_2(INPUT_TXT));
+    let (res_1, duration_1) = time_execution(|| part_1(INPUT_TXT));
+    println!("📌 Part 1: {res_1}, complete in {duration_1} ms");
+
+    let (res_2, duration_2) = time_execution(|| part_2(INPUT_TXT));
+    println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
 }
 
 fn parse_input(input: &str) -> (HashMap<u32, Vec<u32>>, Vec<Vec<u32>>) {
