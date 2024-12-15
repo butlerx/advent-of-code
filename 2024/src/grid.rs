@@ -1,10 +1,52 @@
 use crate::Point;
+use std::iter::Iterator;
 
 #[derive(Debug, Clone)]
 pub struct Grid<T> {
     cells: Vec<T>,
     pub height: usize,
     pub width: usize,
+}
+
+pub struct IterGridState<'a, T> {
+    grid: &'a Grid<T>,
+    current: usize,
+}
+
+impl<'a, T> Iterator for IterGridState<'a, T> {
+    type Item = (Point, &'a T);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.current >= self.grid.cells.len() {
+            None
+        } else {
+            let y = self.current / self.grid.width;
+            let x = self.current % self.grid.width;
+            let point = Point::from((x, y));
+            let value = &self.grid.cells[self.current];
+            self.current += 1;
+            Some((point, value))
+        }
+    }
+}
+
+impl<T> Grid<T> {
+    #[must_use]
+    pub fn iter(&self) -> IterGridState<T> {
+        IterGridState {
+            grid: self,
+            current: 0,
+        }
+    }
+}
+
+impl<'a, T> IntoIterator for &'a Grid<T> {
+    type Item = (Point, &'a T);
+    type IntoIter = IterGridState<'a, T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
 }
 
 impl<T: Clone + Copy> From<Vec<Vec<T>>> for Grid<T> {
