@@ -106,6 +106,14 @@ impl<T: Clone + Copy> Grid<T> {
         let idx = y * self.width + x;
         self.cells[idx] = value;
     }
+
+    #[must_use]
+    pub fn in_bounds(&self, pos: Point) -> bool {
+        let x = usize::try_from(pos.x).expect("number too large");
+        let y = usize::try_from(pos.y).expect("number too large");
+
+        pos.x >= 0 && pos.y >= 0 && (x) < self.width && (y) < self.height
+    }
 }
 
 #[cfg(test)]
