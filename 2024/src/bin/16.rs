@@ -139,6 +139,7 @@ fn find_previous_states(
 
     states
 }
+
 fn backtrack_shortest_paths(
     grid: &Grid<char>,
     visited: &HashMap<State, i32>,
