@@ -33,6 +33,11 @@ impl Point {
     }
 
     #[must_use]
+    pub fn manhattan_distance(self, b: Point) -> i32 {
+        (self.x - b.x).abs() + (self.y - b.y).abs()
+    }
+
+    #[must_use]
     pub fn neighbours(&self) -> Vec<Self> {
         vec![
             Self {
@@ -57,7 +62,7 @@ impl Point {
 
 impl Display for Point {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "({},{})", self.x, self.y)
+        write!(f, "{},{}", self.x, self.y)
     }
 }
 

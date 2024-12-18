@@ -86,6 +86,17 @@ impl<T: Clone + Copy> FromIterator<Vec<T>> for Grid<T> {
 }
 
 impl<T: Clone + Copy> Grid<T> {
+    pub fn new(pos: Point, fill: T) -> Self {
+        let width = usize::try_from(pos.x).expect("number too large") + 1;
+        let height = usize::try_from(pos.y).expect("number too large") + 1;
+        let cells = vec![fill; width * height];
+        Self {
+            cells,
+            height,
+            width,
+        }
+    }
+
     #[must_use]
     pub fn get(&self, pos: Point) -> Option<T> {
         if pos.x < 0 || pos.y < 0 {
@@ -109,10 +120,12 @@ impl<T: Clone + Copy> Grid<T> {
 
     #[must_use]
     pub fn in_bounds(&self, pos: Point) -> bool {
+        if pos.x < 0 || pos.y < 0 {
+            return false;
+        }
         let x = usize::try_from(pos.x).expect("number too large");
         let y = usize::try_from(pos.y).expect("number too large");
-
-        pos.x >= 0 && pos.y >= 0 && (x) < self.width && (y) < self.height
+        (x) < self.width && (y) < self.height
     }
 }
 

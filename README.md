@@ -4,7 +4,7 @@ Solutions for [adventofcode.com](https://adventofcode.com)
 
  <!-- AOC TILES BEGIN -->
 <h1 align="center">
-  2024 - 34 ⭐
+  2024 - 36 ⭐
 </h1>
 <a href="2024/src/bin/01.rs">
   <img src=".aoc_tiles/tiles/2024/01.png" width="161px">
@@ -56,6 +56,9 @@ Solutions for [adventofcode.com](https://adventofcode.com)
 </a>
 <a href="2024/src/bin/17.rs">
   <img src=".aoc_tiles/tiles/2024/17.png" width="161px">
+</a>
+<a href="2024/src/bin/18.rs">
+  <img src=".aoc_tiles/tiles/2024/18.png" width="161px">
 </a>
 <h1 align="center">
   2023 - 50 ⭐
