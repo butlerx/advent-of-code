@@ -20,26 +20,45 @@ struct Node {
     next: [u16; 26],
 }
 
+struct Trie {
+    trie: Vec<Node>,
+}
+
+impl Trie {
+    fn next(&self, i: usize, j: usize) -> usize {
+        self.trie[i].next[j] as usize
+    }
+
+    fn is_towel(&self, i: usize) -> bool {
+        self.trie[i].towel
+    }
+}
+
+impl From<&str> for Trie {
+    fn from(available_colours: &str) -> Self {
+        let trie = available_colours
+            .split(", ")
+            .fold(vec![Node::default()], |mut trie, towel| {
+                let final_index = towel.bytes().map(to_index).fold(0, |i, j| {
+                    if trie[i].next[j] == 0 {
+                        trie.push(Node::default());
+                        let next_index = trie.len() - 1;
+                        trie[i].next[j] = u16::try_from(next_index).expect("Index too large");
+                        next_index
+                    } else {
+                        trie[i].next[j] as usize
+                    }
+                });
+                trie[final_index].towel = true;
+                trie
+            });
+        Self { trie }
+    }
+}
+
 fn parse_input(input: &str) -> impl Iterator<Item = u64> + '_ {
     let (available_colours, desgins) = input.split_once("\n\n").expect("Invalid input");
-
-    let trie = available_colours
-        .split(", ")
-        .fold(vec![Node::default()], |mut trie, towel| {
-            let final_index = towel.bytes().map(to_index).fold(0, |i, j| {
-                if trie[i].next[j] == 0 {
-                    trie.push(Node::default());
-                    let next_index = trie.len() - 1;
-                    trie[i].next[j] = u16::try_from(next_index).expect("Index too large");
-                    next_index
-                } else {
-                    trie[i].next[j] as usize
-                }
-            });
-            trie[final_index].towel = true;
-            trie
-        });
-
+    let trie = Trie::from(available_colours);
     let seen = &mut HashMap::with_capacity(20_000);
     desgins
         .lines()
@@ -49,23 +68,18 @@ fn parse_input(input: &str) -> impl Iterator<Item = u64> + '_ {
 }
 
 #[inline]
-fn count_arrangements<'a>(
-    trie: &[Node],
-    seen: &mut HashMap<&'a [u8], u64>,
-    design: &'a [u8],
-) -> u64 {
+fn count_arrangements<'a>(trie: &Trie, seen: &mut HashMap<&'a [u8], u64>, design: &'a [u8]) -> u64 {
     if design.is_empty() {
         return 1;
     }
     seen.get(design).copied().unwrap_or_else(|| {
         let ways = (0..design.len())
             .scan(0, |state, depth| {
-                let j = to_index(design[depth]);
-                *state = trie[*state].next[j] as usize;
+                *state = trie.next(*state, to_index(design[depth]));
                 Some((*state, depth))
             })
             .take_while(|(i, _)| *i != 0)
-            .filter(|(i, _)| trie[*i].towel)
+            .filter(|(i, _)| trie.is_towel(*i))
             .map(|(_, depth)| count_arrangements(trie, seen, &design[depth + 1..]))
             .sum();
 
