@@ -1,5 +1,5 @@
 use crate::Point;
-use std::iter::Iterator;
+use std::{cmp::PartialEq, iter::Iterator};
 
 #[derive(Debug, Clone)]
 pub struct Grid<T> {
@@ -85,7 +85,7 @@ impl<T: Clone + Copy> FromIterator<Vec<T>> for Grid<T> {
     }
 }
 
-impl<T: Clone + Copy> Grid<T> {
+impl<T: Clone + Copy + PartialEq> Grid<T> {
     pub fn new(pos: Point, fill: T) -> Self {
         let width = usize::try_from(pos.x).expect("number too large") + 1;
         let height = usize::try_from(pos.y).expect("number too large") + 1;
@@ -126,6 +126,10 @@ impl<T: Clone + Copy> Grid<T> {
         let x = usize::try_from(pos.x).expect("number too large");
         let y = usize::try_from(pos.y).expect("number too large");
         (x) < self.width && (y) < self.height
+    }
+
+    pub fn find_position(&self, target: T) -> Option<Point> {
+        self.iter().find(|(_, &c)| c == target).map(|(p, _)| p)
     }
 }
 
