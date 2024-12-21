@@ -5,26 +5,26 @@ use std::{
 
 #[derive(Debug, Hash, Eq, PartialEq, Clone, Copy, Ord, PartialOrd)]
 pub struct Point {
-    pub x: i32,
-    pub y: i32,
+    pub x: i64,
+    pub y: i64,
 }
 
 impl Point {
     #[must_use]
-    pub const fn new(x: i32, y: i32) -> Self {
+    pub const fn new(x: i64, y: i64) -> Self {
         Self { x, y }
     }
 
     #[must_use]
-    pub fn in_bounds(&self, x: i32, y: i32) -> bool {
+    pub fn in_bounds(&self, x: i64, y: i64) -> bool {
         (0..=x).contains(&self.x) && (0..=y).contains(&self.y)
     }
 
     pub fn generate_sequence(
         self,
         delta: Self,
-        x: i32,
-        y: i32,
+        x: i64,
+        y: i64,
     ) -> impl Iterator<Item = Self> + 'static {
         std::iter::successors(Some(self), move |&point| {
             let next = point + delta;
@@ -33,7 +33,7 @@ impl Point {
     }
 
     #[must_use]
-    pub fn manhattan_distance(self, b: Point) -> i32 {
+    pub fn manhattan_distance(self, b: Point) -> i64 {
         (self.x - b.x).abs() + (self.y - b.y).abs()
     }
 
@@ -66,16 +66,16 @@ impl Display for Point {
     }
 }
 
-impl From<(i32, i32)> for Point {
-    fn from((x, y): (i32, i32)) -> Self {
+impl From<(i64, i64)> for Point {
+    fn from((x, y): (i64, i64)) -> Self {
         Self { x, y }
     }
 }
 
 impl From<(usize, usize)> for Point {
     fn from((x, y): (usize, usize)) -> Self {
-        let x = i32::try_from(x).expect("x is too large");
-        let y = i32::try_from(y).expect("y is too large");
+        let x = i64::try_from(x).expect("x is too large");
+        let y = i64::try_from(y).expect("y is too large");
         Self { x, y }
     }
 }
