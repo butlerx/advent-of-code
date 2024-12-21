@@ -66,13 +66,13 @@ impl Grid {
 
     #[inline(always)]
     fn is_wall(&self, pos: Point) -> bool {
-        let idx = (pos.x * self.cols as i32 + pos.y) as usize;
+        let idx = (pos.x * self.cols as i64 + pos.y) as usize;
         self.cells[idx]
     }
 
     #[inline(always)]
     fn set_wall(&mut self, pos: Point, is_wall: bool) {
-        let idx = (pos.x * self.cols as i32 + pos.y) as usize;
+        let idx = (pos.x * self.cols as i64 + pos.y) as usize;
         self.cells[idx] = is_wall;
     }
 

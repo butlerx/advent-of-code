@@ -15,9 +15,9 @@ fn main() {
 }
 
 struct SearchConfig {
-    max_distance: i32,
-    distance_check: fn(i32) -> bool,
-    distance_add: fn(i32) -> i64,
+    max_distance: i64,
+    distance_check: fn(i64) -> bool,
+    distance_add: fn(i64) -> i64,
 }
 
 fn count_paths(
@@ -63,7 +63,7 @@ fn count_paths(
 fn generate_end_points(
     mid_point: Point,
     config: &SearchConfig,
-) -> impl Iterator<Item = (Point, i32)> + '_ {
+) -> impl Iterator<Item = (Point, i64)> + '_ {
     let max_d = config.max_distance;
     (-max_d..=max_d)
         .flat_map(move |r| (-max_d..=max_d).map(move |c| Point::new(c, r)))

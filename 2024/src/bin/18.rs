@@ -43,11 +43,11 @@ fn is_valid_move(point: Point, grid: &Grid<bool>, explored: &HashSet<Point>) -> 
 }
 
 fn explore_step(
-    to_explore: &mut BinaryHeap<(Reverse<i32>, i32, Point)>,
+    to_explore: &mut BinaryHeap<(Reverse<i64>, i64, Point)>,
     explored: &mut HashSet<Point>,
     grid: &Grid<bool>,
     exit: Point,
-) -> Option<i32> {
+) -> Option<i64> {
     let (_, distance, current) = to_explore.pop()?;
 
     if current == exit {
@@ -64,7 +64,7 @@ fn explore_step(
     None
 }
 
-fn explore_at_time(bytes: &[Point], bytes_to_simulate: usize, exit: Point) -> Option<i32> {
+fn explore_at_time(bytes: &[Point], bytes_to_simulate: usize, exit: Point) -> Option<i64> {
     let grid = create_grid(bytes, bytes_to_simulate, exit);
     let start = Point::new(0, 0);
     let mut to_explore = BinaryHeap::from([(Reverse(start.manhattan_distance(exit)), 0, start)]);
@@ -89,7 +89,7 @@ fn parse_input(input: &str) -> Vec<Point> {
         .collect()
 }
 
-fn part_1(input: &str, bytes_to_simulate: usize, exit: Point) -> i32 {
+fn part_1(input: &str, bytes_to_simulate: usize, exit: Point) -> i64 {
     let bytes = parse_input(input);
     explore_at_time(&bytes, bytes_to_simulate, exit).expect("No path found")
 }

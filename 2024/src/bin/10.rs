@@ -14,7 +14,7 @@ fn main() {
     println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
 }
 
-const DIRECTIONS: [(i32, i32); 4] = [(0, -1), (1, 0), (0, 1), (-1, 0)];
+const DIRECTIONS: [(i64, i64); 4] = [(0, -1), (1, 0), (0, 1), (-1, 0)];
 
 struct Map {
     grid: Grid<usize>,

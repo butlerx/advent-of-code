@@ -14,10 +14,10 @@ fn main() {
     println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
 }
 
-fn parse_point(s: &str) -> Vec<i32> {
+fn parse_point(s: &str) -> Vec<i64> {
     s.split(',')
-        .map(|x| x.parse::<i32>().expect("invalid number"))
-        .collect::<Vec<i32>>()
+        .map(|x| x.parse::<i64>().expect("invalid number"))
+        .collect::<Vec<i64>>()
 }
 
 fn parse_input(input: &str) -> Vec<(Point, Point)> {
@@ -34,7 +34,7 @@ fn parse_input(input: &str) -> Vec<(Point, Point)> {
         .collect::<Vec<(Point, Point)>>()
 }
 
-fn part_1(input: &str, width: i32, height: i32) -> i32 {
+fn part_1(input: &str, width: i64, height: i64) -> i64 {
     let robots = parse_input(input);
     let mid_x = (width - 1) / 2;
     let mid_y = (height - 1) / 2;
@@ -60,7 +60,7 @@ fn part_1(input: &str, width: i32, height: i32) -> i32 {
         .product()
 }
 
-fn part_2(input: &str, width: i32, height: i32) -> i32 {
+fn part_2(input: &str, width: i64, height: i64) -> i64 {
     let robots = parse_input(input);
     (0..10_000) // arbitrary limit
         .find(|&seconds| {

@@ -90,8 +90,8 @@ fn move_expanded_vertical(grid: &Grid<char>, start: Point, d: Point) -> MoveResu
             .iter()
             .map(|&p| p + d)
             .flat_map(|next| match grid.get(next) {
-                Some('[') => vec![(next, '['), (next + Point::from((1, 0)), ']')],
-                Some(']') => vec![(next, ']'), (next + Point::from((-1, 0)), '[')],
+                Some('[') => vec![(next, '['), (next + Point::from((1_i64, 0)), ']')],
+                Some(']') => vec![(next, ']'), (next + Point::from((-1_i64, 0)), '[')],
                 _ => vec![],
             })
             .collect();
@@ -148,7 +148,7 @@ fn move_objects(grid: &mut Grid<char>, robot: Point, d: Direction, part_2: bool)
     robot + move_vector
 }
 
-fn sum_gps(mut grid: Grid<char>, moves: Vec<Direction>, part_2: bool) -> i32 {
+fn sum_gps(mut grid: Grid<char>, moves: Vec<Direction>, part_2: bool) -> i64 {
     let mut robot = find_robot(&grid);
     grid.set(robot, '.');
 
@@ -162,7 +162,7 @@ fn sum_gps(mut grid: Grid<char>, moves: Vec<Direction>, part_2: bool) -> i32 {
         .sum()
 }
 
-fn part_1(input: &str) -> i32 {
+fn part_1(input: &str) -> i64 {
     let (grid_data, moves) = parse_input(input);
     let grid = Grid::from(grid_data);
     sum_gps(grid, moves, false)
@@ -179,7 +179,7 @@ fn expand_grid(row: &[char]) -> Vec<char> {
         .collect()
 }
 
-fn part_2(input: &str) -> i32 {
+fn part_2(input: &str) -> i64 {
     let (grid_data, moves) = parse_input(input);
     let grid = Grid::from(
         grid_data

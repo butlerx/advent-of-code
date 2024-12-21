@@ -16,8 +16,8 @@ fn main() {
 
 struct Map {
     antenna: HashMap<char, Vec<Point>>,
-    max_x: i32,
-    max_y: i32,
+    max_x: i64,
+    max_y: i64,
 }
 
 impl From<&str> for Map {
