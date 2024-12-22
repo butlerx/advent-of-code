@@ -1,6 +1,7 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::missing_panics_doc)]
-use aoc_2024::time_execution;
+use aoc_2024::{time_execution, Grid, Point};
+
 static INPUT_TXT: &str = include_str!("../../input/04.txt");
 
 fn main() {
@@ -12,45 +13,36 @@ fn main() {
     println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
 }
 
-type Grid = Vec<Vec<char>>;
-type Point = (i32, i32);
-
 const DIRECTIONS: [Point; 8] = [
-    (0, 1),
-    (1, 0),
-    (0, -1),
-    (-1, 0),
-    (1, 1),
-    (-1, -1),
-    (1, -1),
-    (-1, 1),
+    Point { x: 0, y: 1 },
+    Point { x: 1, y: 0 },
+    Point { x: 0, y: -1 },
+    Point { x: -1, y: 0 },
+    Point { x: 1, y: 1 },
+    Point { x: -1, y: -1 },
+    Point { x: 1, y: -1 },
+    Point { x: -1, y: 1 },
 ];
 
 const WORD: [char; 4] = ['X', 'M', 'A', 'S'];
 
-fn parse_input(input: &str) -> Grid {
+fn parse_input(input: &str) -> Grid<char> {
     input.lines().map(|l| l.chars().collect()).collect()
 }
 
 fn part_1(input: &str) -> usize {
     let grid = parse_input(input);
-    let rows = grid.len();
-    let cols = grid[0].len();
 
-    (0..rows)
-        .flat_map(|r| (0..cols).map(move |c| (r, c)))
-        .filter(|&(r, c)| grid[r][c] == 'X')
-        .map(|(row, col)| {
+    grid.iter()
+        .filter(|(_, &c)| c == 'X')
+        .map(|(pos, _)| {
             DIRECTIONS
                 .iter()
-                .filter(|(dx, dy)| {
+                .filter(|&&delta| {
                     WORD.iter().enumerate().all(|(i, item)| {
-                        let i = i32::try_from(i).expect("number too large");
-                        let new_row =
-                            (i32::try_from(row).expect("number too large") + dx * i) as usize;
-                        let new_col =
-                            (i32::try_from(col).expect("number too large") + dy * i) as usize;
-                        new_row < rows && new_col < cols && grid[new_row][new_col] == *item
+                        let i = i64::try_from(i).expect("number too large");
+                        let next_pos = pos + Point::new(delta.x * i, delta.y * i);
+                        grid.get(next_pos) == Some(*item)
                     })
                 })
                 .count()
@@ -61,41 +53,49 @@ fn part_1(input: &str) -> usize {
 fn part_2(input: &str) -> u32 {
     let grid = parse_input(input);
 
-    (1..grid.len() - 1)
-        .flat_map(|r| (1..grid[0].len() - 1).map(move |c| (r, c)))
-        .filter(|&(r, c)| grid[r][c] == 'A')
-        .map(|(r, c)| {
+    grid.iter()
+        .filter(|(_, &c)| c == 'A')
+        .filter(|(pos, _)| {
+            pos.x > 0
+                && pos.y > 0
+                && pos.x < (grid.height - 1) as i64
+                && pos.y < (grid.width - 1) as i64
+        })
+        .map(|(pos, _)| {
             u32::from(
                 [
                     (
-                        (r - 1, c - 1, 'M', r + 1, c + 1, 'S'),
-                        (r - 1, c + 1, 'M', r + 1, c - 1, 'S'),
+                        (Point::new(-1, -1), 'M', Point::new(1, 1), 'S'),
+                        (Point::new(-1, 1), 'M', Point::new(1, -1), 'S'),
                     ),
                     (
-                        (r - 1, c - 1, 'M', r + 1, c + 1, 'S'),
-                        (r + 1, c - 1, 'M', r - 1, c + 1, 'S'),
+                        (Point::new(-1, -1), 'M', Point::new(1, 1), 'S'),
+                        (Point::new(1, -1), 'M', Point::new(-1, 1), 'S'),
                     ),
                     (
-                        (r + 1, c + 1, 'M', r - 1, c - 1, 'S'),
-                        (r + 1, c - 1, 'M', r - 1, c + 1, 'S'),
+                        (Point::new(1, 1), 'M', Point::new(-1, -1), 'S'),
+                        (Point::new(1, -1), 'M', Point::new(-1, 1), 'S'),
                     ),
                     (
-                        (r + 1, c + 1, 'M', r - 1, c - 1, 'S'),
-                        (r - 1, c + 1, 'M', r + 1, c - 1, 'S'),
+                        (Point::new(1, 1), 'M', Point::new(-1, -1), 'S'),
+                        (Point::new(-1, 1), 'M', Point::new(1, -1), 'S'),
                     ),
                 ]
                 .iter()
-                .any(|&(p1, p2)| check_pattern(&grid, p1) && check_pattern(&grid, p2)),
+                .any(|&(p1, p2)| check_pattern(&grid, pos, p1) && check_pattern(&grid, pos, p2)),
             )
         })
         .sum()
 }
 
 fn check_pattern(
-    grid: &Grid,
-    (r1, c1, m, r2, c2, s): (usize, usize, char, usize, usize, char),
+    grid: &Grid<char>,
+    center: Point,
+    (offset1, m, offset2, s): (Point, char, Point, char),
 ) -> bool {
-    grid[r1][c1] == m && grid[r2][c2] == s
+    let pos1 = center + offset1;
+    let pos2 = center + offset2;
+    grid.get(pos1) == Some(m) && grid.get(pos2) == Some(s)
 }
 
 #[cfg(test)]
