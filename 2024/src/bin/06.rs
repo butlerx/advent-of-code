@@ -1,6 +1,6 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::missing_panics_doc)]
-use aoc_2024::{time_execution, Point};
+use aoc_2024::{time_execution, Grid, Point};
 use std::collections::{HashMap, HashSet};
 
 static INPUT_TXT: &str = include_str!("../../input/06.txt");
@@ -23,7 +23,7 @@ enum Direction {
 }
 
 impl Direction {
-    #[inline(always)]
+    #[inline]
     fn turn_right(self) -> Direction {
         match self {
             Direction::North => Direction::East,
@@ -32,105 +32,80 @@ impl Direction {
             Direction::West => Direction::North,
         }
     }
-}
 
-#[derive(Debug, Clone)]
-struct Grid {
-    cells: Vec<bool>,
-    rows: usize,
-    cols: usize,
-}
-
-impl Grid {
-    fn new(input: &str) -> (Self, Point, Direction) {
-        let cols = input.lines().next().unwrap().len();
-        let cells: Vec<bool> = input
-            .lines()
-            .flat_map(|line| line.chars())
-            .map(|c| c == '#')
-            .collect();
-        let rows = cells.len() / cols;
-
-        let start_pos = input
-            .lines()
-            .enumerate()
-            .find_map(|(row, line)| {
-                line.chars()
-                    .position(|c| c == '^')
-                    .map(|col| Point::from((row, col)))
-            })
-            .expect("no start position found");
-
-        (Self { cells, rows, cols }, start_pos, Direction::North)
-    }
-
-    #[inline(always)]
-    fn is_wall(&self, pos: Point) -> bool {
-        let idx = (pos.x * self.cols as i64 + pos.y) as usize;
-        self.cells[idx]
-    }
-
-    #[inline(always)]
-    fn set_wall(&mut self, pos: Point, is_wall: bool) {
-        let idx = (pos.x * self.cols as i64 + pos.y) as usize;
-        self.cells[idx] = is_wall;
-    }
-
-    fn next_position(&self, pos: Point, dir: Direction) -> Option<Point> {
-        match dir {
-            Direction::North if pos.x > 0 => Some(Point::from((pos.x - 1, pos.y))),
-            Direction::East if (pos.y as usize) < self.cols - 1 => {
-                Some(Point::from((pos.x, pos.y + 1)))
-            }
-            Direction::South if (pos.x as usize) < self.rows - 1 => {
-                Some(Point::from((pos.x + 1, pos.y)))
-            }
-            Direction::West if pos.y > 0 => Some(Point::from((pos.x, pos.y - 1))),
-            _ => None,
+    fn as_delta(self) -> Point {
+        match self {
+            Direction::North => Point::new(0, -1),
+            Direction::East => Point::new(1, 0),
+            Direction::South => Point::new(0, 1),
+            Direction::West => Point::new(-1, 0),
         }
     }
+}
 
-    fn simulate_path(&self, start: Point, mut dir: Direction) -> HashSet<Point> {
-        let mut visited = HashSet::with_capacity(self.rows * self.cols);
-        let mut current = start;
+fn parse_input(input: &str) -> (Grid<bool>, Point, Direction) {
+    let cells = input
+        .lines()
+        .map(|line| line.chars().map(|c| c == '#').collect::<Vec<_>>())
+        .collect::<Vec<_>>();
 
-        loop {
-            visited.insert(current);
-            match self.next_position(current, dir) {
-                Some(next) if self.is_wall(next) => dir = dir.turn_right(),
-                Some(next) => current = next,
-                None => break visited,
-            }
+    let start_pos = input
+        .lines()
+        .enumerate()
+        .find_map(|(row, line)| {
+            line.chars()
+                .position(|c| c == '^')
+                .map(|col| Point::from((col, row)))
+        })
+        .expect("no start position found");
+    (Grid::from(cells), start_pos, Direction::North)
+}
+
+fn next_position(grid: &Grid<bool>, pos: Point, dir: Direction) -> Option<Point> {
+    let next = pos + dir.as_delta();
+    grid.in_bounds(next).then_some(next)
+}
+
+fn simulate_path(grid: &Grid<bool>, start: Point, mut dir: Direction) -> HashSet<Point> {
+    let mut visited = HashSet::with_capacity(grid.height * grid.width);
+    let mut current = start;
+
+    loop {
+        visited.insert(current);
+        match next_position(grid, current, dir) {
+            Some(next) if grid.get(next) == Some(true) => dir = dir.turn_right(),
+            Some(next) => current = next,
+            None => break visited,
         }
     }
 }
 
 fn part_1(input: &str) -> usize {
-    let (grid, start, dir) = Grid::new(input);
-    grid.simulate_path(start, dir).len()
+    let (grid, start, dir) = parse_input(input);
+    simulate_path(&grid, start, dir).len()
 }
 
 fn part_2(input: &str) -> usize {
-    let (grid, start, start_dir) = Grid::new(input);
+    let (grid, start, start_dir) = parse_input(input);
 
     let mut test_grid = grid.clone();
-    let mut visited = HashSet::with_capacity(grid.rows * grid.cols);
-    let mut collision_map = HashMap::with_capacity(grid.rows * grid.cols);
+    let mut visited = HashSet::with_capacity(grid.height * grid.width);
+    let mut collision_map = HashMap::with_capacity(grid.height * grid.width);
 
-    grid.simulate_path(start, start_dir)
+    simulate_path(&grid, start, start_dir)
         .into_iter()
         .filter(|&pos| pos != start)
         .filter(|&pos| {
             visited.clear();
             collision_map.clear();
-            test_grid.set_wall(pos, true);
+            test_grid.set(pos, true);
 
             let mut current = (start, start_dir);
 
             while visited.insert(current) {
                 let mut next = current.0;
-                while let Some(pos) = test_grid.next_position(next, current.1) {
-                    if test_grid.is_wall(pos) {
+                while let Some(pos) = next_position(&test_grid, next, current.1) {
+                    if test_grid.get(pos) == Some(true) {
                         let next_state = (next, current.1.turn_right());
                         collision_map.insert(current, next_state);
                         current = next_state;
@@ -140,7 +115,7 @@ fn part_2(input: &str) -> usize {
                 }
             }
             visited.clear();
-            test_grid.set_wall(pos, false);
+            test_grid.set(pos, false);
 
             loop {
                 if !visited.insert(current) {
