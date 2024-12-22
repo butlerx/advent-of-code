@@ -35,65 +35,59 @@ fn count_paths(
     input
         .iter()
         .filter(|&(p, c)| *c != '#' && start_distance.get(p).unwrap() != i64::MAX)
-        .flat_map(|(mid_point, _)| {
-            let start_distance = start_distance.clone();
-            let end_distance = end_distance.clone();
-            generate_end_points(mid_point, config)
-                .filter(|(e, _)| input.in_bounds(*e))
-                .filter(|(e, _)| input.get(*e) != Some('#'))
-                .filter_map(move |(end_point, manhattan)| {
-                    if end_distance.get(end_point) == Some(i64::MAX) {
-                        return None;
-                    }
-
-                    let start_dist = start_distance.get(mid_point)?;
-                    let end_dist = end_distance.get(end_point)?;
-                    let new_distance = start_dist + end_dist + (config.distance_add)(manhattan);
-
-                    if (exact_distance && (new_distance + target) == orig_distance)
-                        || (!exact_distance && (new_distance + target) <= orig_distance)
-                    {
-                        Some(1)
-                    } else {
-                        None
-                    }
-                })
+        .map(|(mid_point, _)| mid_point)
+        .map(|mid_point| {
+            i64::try_from(
+                (-config.max_distance..=config.max_distance)
+                    .flat_map(|r_offset| {
+                        (-config.max_distance..=config.max_distance)
+                            .map(move |c_offset| Point::new(c_offset, r_offset))
+                    })
+                    .map(|offset| {
+                        let end_point = mid_point + offset;
+                        let manhattan = offset.manhattan_distance(Point::new(0, 0));
+                        (end_point, manhattan)
+                    })
+                    .filter(|&(_, manhattan)| (config.distance_check)(manhattan))
+                    .filter(|&(e, _)| input.in_bounds(e))
+                    .filter(|&(e, _)| input.get(e) != Some('#'))
+                    .filter(|&(e, _)| end_distance.get(e).unwrap() != i64::MAX)
+                    .filter_map(|(end_point, manhattan)| {
+                        let start_dist = start_distance.get(mid_point)?;
+                        let end_dist = end_distance.get(end_point)?;
+                        Some(start_dist + end_dist + (config.distance_add)(manhattan))
+                    })
+                    .filter(|&new_distance| {
+                        if exact_distance {
+                            new_distance + target == orig_distance
+                        } else {
+                            new_distance + target <= orig_distance
+                        }
+                    })
+                    .count(),
+            )
+            .expect("number too large")
         })
-        .sum::<i64>()
-}
-
-fn generate_end_points(
-    mid_point: Point,
-    config: &SearchConfig,
-) -> impl Iterator<Item = (Point, i64)> + '_ {
-    let max_d = config.max_distance;
-    (-max_d..=max_d)
-        .flat_map(move |r| (-max_d..=max_d).map(move |c| Point::new(c, r)))
-        .map(move |offset| {
-            let end_point = mid_point + offset;
-            let manhattan = mid_point.manhattan_distance(Point::new(0, 0));
-            (end_point, manhattan)
-        })
-        .filter(|&(_, manhattan)| (config.distance_check)(manhattan))
+        .sum()
 }
 
 fn bfs(input: &Grid<char>, start: Point) -> Grid<i64> {
     let dimensions = Point::from((input.width, input.height));
     let mut distance = Grid::new(dimensions, i64::MAX);
-    let mut queue = VecDeque::from([(start, 0)]);
+    let mut queue = VecDeque::from([(start, 0i64)]);
+
     while let Some((position, cost)) = queue.pop_front() {
         if distance.get(position).unwrap() != i64::MAX {
             continue;
         }
+
         distance.set(position, cost);
         let next_steps = position
             .neighbours()
             .into_iter()
-            .filter(|&adj| {
-                input.in_bounds(adj)
-                    && distance.get(adj).unwrap() == i64::MAX
-                    && input.get(adj).unwrap() != '#'
-            })
+            .filter(|&adj| input.in_bounds(adj))
+            .filter(|&adj| distance.get(adj) == Some(i64::MAX))
+            .filter(|&adj| input.get(adj) != Some('#'))
             .map(|adj| (adj, cost + 1));
         queue.extend(next_steps);
     }
