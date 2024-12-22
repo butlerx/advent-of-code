@@ -50,10 +50,12 @@ fn count_paths(
                     let end_dist = end_distance.get(end_point)?;
                     let new_distance = start_dist + end_dist + (config.distance_add)(manhattan);
 
-                    match exact_distance {
-                        true if (new_distance + target) == orig_distance => Some(1),
-                        false if (new_distance + target) <= orig_distance => Some(1),
-                        _ => None,
+                    if (exact_distance && (new_distance + target) == orig_distance)
+                        || (!exact_distance && (new_distance + target) <= orig_distance)
+                    {
+                        Some(1)
+                    } else {
+                        None
                     }
                 })
         })
@@ -123,7 +125,7 @@ fn part_2(input: &str) -> i64 {
     let config = SearchConfig {
         max_distance: 20,
         distance_check: |d| d <= 20,
-        distance_add: |d| i64::from(d),
+        distance_add: |d| d,
     };
     count_paths(&grid, &config, 100, false)
 }
@@ -164,7 +166,7 @@ mod tests {
         let config = SearchConfig {
             max_distance: 20,
             distance_check: |d| d <= 20,
-            distance_add: |d| i64::from(d),
+            distance_add: |d| d,
         };
 
         let savings = vec![
@@ -188,14 +190,13 @@ mod tests {
             let count = count_paths(&grid, &config, saving, true);
             assert_eq!(
                 count, expected_count,
-                "Expected {} cheats saving exactly {} picoseconds",
-                expected_count, saving
+                "Expected {expected_count} cheats saving exactly {saving} picoseconds"
             );
         }
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT_TXT), 999556);
+        assert_eq!(part_2(INPUT_TXT), 999_556);
     }
 }

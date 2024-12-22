@@ -58,8 +58,8 @@ fn part_2(input: &str) -> u32 {
         .filter(|(pos, _)| {
             pos.x > 0
                 && pos.y > 0
-                && pos.x < (grid.height - 1) as i64
-                && pos.y < (grid.width - 1) as i64
+                && pos.x < i64::try_from(grid.height - 1).expect("number too large")
+                && pos.y < i64::try_from(grid.width - 1).expect("number too large")
         })
         .map(|(pos, _)| {
             u32::from(

@@ -103,12 +103,12 @@ mod tests {
 
     #[test]
     fn test_prune() {
-        assert_eq!(prune(100_000_000), 16_113_920)
+        assert_eq!(prune(100_000_000), 16_113_920);
     }
 
     #[test]
     fn test_step() {
-        assert_eq!(step(123), 15_887_950)
+        assert_eq!(step(123), 15_887_950);
     }
 
     #[test]

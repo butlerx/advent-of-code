@@ -62,7 +62,9 @@ impl Register {
                 0 => self.a >>= self.combo(operand),
                 1 => self.b ^= operand,
                 2 => self.b = self.combo(operand) % 8,
-                3 if self.a != 0 => pointer = operand as usize,
+                3 if self.a != 0 => {
+                    pointer = usize::try_from(operand).expect("could not convert u64 to usize");
+                }
                 4 => self.b ^= self.c,
                 5 => output.push(self.combo(operand) % 8),
                 6 => self.b = self.a >> self.combo(operand),
@@ -153,7 +155,7 @@ Program: 0,3,5,4,3,0";
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2(INPUT_2), 117440);
-        assert_eq!(part_2(INPUT_TXT), 265061364597659);
+        assert_eq!(part_2(INPUT_2), 117_440);
+        assert_eq!(part_2(INPUT_TXT), 265_061_364_597_659);
     }
 }

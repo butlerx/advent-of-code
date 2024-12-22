@@ -66,16 +66,14 @@ impl Display for Point {
     }
 }
 
-impl From<(i64, i64)> for Point {
-    fn from((x, y): (i64, i64)) -> Self {
-        Self { x, y }
-    }
-}
-
-impl From<(usize, usize)> for Point {
-    fn from((x, y): (usize, usize)) -> Self {
-        let x = i64::try_from(x).expect("x is too large");
-        let y = i64::try_from(y).expect("y is too large");
+impl<T> From<(T, T)> for Point
+where
+    T: TryInto<i64>,
+    T::Error: std::fmt::Debug,
+{
+    fn from((x, y): (T, T)) -> Self {
+        let x = x.try_into().expect("x is too large");
+        let y = y.try_into().expect("y is too large");
         Self { x, y }
     }
 }
