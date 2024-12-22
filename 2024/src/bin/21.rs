@@ -1,6 +1,6 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::missing_panics_doc)]
-use aoc_2024::{time_execution, Point};
+use aoc_2024::{time_execution, Grid, Point};
 use std::collections::HashMap;
 
 static INPUT_TXT: &str = include_str!("../../input/21.txt");
@@ -16,25 +16,24 @@ fn main() {
 
 #[derive(Clone, Debug)]
 struct State {
-    pad: Vec<Vec<char>>,
+    pad: Grid<char>,
     moves: Vec<Point>,
     move_to_dir: HashMap<Point, char>,
 }
 
 impl Default for State {
     fn default() -> Self {
-        let pad = vec![
-            "789".chars().collect(),
-            "456".chars().collect(),
-            "123".chars().collect(),
-            " 0A".chars().collect(),
-        ];
+        let pad = Grid::from(vec![
+            vec!['7', '4', '1', ' '],
+            vec!['8', '5', '2', '0'],
+            vec!['9', '6', '3', 'A'],
+        ]);
         State::from(pad)
     }
 }
 
-impl From<Vec<Vec<char>>> for State {
-    fn from(pad: Vec<Vec<char>>) -> Self {
+impl From<Grid<char>> for State {
+    fn from(pad: Grid<char>) -> Self {
         let moves = vec![
             Point::new(-1, 0),
             Point::new(1, 0),
@@ -50,27 +49,11 @@ impl From<Vec<Vec<char>>> for State {
     }
 }
 
-fn get_permutations<T: Clone>(items: &[T]) -> Vec<Vec<T>> {
-    match items.len() {
-        0 => vec![vec![]],
-        n => (0..n)
-            .flat_map(|i| {
-                let mut items = items.to_vec();
-                let item = items.remove(i);
-                get_permutations(&items).into_iter().map(move |mut perm| {
-                    perm.insert(0, item.clone());
-                    perm
-                })
-            })
-            .collect(),
-    }
-}
-
 impl State {
     fn get_all_encodings(&self, code: &str, start: Point) -> Vec<String> {
         let bounds = Point::new(
-            i64::try_from(self.pad.len()).unwrap() - 1,
-            i64::try_from(self.pad[0].len()).unwrap() - 1,
+            i64::try_from(self.pad.width).unwrap() - 1,
+            i64::try_from(self.pad.height).unwrap() - 1,
         );
 
         get_permutations(&self.moves)
@@ -83,16 +66,13 @@ impl State {
         let mut current = start;
         code.chars()
             .filter_map(|x| {
-                let target = (0..=bounds.x).find_map(|r| {
-                    (0..=bounds.y).find_map(|c| {
-                        let pos = Point::new(r, c);
-                        let x_idx = usize::try_from(pos.x).ok()?;
-                        let y_idx = usize::try_from(pos.y).ok()?;
-                        (self.pad[x_idx][y_idx] == x).then_some(pos)
-                    })
-                });
-
-                target.map(|target| self.find_path(&mut current, target, bounds, moves))
+                self.pad.iter().find_map(|(pos, &c)| {
+                    if c == x {
+                        Some(self.find_path(&mut current, pos, bounds, moves))
+                    } else {
+                        None
+                    }
+                })
             })
             .flatten()
             .collect()
@@ -111,11 +91,8 @@ impl State {
                 .iter()
                 .find_map(|&delta| {
                     let next = *current + delta;
-
-                    let x_idx = usize::try_from(next.x).ok()?;
-                    let y_idx = usize::try_from(next.y).ok()?;
                     if next.in_bounds(bounds.x, bounds.y)
-                        && self.pad[x_idx][y_idx] != ' '
+                        && self.pad.get(next).map_or(false, |c| c != ' ')
                         && current.manhattan_distance(target) > next.manhattan_distance(target)
                     {
                         path.push(*self.move_to_dir.get(&delta).unwrap());
@@ -135,6 +112,22 @@ impl State {
     }
 }
 
+fn get_permutations<T: Clone>(items: &[T]) -> Vec<Vec<T>> {
+    match items.len() {
+        0 => vec![vec![]],
+        n => (0..n)
+            .flat_map(|i| {
+                let mut items = items.to_vec();
+                let item = items.remove(i);
+                get_permutations(&items).into_iter().map(move |mut perm| {
+                    perm.insert(0, item.clone());
+                    perm
+                })
+            })
+            .collect(),
+    }
+}
+
 fn dp(code: &str, depth: i64, cache: &mut HashMap<(String, i64), i64>) -> i64 {
     let cache_key = (code.to_string(), depth);
 
@@ -145,7 +138,11 @@ fn dp(code: &str, depth: i64, cache: &mut HashMap<(String, i64), i64>) -> i64 {
     let result = if depth == 0 {
         i64::try_from(code.len()).expect("number too large")
     } else {
-        let state = State::from(vec![" ^A".chars().collect(), "<v>".chars().collect()]);
+        let state = State::from(Grid::from(vec![
+            vec![' ', '<'],
+            vec!['^', 'v'],
+            vec!['A', '>'],
+        ]));
 
         code[..code.len() - 1]
             .split('A')
