@@ -15,7 +15,7 @@ enum Module<'a> {
     Conjunction(HashMap<&'a str, bool>, Vec<&'a str>),
 }
 
-fn parse_input(input: &str) -> HashMap<&str, Module> {
+fn parse_input(input: &str) -> HashMap<&str, Module<'_>> {
     let modules = input
         .trim()
         .lines()

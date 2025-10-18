@@ -21,7 +21,7 @@ enum Operation<'a> {
     Xor(&'a str, &'a str),
 }
 
-impl<'a> Operation<'a> {
+impl Operation<'_> {
     fn is_input(&self, input: &str) -> bool {
         match self {
             Operation::And(a, b) | Operation::Or(a, b) | Operation::Xor(a, b) => {
@@ -48,7 +48,7 @@ impl<'a> From<&'a str> for Operation<'a> {
     }
 }
 
-fn parse_input(input: &str) -> (HashMap<&str, bool>, HashMap<&str, Operation>) {
+fn parse_input(input: &str) -> (HashMap<&str, bool>, HashMap<&str, Operation<'_>>) {
     let (start_nums, instructions_str) = input.trim().split_once("\n\n").expect("Invalid input");
     let values = start_nums
         .lines()

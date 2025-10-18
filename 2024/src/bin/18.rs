@@ -99,7 +99,7 @@ fn find_last_possible(bytes: &[Point], exit: Point) -> usize {
     let mut right = bytes.len() - 1;
 
     while left < right {
-        let mid = left + (right - left + 1) / 2;
+        let mid = left + (right - left).div_ceil(2);
         if explore_at_time(bytes, mid, exit).is_some() {
             left = mid;
         } else {

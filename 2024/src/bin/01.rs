@@ -37,7 +37,7 @@ fn part_1(input: &str) -> u32 {
     col_a
         .iter()
         .zip(col_b.iter())
-        .map(|(a, b)| if a > b { a - b } else { b - a })
+        .map(|(a, b)| a.abs_diff(*b))
         .sum()
 }
 

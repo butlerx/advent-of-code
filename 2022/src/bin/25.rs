@@ -9,7 +9,7 @@ fn dec_to_snafu(mut num: i64) -> String {
     while num > 0 {
         let c = match (num % 5) as u32 {
             d if d < 3 => std::char::from_digit(d, 10).unwrap(),
-            d if d == 3 => {
+            3 => {
                 num += 2;
                 '='
             }

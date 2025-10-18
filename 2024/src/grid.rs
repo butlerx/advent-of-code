@@ -32,7 +32,7 @@ impl<'a, T> Iterator for IterGridState<'a, T> {
 
 impl<T> Grid<T> {
     #[must_use]
-    pub fn iter(&self) -> IterGridState<T> {
+    pub fn iter(&self) -> IterGridState<'_, T> {
         IterGridState {
             grid: self,
             current: 0,

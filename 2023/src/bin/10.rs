@@ -18,7 +18,7 @@ impl Point {
         Self { x, y }
     }
 
-    fn connects_to(&self, grid: &Vec<Vec<char>>) -> Option<(Self, Self)> {
+    fn connects_to(&self, grid: &[Vec<char>]) -> Option<(Self, Self)> {
         if self.y >= grid.len() || self.x >= grid[0].len() {
             return None;
         }
@@ -136,7 +136,7 @@ fn find_start(grid: &[Vec<char>]) -> Option<Point> {
     })
 }
 
-fn get_pipes(grid: &Vec<Vec<char>>, start: Point) -> Vec<Point> {
+fn get_pipes(grid: &[Vec<char>], start: Point) -> Vec<Point> {
     let mut curr = start
         .neighbours()
         .into_iter()

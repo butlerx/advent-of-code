@@ -67,11 +67,11 @@ impl Map {
         &'a self,
         xy: &'a Point,
         height: usize,
-    ) -> impl Iterator<Item = (Point, usize)> + '_ {
+    ) -> impl Iterator<Item = (Point, usize)> + 'a {
         DIRECTIONS
             .into_iter()
             .map(|(dx, dy)| *xy + Point::from((dx, dy)))
-            .filter(move |p| self.grid.get(*p).map_or(false, |digit| height == digit))
+            .filter(move |p| self.grid.get(*p) == Some(height))
             .map(move |p| (p, height + 1))
     }
 }

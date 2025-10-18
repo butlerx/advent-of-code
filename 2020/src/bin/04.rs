@@ -45,8 +45,7 @@ fn valid_passport(passport: &str) -> bool {
         passport
             .replace('\n', " ")
             .split(' ')
-            .map(validate_key_value)
-            .all(|item| item)
+            .all(validate_key_value)
     }
 }
 

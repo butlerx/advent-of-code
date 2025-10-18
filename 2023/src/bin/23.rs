@@ -14,7 +14,9 @@ fn parse_input(input: &str) -> Vec<Vec<char>> {
     input.trim().lines().map(|s| s.chars().collect()).collect()
 }
 
-fn find_start_positions(grid: &[Vec<char>]) -> VecDeque<(usize, usize, HashSet<(usize, usize)>)> {
+type StartPositions = VecDeque<(usize, usize, HashSet<(usize, usize)>)>;
+
+fn find_start_positions(grid: &[Vec<char>]) -> StartPositions {
     grid[0]
         .iter()
         .enumerate()

@@ -43,7 +43,7 @@ impl Source {
 
 #[derive(Clone, Copy)]
 enum Instruction {
-    Inp(usize),
+    Inp,
     Add(usize, Source),
     Mul(usize, Source),
     Div(usize, Source),
@@ -54,19 +54,19 @@ enum Instruction {
 impl Instruction {
     fn exec(&self, regs: &mut [i64; 4]) {
         match self {
-            Instruction::Add(a, b) => regs[*a] += b.val(regs),
-            Instruction::Mul(a, b) => regs[*a] *= b.val(regs),
-            Instruction::Div(a, b) => regs[*a] /= b.val(regs),
-            Instruction::Mod(a, b) => regs[*a] %= b.val(regs),
-            Instruction::Eql(a, b) => regs[*a] = i64::from(regs[*a] == b.val(regs)),
-            Instruction::Inp(_) => unreachable!(),
+            Self::Add(a, b) => regs[*a] += b.val(regs),
+            Self::Mul(a, b) => regs[*a] *= b.val(regs),
+            Self::Div(a, b) => regs[*a] /= b.val(regs),
+            Self::Mod(a, b) => regs[*a] %= b.val(regs),
+            Self::Eql(a, b) => regs[*a] = i64::from(regs[*a] == b.val(regs)),
+            Self::Inp => unreachable!(),
         }
     }
 
     fn from_str(s: &str) -> Option<Self> {
         let src = s[4..5].parse::<usize>().unwrap();
         match &s[..3] {
-            "inp" => Some(Self::Inp(src)),
+            "inp" => Some(Self::Inp),
             "add" => Some(Self::Add(src, Source::from_str(&s[6..]))),
             "mul" => Some(Self::Mul(src, Source::from_str(&s[6..]))),
             "div" => Some(Self::Div(src, Source::from_str(&s[6..]))),

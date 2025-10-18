@@ -92,7 +92,7 @@ impl State {
                 .find_map(|&delta| {
                     let next = *current + delta;
                     if next.in_bounds(bounds.x, bounds.y)
-                        && self.pad.get(next).map_or(false, |c| c != ' ')
+                        && self.pad.get(next).is_some_and(|c| c != ' ')
                         && current.manhattan_distance(target) > next.manhattan_distance(target)
                     {
                         path.push(*self.move_to_dir.get(&delta).unwrap());

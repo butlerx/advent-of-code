@@ -29,7 +29,7 @@ fn parse_input(input: &str) -> (Vec<Vec<u8>>, Vec<Vec<u8>>) {
         block
             .lines()
             .next()
-            .map_or(false, |l| l.chars().all(|c| c == '#'))
+            .is_some_and(|l| l.chars().all(|c| c == '#'))
     });
 
     (

@@ -62,11 +62,8 @@ fn part_1(input: &str) -> u32 {
     let mut sum = 0;
 
     for expr in parse_input(input) {
-        match expr {
-            Expression::Multiplication(_, _) => {
-                sum += expr.evaluate();
-            }
-            _ => continue,
+        if let Expression::Multiplication(_, _) = expr {
+            sum += expr.evaluate();
         }
     }
 
@@ -84,7 +81,7 @@ fn part_2(input: &str) -> u32 {
             }
             Expression::Do => should_do = true,
             Expression::Dont => should_do = false,
-            Expression::Multiplication(_, _) => continue,
+            Expression::Multiplication(_, _) => (),
         }
     }
 

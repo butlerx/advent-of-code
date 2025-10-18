@@ -52,19 +52,17 @@ fn has_won(board: &[i64], numbers: &[i64]) -> bool {
 
     let any_row_won = matches
         .chunks(BOARD_SIZE)
-        .map(|row| row.iter().all(|tile| *tile))
-        .any(|row| row);
+        .any(|row| row.iter().all(|tile| *tile));
 
     any_row_won
         || (0..BOARD_SIZE)
-            .map(|offset| {
+            .any(|offset| {
                 matches
                     .iter()
                     .skip(offset)
                     .step_by(BOARD_SIZE)
                     .all(|tile| *tile)
             })
-            .any(|col| col)
 }
 
 fn checksum((board, numbers): (&Vec<i64>, &[i64])) -> i64 {

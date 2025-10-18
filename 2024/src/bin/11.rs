@@ -29,7 +29,7 @@ fn blink(n: usize) -> Vec<usize> {
         return vec![1];
     }
     let num_len = n.ilog10() + 1;
-    if num_len % 2 == 0 {
+    if num_len.is_multiple_of(2) {
         let divisor = 10usize.pow(num_len / 2);
         vec![n / divisor, n % divisor]
     } else {

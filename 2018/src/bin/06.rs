@@ -30,9 +30,9 @@ fn part_1(input: &str) -> i64 {
         .map(|y| {
             EXTENT
                 .map(|x| {
-                    match positions.iter().fold(
-                        ((0, 0), std::i64::MAX, false),
-                        |nearest, &position| {
+                    match positions
+                        .iter()
+                        .fold(((0, 0), i64::MAX, false), |nearest, &position| {
                             let distance = (x - position.0).abs() + (y - position.1).abs();
 
                             match distance.cmp(&nearest.1) {
@@ -40,8 +40,7 @@ fn part_1(input: &str) -> i64 {
                                 Ordering::Equal => (position, distance, true),
                                 Ordering::Greater => nearest,
                             }
-                        },
-                    ) {
+                        }) {
                         (position, _, false) => Some(position),
                         (_, _, true) => None,
                     }

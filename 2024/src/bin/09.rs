@@ -32,7 +32,7 @@ fn compact_disk(disk: Vec<(usize, i64)>) -> i64 {
             acc
         })
         .iter()
-        .flat_map(|&(s, id)| std::iter::repeat(id).take(s))
+        .flat_map(|&(s, id)| std::iter::repeat_n(id, s))
         .enumerate()
         .filter(|&(_, id)| id != -1)
         .map(|(i, id)| i64::try_from(i).unwrap() * id)

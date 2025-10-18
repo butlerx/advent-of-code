@@ -56,7 +56,7 @@ fn run(input: &str, part_two: bool) -> i64 {
     let goal = inputs.0.trim().parse::<i64>().unwrap();
     let busses = ids.iter().map(|&(_, b)| b).collect::<Vec<_>>();
     if part_two {
-        let res = ids.iter().map(|&(i, b)| (b - i)).collect::<Vec<_>>();
+        let res = ids.iter().map(|&(i, b)| b - i).collect::<Vec<_>>();
         chinese_remainder(&res, &busses).unwrap()
     } else {
         find_next_bus(goal, busses)
