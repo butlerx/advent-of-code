@@ -1,4 +1,4 @@
-use itertools::{enumerate, Itertools};
+use itertools::{Itertools, enumerate};
 use std::collections::HashMap;
 
 static INPUT_TXT: &str = include_str!("../../input/04.txt");

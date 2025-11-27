@@ -63,7 +63,7 @@ fn build_group(node: &str, neighbors: &HashSet<String>, graph: &Graph) -> Vec<St
             .iter()
             .all(|n| graph.get(neighbor).unwrap().contains(n))
         {
-            group.push(neighbor.to_string());
+            group.push(neighbor.clone());
         }
     }
     group

@@ -8,9 +8,8 @@ fn main() {
 }
 
 fn hash(s: &str) -> u32 {
-    s.chars().fold(0, |acc, c| {
-        ((acc + u32::from(c)) * 17) % 256
-    })
+    s.chars()
+        .fold(0, |acc, c| ((acc + u32::from(c)) * 17) % 256)
 }
 
 fn part_1(input: &str) -> u32 {

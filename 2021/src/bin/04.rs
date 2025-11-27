@@ -43,7 +43,7 @@ fn run(input: &str) -> (i64, i64) {
         .sorted_by(|(_, x), (_, y)| x.len().cmp(&y.len()));
     (
         checksum(scoreboard.next().unwrap()),
-        checksum(scoreboard.last().unwrap()),
+        checksum(scoreboard.next_back().unwrap()),
     )
 }
 
@@ -55,14 +55,13 @@ fn has_won(board: &[i64], numbers: &[i64]) -> bool {
         .any(|row| row.iter().all(|tile| *tile));
 
     any_row_won
-        || (0..BOARD_SIZE)
-            .any(|offset| {
-                matches
-                    .iter()
-                    .skip(offset)
-                    .step_by(BOARD_SIZE)
-                    .all(|tile| *tile)
-            })
+        || (0..BOARD_SIZE).any(|offset| {
+            matches
+                .iter()
+                .skip(offset)
+                .step_by(BOARD_SIZE)
+                .all(|tile| *tile)
+        })
 }
 
 fn checksum((board, numbers): (&Vec<i64>, &[i64])) -> i64 {

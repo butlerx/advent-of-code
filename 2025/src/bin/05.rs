@@ -5,7 +5,7 @@ use aoc_shared::time_execution;
 static INPUT_TXT: &str = include_str!("../../input/05.txt");
 
 fn main() {
-    println!("🌟 --- Day 1 Results --- 🌟");
+    println!("🌟 --- Day 5 Results --- 🌟");
     let (res_1, duration_1) = time_execution(|| part_1(INPUT_TXT));
     println!("📌 Part 1: {res_1}, complete in {duration_1} ms");
 
@@ -29,13 +29,13 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        assert_eq!(part1(TEST_INPUT), 0);
-        assert_eq!(part1(INPUT_TXT), 0);
+        assert_eq!(part_1(TEST_INPUT), 0);
+        assert_eq!(part_1(INPUT_TXT), 0);
     }
 
     #[test]
     fn test_part2() {
-        assert_eq!(part2(TEST_INPUT), 0);
-        assert_eq!(part2(INPUT_TXT), 0);
+        assert_eq!(part_2(TEST_INPUT), 0);
+        assert_eq!(part_2(INPUT_TXT), 0);
     }
 }

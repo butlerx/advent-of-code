@@ -1,5 +1,13 @@
 repos:
   - repo: https://github.com/LiquidFun/aoc_tiles
-    rev: 0.5.3
+    rev: 0.6.3
     hooks:
       - id: aoc-tiles
+  - repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+      - id: cargo-check
+        args: ['--workspace']
+      - id: fmt
+      - id: clippy
+        args: ['--fix', '--allow-staged', '--', '-D', 'warnings']

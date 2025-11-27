@@ -1,4 +1,4 @@
-use itertools::{iproduct, Itertools};
+use itertools::{Itertools, iproduct};
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 

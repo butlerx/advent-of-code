@@ -14,7 +14,7 @@ fn run(input: &str, part_two: bool) -> i64 {
         .sorted();
     if part_two {
         let mut points = HashMap::new();
-        let end = nums.clone().last().unwrap();
+        let end = nums.clone().next_back().unwrap();
         points.insert(0, 1);
         for num in nums {
             let value = points.get(&(num - 1)).unwrap_or(&0)

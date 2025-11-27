@@ -15,11 +15,7 @@ fn parse_input(input: &str) -> Vec<((i64, i64), (i64, i64))> {
             let (x2, y2) = two.trim().split_once(',').unwrap();
             let from = (x1.parse::<i64>().unwrap(), y1.parse::<i64>().unwrap());
             let to = (x2.parse::<i64>().unwrap(), y2.parse::<i64>().unwrap());
-            if to < from {
-                (to, from)
-            } else {
-                (from, to)
-            }
+            if to < from { (to, from) } else { (from, to) }
         })
         .collect()
 }
