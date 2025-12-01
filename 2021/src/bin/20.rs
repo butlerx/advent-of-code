@@ -78,7 +78,11 @@ fn get_new_pixel(rc: (usize, usize), map: &[Vec<bool>], rules: &[bool], default:
     rules[(r - 1..r + 2).fold(0, |n, row| {
         (c - 1..c + 2).fold(n, |num, col| {
             let number = num << 1;
-            if pixel(col, row) { number + 1 } else { number }
+            if pixel(col, row) {
+                number + 1
+            } else {
+                number
+            }
         })
     })]
 }

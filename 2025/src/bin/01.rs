@@ -46,18 +46,18 @@ fn part_2(input: &str) -> i32 {
             let (new_pos, crossed_zero) = match direction {
                 "L" => {
                     let new_pos = (pos - distance).rem_euclid(100);
-                    let crossed = (distance_mod > pos && pos != 0) as i32;
+                    let crossed = i32::from(distance_mod > pos && pos != 0);
                     (new_pos, crossed)
                 }
                 "R" => {
                     let new_pos = (pos + distance).rem_euclid(100);
-                    let crossed = ((pos + distance_mod) > 100) as i32;
+                    let crossed = i32::from((pos + distance_mod) > 100);
                     (new_pos, crossed)
                 }
                 _ => panic!("Invalid turn direction: {direction}"),
             };
 
-            let landed_on_zero = (new_pos == 0) as i32;
+            let landed_on_zero = i32::from(new_pos == 0);
             let new_count = count + full_laps + crossed_zero + landed_on_zero;
 
             (new_pos, new_count)

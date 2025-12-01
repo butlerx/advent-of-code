@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet, hash_map::Entry};
+use std::collections::{hash_map::Entry, HashMap, HashSet};
 
 type Allergens = HashMap<String, HashSet<String>>;
 type Ingredients = (Allergens, HashMap<String, usize>);

@@ -24,7 +24,11 @@ fn egcd(a: i64, b: i64) -> (i64, i64, i64) {
 
 fn mod_inv(x: i64, n: i64) -> Option<i64> {
     let (g, x, _) = egcd(x, n);
-    if g == 1 { Some((x % n + n) % n) } else { None }
+    if g == 1 {
+        Some((x % n + n) % n)
+    } else {
+        None
+    }
 }
 
 fn chinese_remainder(residues: &[i64], modulii: &[i64]) -> Option<i64> {

@@ -1,6 +1,6 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::missing_panics_doc)]
-use aoc_2024::{Point, time_execution};
+use aoc_2024::{time_execution, Point};
 use std::collections::{HashMap, HashSet};
 
 static INPUT_TXT: &str = include_str!("../../input/08.txt");

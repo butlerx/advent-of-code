@@ -62,7 +62,7 @@ fn get_flowrates(input: &str) -> (Flowrate, Snapshot) {
                 };
             }
 
-            for (oldlocn, _) in valves.iter().filter(|l| l.1.1.contains(locn)) {
+            for (oldlocn, _) in valves.iter().filter(|l| l.1 .1.contains(locn)) {
                 let prev: Vec<_> = flowrate
                     .iter()
                     .filter(|((t, ol, _), _)| *t == time - 1 && ol == oldlocn)

@@ -1,6 +1,6 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::missing_panics_doc)]
-use aoc_2024::{time_execution, Grid, Point};
+use aoc_2024::{Grid, Point, time_execution};
 use std::collections::{HashSet, VecDeque};
 
 static INPUT_TXT: &str = include_str!("../../input/10.txt");
