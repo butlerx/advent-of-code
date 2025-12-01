@@ -3,45 +3,6 @@
 version = 4
 
 [[package]]
-name = "advent-of-code-2018"
-version = "0.1.0"
-dependencies = [
- "itertools 0.10.5",
- "regex",
-]
-
-[[package]]
-name = "advent-of-code-2019"
-version = "0.1.0"
-dependencies = [
- "itertools 0.9.0",
-]
-
-[[package]]
-name = "advent-of-code-2020"
-version = "0.1.0"
-dependencies = [
- "itertools 0.9.0",
- "pathfinding",
- "regex",
-]
-
-[[package]]
-name = "advent-of-code-2021"
-version = "0.1.0"
-dependencies = [
- "itertools 0.10.5",
-]
-
-[[package]]
-name = "advent-of-code-2022"
-version = "0.1.0"
-dependencies = [
- "itertools 0.10.5",
- "serde_json",
-]
-
-[[package]]
 name = "aho-corasick"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -60,7 +21,46 @@ dependencies = [
 ]
 
 [[package]]
-name = "aoc-2023"
+name = "aoc_2018"
+version = "0.1.0"
+dependencies = [
+ "itertools 0.10.5",
+ "regex",
+]
+
+[[package]]
+name = "aoc_2019"
+version = "0.1.0"
+dependencies = [
+ "itertools 0.9.0",
+]
+
+[[package]]
+name = "aoc_2020"
+version = "0.1.0"
+dependencies = [
+ "itertools 0.9.0",
+ "pathfinding",
+ "regex",
+]
+
+[[package]]
+name = "aoc_2021"
+version = "0.1.0"
+dependencies = [
+ "itertools 0.10.5",
+]
+
+[[package]]
+name = "aoc_2022"
+version = "0.1.0"
+dependencies = [
+ "itertools 0.10.5",
+ "serde_json",
+]
+
+[[package]]
+name = "aoc_2023"
 version = "0.1.0"
 
 [[package]]

@@ -1,8 +1,10 @@
 [package]
-name = "advent-of-code-2022"
-version = "0.1.0"
+name = "aoc_2022"
+version.workspace = true
+authors.workspace = true
+readme.workspace = true
+repository.workspace = true
 edition = "2021"
-authors = ["butlerx <butlerx@notthe.cloud>"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
