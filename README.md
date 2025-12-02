@@ -463,3 +463,49 @@ Solutions for [adventofcode.com](https://adventofcode.com)
   <img src=".aoc_tiles/tiles/2018/07.png" width="161px">
 </a>
 <!-- AOC TILES END -->
+
+---
+
+## Repository Structure
+
+- Each year has its own directory (e.g., `2024/`, `2025/`).
+- Inside each year:
+  - `Cargo.toml`: Rust crate configuration for that year.
+  - `input/`: Contains input files for each day (`01.txt`, ..., `25.txt`).
+  - `src/bin/`: Contains Rust binaries for each day (`01.rs`, ..., `25.rs`).
+  - `src/`: Shared code for the year (e.g., `lib.rs`, utility modules).
+
+## Running a Day’s Solution
+
+From the repository root, use the `--package` flag:
+
+```sh
+cargo run --package aoc_2024 --bin 01
+```
+
+This runs Day 1 for 2024 using the input from `2024/input/01.txt`.
+
+## Testing a Day’s Solution
+
+From the repository root, use the `--package` flag:
+
+```sh
+cargo test --package aoc_2024 --bin 01
+```
+
+This runs tests for Day 1 for 2024. Each day’s file includes its own tests.
+
+## Adding a New Year
+
+To scaffold a new year’s directory and files, use the helper binary in
+`aoc_shared`:
+
+```sh
+cargo run --package aoc_shared --bin new_year [YEAR]
+```
+
+- If `[YEAR]` is omitted, it uses the current year.
+- This creates the directory, input files, binaries, and sets up `Cargo.toml`
+  and `lib.rs` for you.
+
+---
