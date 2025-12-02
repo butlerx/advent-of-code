@@ -57,17 +57,10 @@ fn has_repeating_pattern(n: usize) -> bool {
             let divisor = 10_usize.pow(pattern_len);
             let pattern = n % divisor;
 
-            let mut remaining = n;
-            let mut matches = true;
-
-            while remaining > 0 {
-                if remaining % divisor != pattern {
-                    matches = false;
-                    break;
-                }
-                remaining /= divisor;
-            }
-            matches
+            std::iter::successors(Some(n), |&remaining| {
+                (remaining >= divisor).then_some(remaining / divisor)
+            })
+            .all(|remaining| remaining % divisor == pattern)
         })
 }
 
