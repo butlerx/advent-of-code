@@ -4,16 +4,19 @@ Solutions for [adventofcode.com](https://adventofcode.com)
 
  <!-- AOC TILES BEGIN -->
 <h1 align="center">
-  Advent of Code - 287/504 ⭐
+  Advent of Code - 289/506 ⭐
 </h1>
 <h1 align="center">
-  2025 - 4 ⭐ - Rust
+  2025 - 6 ⭐ - Rust
 </h1>
 <a href="2025/src/bin/01.rs">
   <img src=".aoc_tiles/tiles/2025/01.png" width="161px">
 </a>
 <a href="2025/src/bin/02.rs">
   <img src=".aoc_tiles/tiles/2025/02.png" width="161px">
+</a>
+<a href="2025/src/bin/03.rs">
+  <img src=".aoc_tiles/tiles/2025/03.png" width="161px">
 </a>
 <h1 align="center">
   2024 - 50 ⭐ - Rust
