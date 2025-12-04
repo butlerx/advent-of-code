@@ -13,17 +13,6 @@ fn main() {
     println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
 }
 
-static DIRECTIONS: [(i64, i64); 8] = [
-    (-1, -1),
-    (-1, 0),
-    (-1, 1),
-    (0, -1),
-    (0, 1),
-    (1, -1),
-    (1, 0),
-    (1, 1),
-];
-
 fn parse_input(input: &str) -> Grid<bool> {
     let cells = input
         .trim()
@@ -35,10 +24,10 @@ fn parse_input(input: &str) -> Grid<bool> {
 
 #[inline]
 fn count_neighbors(grid: &Grid<bool>, point: Point) -> usize {
-    DIRECTIONS
+    point
+        .neighbours_all_directions()
         .iter()
-        .map(|(x, y)| Point::new(point.x + x, point.y + y))
-        .filter(|&neighbor| grid.in_bounds(neighbor) && grid.get(neighbor) == Some(true))
+        .filter(|&neighbor| grid.in_bounds(*neighbor) && grid.get(*neighbor) == Some(true))
         .count()
 }
 

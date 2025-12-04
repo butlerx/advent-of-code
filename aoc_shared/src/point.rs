@@ -3,6 +3,17 @@ use std::{
     ops::{Add, Neg, Sub},
 };
 
+static DIRECTIONS: [(i64, i64); 8] = [
+    (-1, -1),
+    (-1, 0),
+    (-1, 1),
+    (0, -1),
+    (0, 1),
+    (1, -1),
+    (1, 0),
+    (1, 1),
+];
+
 #[derive(Debug, Hash, Eq, PartialEq, Clone, Copy, Ord, PartialOrd)]
 pub struct Point {
     pub x: i64,
@@ -57,6 +68,18 @@ impl Point {
                 y: self.y + 1,
             },
         ]
+    }
+
+    #[inline]
+    #[must_use]
+    pub fn neighbours_all_directions(&self) -> Vec<Self> {
+        DIRECTIONS
+            .iter()
+            .map(|(dx, dy)| Self {
+                x: self.x + dx,
+                y: self.y + dy,
+            })
+            .collect()
     }
 }
 
