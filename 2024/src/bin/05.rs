@@ -1,5 +1,3 @@
-#![warn(clippy::pedantic)]
-#![allow(clippy::missing_panics_doc)]
 use aoc_shared::time_execution;
 use std::{cmp::Ordering, collections::HashMap};
 static INPUT_TXT: &str = include_str!("../../input/05.txt");

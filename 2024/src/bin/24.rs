@@ -1,5 +1,3 @@
-#![warn(clippy::pedantic)]
-#![allow(clippy::missing_panics_doc)]
 use aoc_shared::time_execution;
 use std::collections::{BTreeSet, HashMap};
 
@@ -102,7 +100,11 @@ fn binary_output(values: &HashMap<&str, bool>, p: char) -> u64 {
         .filter(|(&key, _)| key.starts_with(p))
         .fold(0, |acc, (&key, &value)| {
             let i = key[1..].parse::<usize>().unwrap();
-            if value { acc | (1 << i) } else { acc }
+            if value {
+                acc | (1 << i)
+            } else {
+                acc
+            }
         })
 }
 

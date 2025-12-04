@@ -1,6 +1,4 @@
-#![warn(clippy::pedantic)]
-#![allow(clippy::missing_panics_doc)]
-use aoc_shared::{Point, time_execution};
+use aoc_shared::{time_execution, Point};
 use std::collections::HashSet;
 
 static INPUT_TXT: &str = include_str!("../../input/14.txt");

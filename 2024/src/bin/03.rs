@@ -1,5 +1,3 @@
-#![warn(clippy::pedantic)]
-#![allow(clippy::missing_panics_doc)]
 use aoc_shared::time_execution;
 static INPUT_TXT: &str = include_str!("../../input/03.txt");
 

@@ -1,5 +1,4 @@
-#![warn(clippy::pedantic)]
-#![allow(clippy::missing_panics_doc)]
+#![warn(clippy::pedantic, clippy::perf)]
 use std::{
     env,
     fs::{self, File},
@@ -34,8 +33,7 @@ fn main() -> std::io::Result<()> {
         let input_path = year_dir.join(format!("input/{day_str}.txt"));
 
         let rust_template = format!(
-            r#"#![warn(clippy::pedantic)]
-#![allow(clippy::missing_panics_doc)]
+            r#"#![warn(clippy::pedantic, clippy::perf)]
 
 use aoc_shared::time_execution;
 static INPUT_TXT: &str = include_str!("../../input/{day_str}.txt");
@@ -85,8 +83,7 @@ mod tests {{
 
     // Create lib.rs
     let lib_path = year_dir.join("src/lib.rs");
-    let lib_content = r"#![warn(clippy::pedantic)]
-#![allow(clippy::missing_panics_doc)]";
+    let lib_content = r"#![warn(clippy::pedantic, clippy::perf)]";
     let mut lib_file = File::create(lib_path)?;
     lib_file.write_all(lib_content.as_bytes())?;
 
