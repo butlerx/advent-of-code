@@ -66,6 +66,9 @@ version = "0.1.0"
 [[package]]
 name = "aoc_2024"
 version = "0.1.0"
+dependencies = [
+ "aoc_shared",
+]
 
 [[package]]
 name = "aoc_2025"

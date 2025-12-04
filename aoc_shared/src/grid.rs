@@ -1,6 +1,18 @@
 use crate::Point;
 use std::{cmp::PartialEq, iter::Iterator};
 
+/// A 2D grid of values.
+///
+/// Stores values in a 2D grid with fixed width and height. Provides methods for
+/// accessing, setting, and iterating over grid elements using [`Point`] coordinates.
+///
+/// # Examples
+///
+/// ```
+/// use aoc_shared::{Grid, Point};
+/// let grid = Grid::from(vec![vec![1, 2], vec![3, 4]]);
+/// assert_eq!(grid.get(Point::new(1, 0)), Some(2));
+/// ```
 #[derive(Debug, Clone)]
 pub struct Grid<T> {
     cells: Vec<T>,
@@ -31,6 +43,17 @@ impl<'a, T> Iterator for IterGridState<'a, T> {
 }
 
 impl<T> Grid<T> {
+    /// Returns an iterator over all points and their values in the grid.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::{Grid, Point};
+    /// let grid = Grid::from(vec![vec![1, 2], vec![3, 4]]);
+    /// for (point, value) in grid.iter() {
+    ///     // Use point and value
+    /// }
+    /// ```
     #[must_use]
     pub fn iter(&self) -> IterGridState<'_, T> {
         IterGridState {
@@ -86,6 +109,20 @@ impl<T: Clone + Copy> FromIterator<Vec<T>> for Grid<T> {
 }
 
 impl<T: Clone + Copy + PartialEq> Grid<T> {
+    /// Creates a new grid of size `(pos.x + 1, pos.y + 1)` filled with the given value.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `pos.x` or `pos.y` is negative or too large to convert to `usize`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::{Grid, Point};
+    /// let grid = Grid::new(Point::new(1, 1), 0);
+    /// assert_eq!(grid.width, 2);
+    /// assert_eq!(grid.height, 2);
+    /// ```
     pub fn new(pos: Point, fill: T) -> Self {
         let width = usize::try_from(pos.x).expect("number too large") + 1;
         let height = usize::try_from(pos.y).expect("number too large") + 1;
@@ -97,6 +134,16 @@ impl<T: Clone + Copy + PartialEq> Grid<T> {
         }
     }
 
+    /// Returns the value at the given point, or `None` if out of bounds.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::{Grid, Point};
+    /// let grid = Grid::from(vec![vec![1, 2], vec![3, 4]]);
+    /// assert_eq!(grid.get(Point::new(1, 0)), Some(2));
+    /// assert_eq!(grid.get(Point::new(2, 0)), None);
+    /// ```
     #[must_use]
     pub fn get(&self, pos: Point) -> Option<T> {
         if pos.x < 0 || pos.y < 0 {
@@ -111,6 +158,20 @@ impl<T: Clone + Copy + PartialEq> Grid<T> {
         self.cells.get(idx).copied()
     }
 
+    /// Sets the value at the given point.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the point is out of bounds or negative.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::{Grid, Point};
+    /// let mut grid = Grid::from(vec![vec![1, 2], vec![3, 4]]);
+    /// grid.set(Point::new(0, 0), 9);
+    /// assert_eq!(grid.get(Point::new(0, 0)), Some(9));
+    /// ```
     pub fn set(&mut self, pos: Point, value: T) {
         let x = usize::try_from(pos.x).expect("number too large");
         let y = usize::try_from(pos.y).expect("number too large");
@@ -118,6 +179,20 @@ impl<T: Clone + Copy + PartialEq> Grid<T> {
         self.cells[idx] = value;
     }
 
+    /// Returns `true` if the given point is within the grid bounds.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `pos.x` or `pos.y` is negative or too large to convert to `usize`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::{Grid, Point};
+    /// let grid = Grid::from(vec![vec![1, 2], vec![3, 4]]);
+    /// assert!(grid.in_bounds(Point::new(1, 1)));
+    /// assert!(!grid.in_bounds(Point::new(2, 2)));
+    /// ```
     #[must_use]
     pub fn in_bounds(&self, pos: Point) -> bool {
         if pos.x < 0 || pos.y < 0 {
@@ -128,6 +203,18 @@ impl<T: Clone + Copy + PartialEq> Grid<T> {
         (x) < self.width && (y) < self.height
     }
 
+    /// Finds the first position of the given value in the grid.
+    ///
+    /// Returns `Some(Point)` if found, or `None` if not present.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::{Grid, Point};
+    /// let grid = Grid::from(vec![vec![1, 2], vec![3, 4]]);
+    /// assert_eq!(grid.find_position(3), Some(Point::new(0, 1)));
+    /// assert_eq!(grid.find_position(9), None);
+    /// ```
     pub fn find_position(&self, target: T) -> Option<Point> {
         self.iter().find(|&(_, &c)| c == target).map(|(p, _)| p)
     }

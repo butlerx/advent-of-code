@@ -1,6 +1,6 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::missing_panics_doc)]
-use aoc_2024::time_execution;
+use aoc_shared::time_execution;
 use std::collections::HashMap;
 
 static INPUT_TXT: &str = include_str!("../../input/19.txt");

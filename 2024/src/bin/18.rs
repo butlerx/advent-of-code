@@ -1,6 +1,6 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::missing_panics_doc)]
-use aoc_2024::{Grid, Point, time_execution};
+use aoc_shared::{Grid, Point, time_execution};
 use std::{
     cmp::Reverse,
     collections::{BinaryHeap, HashSet},

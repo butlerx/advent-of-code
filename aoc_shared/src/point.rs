@@ -14,6 +14,19 @@ static DIRECTIONS: [(i64, i64); 8] = [
     (1, 1),
 ];
 
+/// A 2D point with integer coordinates.
+///
+/// Represents a point in 2D space with `x` and `y` coordinates. Provides utility methods for
+/// common operations such as distance calculation, neighbor finding, and sequence generation.
+///
+/// # Examples
+///
+/// ```
+/// use aoc_shared::Point;
+/// let p = Point::new(1, 2);
+/// assert_eq!(p.x, 1);
+/// assert_eq!(p.y, 2);
+/// ```
 #[derive(Debug, Hash, Eq, PartialEq, Clone, Copy, Ord, PartialOrd)]
 pub struct Point {
     pub x: i64,
@@ -21,16 +34,48 @@ pub struct Point {
 }
 
 impl Point {
+    /// Creates a new `Point` with the given `x` and `y` coordinates.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::Point;
+    /// let p = Point::new(3, 4);
+    /// assert_eq!(p.x, 3);
+    /// assert_eq!(p.y, 4);
+    /// ```
     #[must_use]
     pub const fn new(x: i64, y: i64) -> Self {
         Self { x, y }
     }
 
+    /// Returns `true` if the point is within the bounds `(0..=x, 0..=y)`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::Point;
+    /// let p = Point::new(2, 3);
+    /// assert!(p.in_bounds(5, 5));
+    /// assert!(!p.in_bounds(1, 1));
+    /// ```
     #[must_use]
     pub fn in_bounds(&self, x: i64, y: i64) -> bool {
         (0..=x).contains(&self.x) && (0..=y).contains(&self.y)
     }
 
+    /// Generates a sequence of points starting from this point, stepping by `delta`,
+    /// and stopping when the next point would be out of bounds `(0..=x, 0..=y)`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::Point;
+    /// let start = Point::new(0, 0);
+    /// let delta = Point::new(1, 1);
+    /// let points: Vec<_> = start.generate_sequence(delta, 2, 2).collect();
+    /// assert_eq!(points, vec![Point::new(0, 0), Point::new(1, 1), Point::new(2, 2)]);
+    /// ```
     pub fn generate_sequence(
         self,
         delta: Self,
@@ -43,11 +88,34 @@ impl Point {
         })
     }
 
+    /// Returns the Manhattan distance between this point and another.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::Point;
+    /// let a = Point::new(1, 2);
+    /// let b = Point::new(4, 6);
+    /// assert_eq!(a.manhattan_distance(b), 7);
+    /// ```
     #[must_use]
     pub fn manhattan_distance(self, b: Point) -> i64 {
         (self.x - b.x).abs() + (self.y - b.y).abs()
     }
 
+    /// Returns the four cardinal neighbors (up, down, left, right) of this point.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::Point;
+    /// let p = Point::new(1, 1);
+    /// let n = p.neighbours();
+    /// assert!(n.contains(&Point::new(0, 1)));
+    /// assert!(n.contains(&Point::new(2, 1)));
+    /// assert!(n.contains(&Point::new(1, 0)));
+    /// assert!(n.contains(&Point::new(1, 2)));
+    /// ```
     #[must_use]
     pub fn neighbours(&self) -> Vec<Self> {
         vec![
@@ -70,6 +138,16 @@ impl Point {
         ]
     }
 
+    /// Returns all eight neighbors (including diagonals) of this point.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::Point;
+    /// let p = Point::new(1, 1);
+    /// let n = p.neighbours_all_directions();
+    /// assert_eq!(n.len(), 8);
+    /// ```
     #[inline]
     #[must_use]
     pub fn neighbours_all_directions(&self) -> Vec<Self> {
@@ -89,6 +167,19 @@ impl Display for Point {
     }
 }
 
+/// Converts a tuple `(x, y)` into a `Point`.
+///
+/// # Panics
+///
+/// Panics if the values cannot be converted to `i64`.
+///
+/// # Examples
+///
+/// ```
+/// use aoc_shared::Point;
+/// let p: Point = (3, 4).into();
+/// assert_eq!(p, Point::new(3, 4));
+/// ```
 impl<T> From<(T, T)> for Point
 where
     T: TryInto<i64>,
