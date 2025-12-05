@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic, clippy::perf)]
 use std::collections::HashMap;
 
 static INPUT_TXT: &str = include_str!("../../input/07.txt");
@@ -68,7 +69,7 @@ impl HandType {
 struct Hand {
     cards: Vec<u32>,
     bid: u32,
-    hand_type: HandType,
+    kind: HandType,
 }
 
 impl PartialOrd for Hand {
@@ -79,7 +80,7 @@ impl PartialOrd for Hand {
 
 impl Ord for Hand {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        match (&self.hand_type, &other.hand_type) {
+        match (&self.kind, &other.kind) {
             (HandType::FiveOfAKind, HandType::FiveOfAKind)
             | (HandType::FourOfAKind, HandType::FourOfAKind)
             | (HandType::FullHouse, HandType::FullHouse)
@@ -129,7 +130,7 @@ impl Hand {
         Self {
             cards,
             bid,
-            hand_type,
+            kind: hand_type,
         }
     }
 }
@@ -137,7 +138,7 @@ impl Hand {
 fn play_cards(input: &str, jacks_wild: bool) -> u32 {
     let mut hands: Vec<Hand> = input
         .trim()
-        .split('\n')
+        .lines()
         .map(|line| Hand::new(line, jacks_wild))
         .collect();
     hands.sort();

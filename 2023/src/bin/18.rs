@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic, clippy::perf)]
 static INPUT_TXT: &str = include_str!("../../input/18.txt");
 
 fn main() {
@@ -54,7 +55,7 @@ fn shoe_string(input: &str, parse_string: fn(&str) -> (Direction, i64)) -> i64 {
                 position = (x, y);
                 (perimiter + steps, sum)
             });
-    (perimiter + filled) / 2 + 1
+    i64::midpoint(perimiter, filled) + 1
 }
 
 fn part_1(input: &str) -> i64 {

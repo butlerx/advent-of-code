@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic, clippy::perf)]
 static INPUT_TXT: &str = include_str!("../../input/01.txt");
 
 fn main() {
@@ -41,7 +42,7 @@ fn last_num_words(mut line: &str) -> usize {
 fn part_1(input: &str) -> u32 {
     input
         .trim()
-        .split('\n')
+        .lines()
         .map(|line| first_num(line) * 10 + first_num(&line.chars().rev().collect::<String>()))
         .sum()
 }
@@ -49,7 +50,7 @@ fn part_1(input: &str) -> u32 {
 fn part_2(input: &str) -> usize {
     input
         .trim()
-        .split('\n')
+        .lines()
         .map(|line| first_num_words(line) * 10 + last_num_words(line))
         .sum()
 }

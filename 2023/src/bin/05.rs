@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic, clippy::perf)]
+#![allow(clippy::missing_panics_doc)]
 static INPUT_TXT: &str = include_str!("../../input/05.txt");
 
 fn main() {
@@ -45,7 +47,7 @@ fn parse_mappings(input: &str) -> Vec<Mapping> {
 
 fn part_1(input: &str) -> i64 {
     let mut lines = input.trim().split("\n\n");
-    let seeds = parse_seeds(lines.next().unwrap());
+    let seeds = parse_seeds(lines.next().expect("no seeds"));
     let mappings: Vec<_> = lines.map(parse_mappings).collect();
     seeds
         .into_iter()
@@ -87,7 +89,7 @@ fn map_field(mapping: &[Mapping], seed: (i64, i64)) -> Vec<(i64, i64)> {
 
 pub fn part_2(input: &str) -> i64 {
     let mut lines = input.trim().split("\n\n");
-    let seeds: Vec<(i64, i64)> = parse_seeds(lines.next().unwrap())
+    let seeds: Vec<(i64, i64)> = parse_seeds(lines.next().expect("no seeds"))
         .chunks(2)
         .map(|s| (s[0], s[0] + s[1]))
         .collect();
@@ -102,7 +104,7 @@ pub fn part_2(input: &str) -> i64 {
         .iter()
         .map(|&(s, _)| s)
         .min()
-        .unwrap()
+        .expect("no minimum found")
 }
 
 #[cfg(test)]

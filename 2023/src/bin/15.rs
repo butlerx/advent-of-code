@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic, clippy::perf)]
 use std::collections::VecDeque;
 
 static INPUT_TXT: &str = include_str!("../../input/15.txt");

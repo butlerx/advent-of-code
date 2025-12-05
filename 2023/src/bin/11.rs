@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic, clippy::perf)]
 static INPUT_TXT: &str = include_str!("../../input/11.txt");
 
 fn main() {

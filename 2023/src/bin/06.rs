@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic, clippy::perf)]
 static INPUT_TXT: &str = include_str!("../../input/06.txt");
 
 fn main() {
@@ -17,15 +18,17 @@ fn possible_wins_brute_force(time: usize, dist: usize) -> usize {
 // Maths solution
 fn possible_wins(time: f64, dist: f64) -> u64 {
     let d = (time * time - 4.0 * (dist + 1.0)).sqrt();
+    #[allow(clippy::cast_sign_loss, clippy::cast_possible_truncation)]
     let low = ((time - d) / 2.0).max(0.0).ceil() as u64;
-    let high = ((time + d) / 2.0).floor() as u64;
+    #[allow(clippy::cast_sign_loss, clippy::cast_possible_truncation)]
+    let high = f64::midpoint(time, d).floor() as u64;
     (high - low) + 1
 }
 
 fn part_1(input: &str) -> u64 {
     let nums: Vec<_> = input
         .trim()
-        .split('\n')
+        .lines()
         .map(|line| {
             line.split_whitespace()
                 .skip(1)
@@ -43,7 +46,7 @@ fn part_1(input: &str) -> u64 {
 fn part_2(input: &str) -> u64 {
     let nums: Vec<_> = input
         .trim()
-        .split('\n')
+        .lines()
         .map(|line| {
             line.split_whitespace()
                 .skip(1)

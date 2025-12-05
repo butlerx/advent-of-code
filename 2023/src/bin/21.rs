@@ -1,3 +1,4 @@
+#![warn(clippy::perf)]
 use std::collections::{HashMap, HashSet};
 
 static INPUT_TXT: &str = include_str!("../../input/21.txt");
@@ -49,8 +50,8 @@ fn get_graph(garden: &[Vec<char>]) -> HashMap<Position, Vec<Position>> {
             ]
             .into_iter()
             .filter(|&(x, y)| x >= 0 && y >= 0 && x < width as isize && y < height as isize)
-            .filter(|&(x, y)| garden[y as usize][x as usize] == '.')
-            .map(|(x, y)| (x as usize, y as usize))
+            .filter(|&(x, y)| garden[y.unsigned_abs()][x.unsigned_abs()] == '.')
+            .map(|(x, y)| (x.unsigned_abs(), y.unsigned_abs()))
             .collect();
             ((x, y), neighbors)
         })

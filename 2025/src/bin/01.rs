@@ -1,4 +1,4 @@
-#![warn(clippy::pedantic)]
+#![warn(clippy::pedantic, clippy::perf)]
 
 use aoc_shared::time_execution_us;
 static INPUT_TXT: &str = include_str!("../../input/01.txt");

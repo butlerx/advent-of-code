@@ -1,4 +1,4 @@
-#![warn(clippy::pedantic)]
+#![warn(clippy::pedantic, clippy::perf)]
 
 //! Shared utilities for Advent of Code solutions.
 //!

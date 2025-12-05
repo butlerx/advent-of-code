@@ -1,3 +1,4 @@
+#![warn(clippy::perf)]
 use std::collections::HashSet;
 
 static INPUT_TXT: &str = include_str!("../../input/24.txt");
@@ -88,7 +89,7 @@ fn part_1(input: &str) -> usize {
 }
 
 fn find_possible_speeds(
-    possible_speeds: HashSet<i128>,
+    possible_speeds: &HashSet<i128>,
     differential: i128,
     velocity: i128,
 ) -> HashSet<i128> {
@@ -146,17 +147,17 @@ fn part_2(input: &str) -> f64 {
         for h2 in stones.iter().skip(i + 1) {
             if h1.vel_x == h2.vel_x {
                 let dx = (h2.x - h1.x) as i128;
-                possible_x_speeds = find_possible_speeds(possible_x_speeds, dx, h1.vel_x as i128);
+                possible_x_speeds = find_possible_speeds(&possible_x_speeds, dx, h1.vel_x as i128);
             }
 
             if h1.vel_y == h2.vel_y {
                 let dy = (h2.y - h1.y) as i128;
-                possible_y_speeds = find_possible_speeds(possible_y_speeds, dy, h1.vel_y as i128);
+                possible_y_speeds = find_possible_speeds(&possible_y_speeds, dy, h1.vel_y as i128);
             }
 
             if h1.vel_z == h2.vel_z {
                 let dz = (h2.z - h1.z) as i128;
-                possible_z_speeds = find_possible_speeds(possible_z_speeds, dz, h1.vel_z as i128);
+                possible_z_speeds = find_possible_speeds(&possible_z_speeds, dz, h1.vel_z as i128);
             }
         }
     }

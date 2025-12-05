@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic, clippy::perf)]
 use std::collections::{BinaryHeap, HashMap};
 
 static INPUT_TXT: &str = include_str!("../../input/17.txt");
@@ -44,8 +45,9 @@ fn dijkstra(grid: &[Vec<i32>], min_step: isize, max_step: isize) -> i32 {
             }
             let mut next_cost = -cost;
             for steps in 1..=max_step {
-                let next_row = (isize::try_from(row).unwrap() + delta_row * steps) as usize;
-                let next_col = (isize::try_from(col).unwrap() + delta_col * steps) as usize;
+                let next_row = (isize::try_from(row).unwrap() + delta_row * steps).unsigned_abs();
+                let next_col =
+                    (isize::try_from(col).unwrap() + delta_col * steps).unsigned_abs();
                 if next_row >= grid.len() || next_col >= grid[0].len() {
                     continue;
                 }

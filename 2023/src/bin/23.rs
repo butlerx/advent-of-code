@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic, clippy::perf)]
 use std::{
     cmp::max,
     collections::{HashSet, VecDeque},
@@ -41,12 +42,17 @@ fn part_1(input: &str) -> usize {
         match grid[y][x] {
             '#' => {}
             '.' => {
-                let directions = &[(0, -1), (0, 1), (-1, 0), (1, 0)];
+                let directions = &[(0i32, -1i32), (0, 1), (-1, 0), (1, 0)];
                 for (dx, dy) in directions {
-                    let new_x = x.wrapping_add(*dx as usize);
-                    let new_y = y.wrapping_add(*dy as usize);
-                    if new_x < grid[0].len() && new_y < grid.len() && grid[new_y][new_x] != '#' {
-                        queue.push_back((new_x, new_y, visited.clone()));
+                    let new_x = i32::try_from(x).expect("couldnt convert to i32") + dx;
+                    let new_y = i32::try_from(y).expect("couldnt convert to i32") + dy;
+                    if new_x >= 0 && new_y >= 0 {
+                        let new_x = new_x.unsigned_abs() as usize;
+                        let new_y = new_y.unsigned_abs() as usize;
+                        if new_x < grid[0].len() && new_y < grid.len() && grid[new_y][new_x] != '#'
+                        {
+                            queue.push_back((new_x, new_y, visited.clone()));
+                        }
                     }
                 }
             }
@@ -90,16 +96,14 @@ fn part_2(input: &str) -> usize {
             max_path = max(max_path, visited.len());
             continue;
         }
-        match grid[y][x] {
-            '#' => {}
-            _ => {
-                let directions = &[(0, -1), (0, 1), (-1, 0), (1, 0)];
-                for (dx, dy) in directions {
-                    let new_x = x.wrapping_add(*dx as usize);
-                    let new_y = y.wrapping_add(*dy as usize);
-                    if new_x < grid[0].len() && new_y < grid.len() && grid[new_y][new_x] != '#' {
-                        queue.push_back((new_x, new_y, visited.clone()));
-                    }
+        if grid[y][x] == '#' {
+        } else {
+            let directions: &[(isize, isize); 4] = &[(0, -1), (0, 1), (-1, 0), (1, 0)];
+            for (dx, dy) in directions {
+                let new_x = x.wrapping_add(dx.unsigned_abs());
+                let new_y = y.wrapping_add(dy.unsigned_abs());
+                if new_x < grid[0].len() && new_y < grid.len() && grid[new_y][new_x] != '#' {
+                    queue.push_back((new_x, new_y, visited.clone()));
                 }
             }
         }

@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic, clippy::perf)]
 static INPUT_TXT: &str = include_str!("../../input/02.txt");
 
 fn main() {
@@ -85,7 +86,7 @@ impl Game {
 struct Games(Vec<Game>);
 impl From<&str> for Games {
     fn from(s: &str) -> Self {
-        Self(s.trim().split('\n').map(Game::from).collect())
+        Self(s.trim().lines().map(Game::from).collect())
     }
 }
 

@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic, clippy::perf)]
 use aoc_shared::{time_execution, Grid, Point};
 use std::collections::{HashSet, VecDeque};
 

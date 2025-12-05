@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic, clippy::perf)]
 use std::collections::HashMap;
 
 static INPUT_TXT: &str = include_str!("../../input/14.txt");

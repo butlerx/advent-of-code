@@ -1,3 +1,4 @@
+#![warn(clippy::pedantic, clippy::perf)]
 static INPUT_TXT: &str = include_str!("../../input/16.txt");
 
 fn main() {
@@ -21,8 +22,8 @@ fn step(row: usize, col: usize, dir: usize) -> (usize, usize, usize) {
         _ => (0, -1),
     };
     (
-        (isize::try_from(row).unwrap() + dr) as _,
-        (isize::try_from(col).unwrap() + dc) as _,
+        (isize::try_from(row).unwrap() + dr).unsigned_abs() as _,
+        (isize::try_from(col).unwrap() + dc).unsigned_abs() as _,
         dir,
     )
 }
