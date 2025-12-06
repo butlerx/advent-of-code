@@ -1,122 +1,171 @@
 #![warn(clippy::pedantic, clippy::perf)]
 
-use aoc_shared::time_execution;
+use aoc_shared::{time_execution_us, Grid, Point};
 static INPUT_TXT: &str = include_str!("../../input/06.txt");
 
 fn main() {
     println!("🌟 --- Day 6 Results --- 🌟");
-    let (res_1, duration_1) = time_execution(|| part_1(INPUT_TXT));
-    println!("📌 Part 1: {res_1}, complete in {duration_1} ms");
+    let (res_1, duration_1) = time_execution_us(|| part_1(INPUT_TXT));
+    println!("📌 Part 1: {res_1}, complete in {duration_1} us");
 
-    let (res_2, duration_2) = time_execution(|| part_2(INPUT_TXT));
-    println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
+    let (res_2, duration_2) = time_execution_us(|| part_2(INPUT_TXT));
+    println!("📌 Part 2: {res_2}, complete in {duration_2} us");
 }
 
 fn part_1(input: &str) -> usize {
+    solve_problems(input, extract_problem_horizontal)
+}
+
+fn part_2(input: &str) -> usize {
+    solve_problems(input, extract_problem_vertical)
+}
+
+fn solve_problems<F>(input: &str, extractor: F) -> usize
+where
+    F: Fn(&Grid<char>, usize) -> (Option<Problem>, usize),
+{
+    let grid = parse_grid(input);
+
+    std::iter::successors(Some(0), |&col| (col < grid.width).then_some(col))
+        .scan(0, |current_col, _| {
+            if *current_col >= grid.width {
+                return None;
+            }
+
+            if is_separator_column(&grid, *current_col) {
+                *current_col += 1;
+                Some(None)
+            } else {
+                let (problem, next_col) = extractor(&grid, *current_col);
+                *current_col = next_col;
+                Some(problem)
+            }
+        })
+        .flatten()
+        .map(Problem::calculate)
+        .sum()
+}
+
+fn parse_grid(input: &str) -> Grid<char> {
     let lines: Vec<&str> = input.trim().lines().collect();
-
-    if lines.is_empty() {
-        return 0;
-    }
-
     let width = lines.iter().map(|line| line.len()).max().unwrap_or(0);
 
-    let mut problems = Vec::new();
-    let mut col = 0;
+    let rows: Vec<Vec<char>> = lines
+        .into_iter()
+        .map(|line| {
+            let mut chars: Vec<char> = line.chars().collect();
+            chars.resize(width, ' ');
+            chars
+        })
+        .collect();
 
-    while col < width {
-        if is_separator_column(&lines, col) {
-            col += 1;
-            continue;
-        }
-
-        let (problem, next_col) = extract_problem(&lines, col, width);
-        if let Some(prob) = problem {
-            problems.push(prob);
-        }
-        col = next_col;
-    }
-
-    problems.iter().map(|p| p.calculate()).sum()
+    Grid::from(rows)
 }
 
-fn is_separator_column(lines: &[&str], col: usize) -> bool {
-    lines
-        .iter()
-        .all(|line| col >= line.len() || line.chars().nth(col).unwrap_or(' ') == ' ')
+fn is_separator_column(grid: &Grid<char>, col: usize) -> bool {
+    (0..grid.height).all(|row| {
+        grid.get(Point::new(col as i64, row as i64))
+            .is_none_or(|ch| ch == ' ')
+    })
 }
 
-fn extract_problem(lines: &[&str], start_col: usize, width: usize) -> (Option<Problem>, usize) {
-    // Find the width of this problem (until we hit a separator column or end)
-    let mut end_col = start_col;
-    while end_col < width && !is_separator_column(lines, end_col) {
-        end_col += 1;
+fn extract_problem_horizontal(grid: &Grid<char>, start_col: usize) -> (Option<Problem>, usize) {
+    let end_col = find_next_separator(grid, start_col);
+
+    let (numbers, operator) = (0..grid.height)
+        .filter_map(|row| parse_row_segment(grid, row, start_col, end_col))
+        .fold(
+            (Vec::new(), None),
+            |(mut numbers, operator), entry| match entry {
+                Entry::Number(n) => {
+                    numbers.push(n);
+                    (numbers, operator)
+                }
+                Entry::Operator(op) => (numbers, Some(op)),
+            },
+        );
+
+    let problem = operator.map(|op| Problem {
+        numbers,
+        operator: op,
+    });
+    (problem, end_col)
+}
+
+fn extract_problem_vertical(grid: &Grid<char>, start_col: usize) -> (Option<Problem>, usize) {
+    let end_col = find_next_separator(grid, start_col);
+
+    let (mut numbers, operator) =
+        (start_col..end_col).fold((Vec::new(), None::<char>), |(mut nums, op), col| {
+            let (digits, col_op) =
+                (0..grid.height).fold((String::new(), op), |(mut digits, op), row| {
+                    match grid.get(Point::new(col as i64, row as i64)) {
+                        Some(ch) if ch == '*' || ch == '+' => (digits, Some(ch)),
+                        Some(ch) if ch != ' ' => {
+                            digits.push(ch);
+                            (digits, op)
+                        }
+                        _ => (digits, op),
+                    }
+                });
+
+            if let Ok(num) = digits.parse::<usize>() {
+                nums.push(num);
+            }
+            (nums, col_op)
+        });
+
+    numbers.reverse();
+    let problem = operator.map(|op| Problem {
+        numbers,
+        operator: op,
+    });
+    (problem, end_col)
+}
+
+fn find_next_separator(grid: &Grid<char>, start_col: usize) -> usize {
+    (start_col..grid.width)
+        .find(|&col| is_separator_column(grid, col))
+        .unwrap_or(grid.width)
+}
+
+fn parse_row_segment(
+    grid: &Grid<char>,
+    row: usize,
+    start_col: usize,
+    end_col: usize,
+) -> Option<Entry> {
+    let segment: String = (start_col..end_col)
+        .filter_map(|col| grid.get(Point::new(col as i64, row as i64)))
+        .collect();
+
+    match segment.trim() {
+        "*" => Some(Entry::Operator('*')),
+        "+" => Some(Entry::Operator('+')),
+        s => s.parse::<usize>().ok().map(Entry::Number),
     }
+}
 
-    if start_col >= end_col {
-        return (None, end_col);
-    }
-
-    // Extract the problem data
-    let mut numbers = Vec::new();
-    let mut operator = None;
-
-    for line in lines {
-        let segment: String = line
-            .chars()
-            .skip(start_col)
-            .take(end_col - start_col)
-            .collect();
-
-        let trimmed = segment.trim();
-
-        if trimmed.is_empty() {
-            continue;
-        }
-
-        // Check if it's an operator
-        if trimmed == "*" || trimmed == "+" {
-            operator = Some(trimmed.to_string());
-        } else if let Ok(num) = trimmed.parse::<usize>() {
-            numbers.push(num);
-        }
-    }
-
-    if !numbers.is_empty() && operator.is_some() {
-        (
-            Some(Problem {
-                numbers,
-                operator: operator.unwrap(),
-            }),
-            end_col,
-        )
-    } else {
-        (None, end_col)
-    }
+#[derive(Debug)]
+enum Entry {
+    Number(usize),
+    Operator(char),
 }
 
 #[derive(Debug)]
 struct Problem {
     numbers: Vec<usize>,
-    operator: String,
+    operator: char,
 }
 
 impl Problem {
-    fn calculate(&self) -> usize {
-        if self.numbers.is_empty() {
-            return 0;
-        }
-
-        match self.operator.as_str() {
-            "+" => self.numbers.iter().sum(),
-            "*" => self.numbers.iter().product(),
+    fn calculate(self) -> usize {
+        match self.operator {
+            '+' => self.numbers.iter().sum(),
+            '*' => self.numbers.iter().product(),
             _ => 0,
         }
     }
-}
-
-fn part_2(_input: &str) -> usize {
-    0
 }
 
 #[cfg(test)]
@@ -130,13 +179,13 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        assert_eq!(part_1(TEST_INPUT), 4277556);
-        assert_eq!(part_1(INPUT_TXT), 6417439773370);
+        assert_eq!(part_1(TEST_INPUT), 4_277_556);
+        assert_eq!(part_1(INPUT_TXT), 6_417_439_773_370);
     }
 
     #[test]
     fn test_part2() {
-        assert_eq!(part_2(TEST_INPUT), 3263827);
-        assert_eq!(part_2(INPUT_TXT), 0);
+        assert_eq!(part_2(TEST_INPUT), 3_263_827);
+        assert_eq!(part_2(INPUT_TXT), 11_044_319_475_191);
     }
 }
