@@ -1,6 +1,6 @@
 #![warn(clippy::pedantic, clippy::perf)]
 
-use aoc_shared::{time_execution_us, Grid, Point};
+use aoc_shared::{time_execution_us, Grid};
 static INPUT_TXT: &str = include_str!("../../input/06.txt");
 
 fn main() {
@@ -63,10 +63,7 @@ fn parse_grid(input: &str) -> Grid<char> {
 }
 
 fn is_separator_column(grid: &Grid<char>, col: usize) -> bool {
-    (0..grid.height).all(|row| {
-        grid.get(Point::new(col as i64, row as i64))
-            .is_none_or(|ch| ch == ' ')
-    })
+    (0..grid.height).all(|row| grid.get((col, row).into()).is_none_or(|ch| ch == ' '))
 }
 
 fn extract_problem_horizontal(grid: &Grid<char>, start_col: usize) -> (Option<Problem>, usize) {
@@ -99,7 +96,7 @@ fn extract_problem_vertical(grid: &Grid<char>, start_col: usize) -> (Option<Prob
         (start_col..end_col).fold((Vec::new(), None::<char>), |(mut nums, op), col| {
             let (digits, col_op) =
                 (0..grid.height).fold((String::new(), op), |(mut digits, op), row| {
-                    match grid.get(Point::new(col as i64, row as i64)) {
+                    match grid.get((col, row).into()) {
                         Some(ch) if ch == '*' || ch == '+' => (digits, Some(ch)),
                         Some(ch) if ch != ' ' => {
                             digits.push(ch);
@@ -136,7 +133,7 @@ fn parse_row_segment(
     end_col: usize,
 ) -> Option<Entry> {
     let segment: String = (start_col..end_col)
-        .filter_map(|col| grid.get(Point::new(col as i64, row as i64)))
+        .filter_map(|col| grid.get((col, row).into()))
         .collect();
 
     match segment.trim() {
