@@ -20,6 +20,19 @@ pub struct Grid<T> {
     pub width: usize,
 }
 
+impl std::fmt::Display for Grid<char> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for y in 0..self.height {
+            for x in 0..self.width {
+                let idx = y * self.width + x;
+                write!(f, "{}", self.cells[idx])?;
+            }
+            writeln!(f)?;
+        }
+        Ok(())
+    }
+}
+
 pub struct IterGridState<'a, T> {
     grid: &'a Grid<T>,
     current: usize,
