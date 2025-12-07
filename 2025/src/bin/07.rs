@@ -1,6 +1,6 @@
 #![warn(clippy::pedantic, clippy::perf)]
 
-use aoc_shared::{time_execution, time_execution_us, Grid, Point};
+use aoc_shared::{time_execution_us, Grid, Point};
 use std::collections::HashMap;
 static INPUT_TXT: &str = include_str!("../../input/07.txt");
 
@@ -9,8 +9,8 @@ fn main() {
     let (res_1, duration_1) = time_execution_us(|| part_1(INPUT_TXT));
     println!("📌 Part 1: {res_1}, complete in {duration_1} us");
 
-    let (res_2, duration_2) = time_execution(|| part_2(INPUT_TXT));
-    println!("📌 Part 2: {res_2}, complete in {duration_2} ms");
+    let (res_2, duration_2) = time_execution_us(|| part_2(INPUT_TXT));
+    println!("📌 Part 2: {res_2}, complete in {duration_2} us");
 }
 
 fn parse_input(input: &str) -> Grid<char> {
