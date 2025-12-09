@@ -103,6 +103,28 @@ impl Point {
         (self.x - b.x).abs() + (self.y - b.y).abs()
     }
 
+    /// Returns the area distance between this point and another.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use aoc_shared::Point;
+    /// let a = Point::new(1, 2);
+    /// let b = Point::new(4, 6);
+    /// assert_eq!(a.area_distance(b), 20);
+    /// ```
+    #[must_use]
+    pub fn area_distance(self, b: Point) -> i64 {
+        let width = (b.x - self.x).abs();
+        let height = (b.y - self.y).abs();
+
+        if width > 0 && height > 0 {
+            (width + 1) * (height + 1)
+        } else {
+            0
+        }
+    }
+
     /// Returns the four cardinal neighbors (up, down, left, right) of this point.
     ///
     /// # Examples
@@ -188,6 +210,15 @@ where
     fn from((x, y): (T, T)) -> Self {
         let x = x.try_into().expect("x is too large");
         let y = y.try_into().expect("y is too large");
+        Self { x, y }
+    }
+}
+
+impl From<&str> for Point {
+    fn from(s: &str) -> Self {
+        let parts = s.trim().split_once(',').expect("Invalid input line");
+        let x = parts.0.parse::<i64>().expect("Invalid x coordinate");
+        let y = parts.1.parse::<i64>().expect("Invalid y coordinate");
         Self { x, y }
     }
 }
