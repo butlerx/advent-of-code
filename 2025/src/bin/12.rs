@@ -60,7 +60,7 @@ struct OrientationInfo {
     size: usize,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 struct ParseState {
     shapes: Vec<Shape>,
     regions: Vec<String>,
@@ -69,15 +69,6 @@ struct ParseState {
 }
 
 impl ParseState {
-    fn new() -> Self {
-        Self {
-            shapes: Vec::new(),
-            regions: Vec::new(),
-            current_shape_id: None,
-            shape_lines: Vec::new(),
-        }
-    }
-
     fn finalize_current_shape(&mut self) {
         if let Some(id) = self.current_shape_id.take()
             && !self.shape_lines.is_empty()
@@ -103,10 +94,12 @@ impl ParseState {
     }
 }
 
+#[inline]
 fn is_region_line(line: &str) -> bool {
     line.contains(':') && line.split(':').next().is_some_and(|s| s.contains('x'))
 }
 
+#[inline]
 fn parse_shape_header(line: &str) -> Option<usize> {
     if !line.contains(':') {
         return None;
@@ -114,6 +107,7 @@ fn parse_shape_header(line: &str) -> Option<usize> {
     line.split(':').next()?.trim().parse().ok()
 }
 
+#[inline]
 fn is_shape_content(line: &str) -> bool {
     !line.trim().is_empty() && (line.contains('#') || line.contains('.'))
 }
@@ -121,11 +115,12 @@ fn is_shape_content(line: &str) -> bool {
 fn parse_input(input: &str) -> (Vec<Shape>, Vec<String>) {
     let mut state = input
         .lines()
-        .fold(ParseState::new(), ParseState::process_line);
+        .fold(ParseState::default(), ParseState::process_line);
     state.finalize_current_shape();
     (state.shapes, state.regions)
 }
 
+#[inline]
 fn parse_shape(lines: &[String]) -> Shape {
     lines
         .iter()
@@ -172,6 +167,7 @@ impl Region {
     }
 }
 
+#[inline]
 fn can_fit_region(line: &str, shapes: &[Shape]) -> bool {
     let Some(region) = Region::from_line(line) else {
         return false;
@@ -192,40 +188,30 @@ fn can_fit_region(line: &str, shapes: &[Shape]) -> bool {
 
     let shape_orientations: Vec<_> = shapes
         .iter()
-        .map(|shape| get_all_orientations_with_bounds(shape))
+        .map(|shape| get_all_orientations(shape))
         .collect();
 
     presents.sort_by_key(|&id| std::cmp::Reverse(shape_orientations[id][0].size));
 
-    let mut occupied = HashSet::new();
+    let total_cells: usize = presents
+        .iter()
+        .map(|&id| shape_orientations[id][0].size)
+        .sum();
+    let mut occupied = HashSet::with_capacity(total_cells);
+
     solve_placement(
         &mut occupied,
         region.width,
         region.height,
         &shape_orientations,
         &presents,
+        total_cells,
         0,
     )
 }
 
-fn get_all_orientations_with_bounds(coords: &[Point]) -> Vec<OrientationInfo> {
-    get_all_orientations(coords)
-        .into_iter()
-        .map(|coords| {
-            let (max_x, max_y) = coords
-                .iter()
-                .fold((0i64, 0i64), |(mx, my), p| (mx.max(p.x), my.max(p.y)));
-            OrientationInfo {
-                size: coords.len(),
-                width: usize::try_from(max_x + 1).expect("number too large"),
-                height: usize::try_from(max_y + 1).expect("number too large"),
-                coords,
-            }
-        })
-        .collect()
-}
-
-fn get_all_orientations(coords: &[Point]) -> Vec<Vec<Point>> {
+#[inline]
+fn get_all_orientations(coords: &[Point]) -> Vec<OrientationInfo> {
     let rotations = (0..4).scan(coords.to_vec(), |state, _| {
         let current = state.clone();
         *state = rotate_90(state);
@@ -246,9 +232,21 @@ fn get_all_orientations(coords: &[Point]) -> Vec<Vec<Point>> {
         .chain(flipped_rotations)
         .collect::<HashSet<_>>()
         .into_iter()
+        .map(|coords| {
+            let (max_x, max_y) = coords
+                .iter()
+                .fold((0i64, 0i64), |(mx, my), p| (mx.max(p.x), my.max(p.y)));
+            OrientationInfo {
+                size: coords.len(),
+                width: usize::try_from(max_x + 1).expect("number too large"),
+                height: usize::try_from(max_y + 1).expect("number too large"),
+                coords,
+            }
+        })
         .collect()
 }
 
+#[inline]
 fn rotate_90(coords: &[Point]) -> Vec<Point> {
     coords.iter().map(|p| Point::new(-p.y, p.x)).collect()
 }
@@ -279,6 +277,7 @@ fn solve_placement(
     grid_height: usize,
     orientations: &[Vec<OrientationInfo>],
     presents: &[usize],
+    remaining_size: usize,
     idx: usize,
 ) -> bool {
     if idx == presents.len() {
@@ -288,51 +287,63 @@ fn solve_placement(
     let occupied_count = occupied.len();
     let total_space = grid_width * grid_height;
     let remaining_space = total_space - occupied_count;
-    let remaining_shapes_size: usize = presents[idx..]
-        .iter()
-        .map(|&id| orientations[id][0].size)
-        .sum();
 
-    if remaining_space < remaining_shapes_size {
+    if remaining_space < remaining_size {
         return false;
     }
 
     let shape_id = presents[idx];
+    let current_shape_size = orientations[shape_id][0].size;
+    let next_remaining = remaining_size - current_shape_size;
 
     for orientation in &orientations[shape_id] {
         let max_x = grid_width.saturating_sub(orientation.width);
         let max_y = grid_height.saturating_sub(orientation.height);
+        let mut positions: Vec<_> = (0..=max_y)
+            .flat_map(|y| (0..=max_x).map(move |x| (x, y)))
+            .collect();
 
-        for y in 0..=max_y {
-            for x in 0..=max_x {
-                let pos: Point = (x, y).into();
-
-                let placements: Vec<Point> = orientation
-                    .coords
+        positions.sort_by_cached_key(|(x, y)| {
+            let pos: Point = (*x, *y).into();
+            std::cmp::Reverse(
+                [(-1, 0), (1, 0), (0, -1), (0, 1)]
                     .iter()
-                    .map(|&offset| pos + offset)
-                    .collect();
+                    .filter(|&&(dx, dy)| {
+                        let check_pos = Point::new(pos.x + dx, pos.y + dy);
+                        occupied.contains(&check_pos)
+                    })
+                    .count(),
+            )
+        });
 
-                if placements.iter().all(|p| !occupied.contains(p)) {
-                    for &p in &placements {
-                        occupied.insert(p);
-                    }
+        'position_loop: for (x, y) in positions {
+            let pos: Point = (x, y).into();
 
-                    if solve_placement(
-                        occupied,
-                        grid_width,
-                        grid_height,
-                        orientations,
-                        presents,
-                        idx + 1,
-                    ) {
-                        return true;
-                    }
-
-                    for &p in &placements {
-                        occupied.remove(&p);
-                    }
+            for offset in &orientation.coords {
+                let p = pos + *offset;
+                if occupied.contains(&p) {
+                    continue 'position_loop;
                 }
+            }
+
+            for offset in &orientation.coords {
+                occupied.insert(pos + *offset);
+            }
+
+            if solve_placement(
+                occupied,
+                grid_width,
+                grid_height,
+                orientations,
+                presents,
+                next_remaining,
+                idx + 1,
+            ) {
+                return true;
+            }
+
+            for offset in &orientation.coords {
+                occupied.remove(&(pos + *offset));
             }
         }
     }
