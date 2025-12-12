@@ -1,6 +1,6 @@
 #![warn(clippy::pedantic, clippy::perf)]
 
-use aoc_shared::{time_execution, time_execution_us, Grid, Point};
+use aoc_shared::{Grid, Point, time_execution, time_execution_us};
 static INPUT_TXT: &str = include_str!("../../input/04.txt");
 
 fn main() {

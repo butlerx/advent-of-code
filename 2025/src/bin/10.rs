@@ -23,7 +23,8 @@ fn pivot(
         }
         for col_idx in 0..num_cols + 2 {
             if col_idx != pivot_col {
-                tableau[row_idx][col_idx] -= tableau[pivot_row][col_idx] * tableau[row_idx][pivot_col] * pivot_scale;
+                tableau[row_idx][col_idx] -=
+                    tableau[pivot_row][col_idx] * tableau[row_idx][pivot_col] * pivot_scale;
             }
         }
     }
@@ -34,7 +35,10 @@ fn pivot(
         row[pivot_col] *= -pivot_scale;
     }
     tableau[pivot_row][pivot_col] = pivot_scale;
-    std::mem::swap(&mut basic_indices[pivot_row], &mut non_basic_indices[pivot_col]);
+    std::mem::swap(
+        &mut basic_indices[pivot_row],
+        &mut non_basic_indices[pivot_col],
+    );
 }
 
 fn find(
@@ -84,7 +88,15 @@ fn find(
         if pivot_row == usize::MAX {
             return false;
         }
-        pivot(tableau, basic_indices, non_basic_indices, pivot_row, pivot_col, num_rows, num_cols);
+        pivot(
+            tableau,
+            basic_indices,
+            non_basic_indices,
+            pivot_row,
+            pivot_col,
+            num_rows,
+            num_cols,
+        );
     }
 }
 
@@ -102,7 +114,6 @@ pub struct Machine {
     pub goal_counters: Vec<i64>,
     pub button_masks: Vec<u32>,
 }
-
 
 /// Parses the input string into a vector of Machines.
 ///
@@ -181,11 +192,13 @@ fn simplex(lhs: &[Vec<f64>], cost_vector: &[f64]) -> (f64, Option<Vec<f64>>) {
     let num_rows = lhs.len();
     let num_cols = lhs[0].len() - 1;
 
-    let mut non_basic_indices: Vec<i32> = (0..i32::try_from(num_cols).expect("num_cols too large")).collect();
+    let mut non_basic_indices: Vec<i32> =
+        (0..i32::try_from(num_cols).expect("num_cols too large")).collect();
     non_basic_indices.push(-1);
 
-    let mut basic_indices: Vec<i32> =
-        (i32::try_from(num_cols).expect("num_cols too large")..i32::try_from(num_cols + num_rows).expect("couldnt parse n+m")).collect();
+    let mut basic_indices: Vec<i32> = (i32::try_from(num_cols).expect("num_cols too large")
+        ..i32::try_from(num_cols + num_rows).expect("couldnt parse n+m"))
+        .collect();
 
     let mut tableau = vec![vec![0.0; num_cols + 2]; num_rows + 2];
 
@@ -211,15 +224,33 @@ fn simplex(lhs: &[Vec<f64>], cost_vector: &[f64]) -> (f64, Option<Vec<f64>>) {
     }
 
     if tableau[split_row][num_cols + 1] < -EPS {
-        pivot(&mut tableau[..], &mut basic_indices[..], &mut non_basic_indices[..], split_row, num_cols, num_rows, num_cols);
-        if !find(&mut tableau[..], &mut basic_indices[..], &mut non_basic_indices[..], 1, num_rows, num_cols) || tableau[num_rows + 1][num_cols + 1] < -EPS {
+        pivot(
+            &mut tableau[..],
+            &mut basic_indices[..],
+            &mut non_basic_indices[..],
+            split_row,
+            num_cols,
+            num_rows,
+            num_cols,
+        );
+        if !find(
+            &mut tableau[..],
+            &mut basic_indices[..],
+            &mut non_basic_indices[..],
+            1,
+            num_rows,
+            num_cols,
+        ) || tableau[num_rows + 1][num_cols + 1] < -EPS
+        {
             return (-INF, None);
         }
         for row_idx in 0..num_rows {
             if basic_indices[row_idx] == -1 {
                 let mut best_col = 0;
                 let mut best_key = (tableau[row_idx][0], non_basic_indices[0]);
-                for (col_idx, &non_basic_idx) in non_basic_indices.iter().enumerate().take(num_cols).skip(1) {
+                for (col_idx, &non_basic_idx) in
+                    non_basic_indices.iter().enumerate().take(num_cols).skip(1)
+                {
                     let key = (tableau[row_idx][col_idx], non_basic_idx);
                     if key.0 < best_key.0 - EPS
                         || ((key.0 - best_key.0).abs() <= EPS && key.1 < best_key.1)
@@ -228,16 +259,32 @@ fn simplex(lhs: &[Vec<f64>], cost_vector: &[f64]) -> (f64, Option<Vec<f64>>) {
                         best_key = key;
                     }
                 }
-                pivot(&mut tableau[..], &mut basic_indices[..], &mut non_basic_indices[..], row_idx, best_col, num_rows, num_cols);
+                pivot(
+                    &mut tableau[..],
+                    &mut basic_indices[..],
+                    &mut non_basic_indices[..],
+                    row_idx,
+                    best_col,
+                    num_rows,
+                    num_cols,
+                );
             }
         }
     }
 
-    if find(&mut tableau[..], &mut basic_indices[..], &mut non_basic_indices[..], 0, num_rows, num_cols) {
+    if find(
+        &mut tableau[..],
+        &mut basic_indices[..],
+        &mut non_basic_indices[..],
+        0,
+        num_rows,
+        num_cols,
+    ) {
         let mut solution = vec![0.0; num_cols];
         for row_idx in 0..num_rows {
             if let Ok(idx) = usize::try_from(basic_indices[row_idx])
-                && idx < num_cols {
+                && idx < num_cols
+            {
                 solution[idx] = tableau[row_idx][num_cols + 1];
             }
         }

@@ -1,6 +1,6 @@
 #![warn(clippy::pedantic, clippy::perf)]
 
-use aoc_shared::{time_execution, time_execution_us,  Point};
+use aoc_shared::{Point, time_execution, time_execution_us};
 use std::collections::HashSet;
 
 static INPUT_TXT: &str = include_str!("../../input/12.txt");
@@ -52,7 +52,6 @@ fn part_1(input: &str) -> usize {
 
 type Shape = Vec<Point>;
 
-
 #[derive(Debug, Clone)]
 struct OrientationInfo {
     coords: Shape,
@@ -81,13 +80,14 @@ impl ParseState {
 
     fn finalize_current_shape(&mut self) {
         if let Some(id) = self.current_shape_id.take()
-            && !self.shape_lines.is_empty() {
-                while self.shapes.len() <= id {
-                    self.shapes.push(Vec::new());
-                }
-                self.shapes[id] = parse_shape(&self.shape_lines);
-                self.shape_lines.clear();
+            && !self.shape_lines.is_empty()
+        {
+            while self.shapes.len() <= id {
+                self.shapes.push(Vec::new());
             }
+            self.shapes[id] = parse_shape(&self.shape_lines);
+            self.shape_lines.clear();
+        }
     }
 
     fn process_line(mut self, line: &str) -> Self {
@@ -136,7 +136,6 @@ fn parse_shape(lines: &[String]) -> Shape {
                 .filter_map(move |(x, ch)| (ch == '#').then_some((x, y).into()))
         })
         .collect()
-
 }
 
 #[derive(Debug)]
