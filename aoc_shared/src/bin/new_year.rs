@@ -1,4 +1,29 @@
 #![warn(clippy::pedantic, clippy::perf)]
+
+//! Scaffolds a new Advent of Code year directory.
+//!
+//! Creates the standard directory layout with input files, binary templates, and
+//! Cargo configuration for a given year:
+//!
+//! ```text
+//! <year>/
+//! ├── Cargo.toml
+//! ├── input/
+//! │   ├── 01.txt ... 12.txt
+//! └── src/
+//!     ├── lib.rs
+//!     └── bin/
+//!         ├── 01.rs ... 12.rs
+//! ```
+//!
+//! # Usage
+//!
+//! ```sh
+//! cargo run --package aoc_shared --bin new_year [YEAR]
+//! ```
+//!
+//! If `YEAR` is omitted, the current calendar year is used.
+
 use std::{
     env,
     fs::{self, File},
@@ -33,7 +58,10 @@ fn main() -> std::io::Result<()> {
         let input_path = year_dir.join(format!("input/{day_str}.txt"));
 
         let rust_template = format!(
-            r#"#![warn(clippy::pedantic, clippy::perf)]
+            r#"//! Advent of Code {year} - Day {day}
+//!
+//! <https://adventofcode.com/{year}/day/{day}>
+#![warn(clippy::pedantic, clippy::perf)]
 
 use aoc_shared::time_execution;
 static INPUT_TXT: &str = include_str!("../../input/{day_str}.txt");
@@ -64,13 +92,11 @@ mod tests {{
     #[test]
     fn test_part1() {{
         assert_eq!(part_1(TEST_INPUT), 0);
-        assert_eq!(part_1(INPUT_TXT), 0);
     }}
 
     #[test]
     fn test_part2() {{
         assert_eq!(part_2(TEST_INPUT), 0);
-        assert_eq!(part_2(INPUT_TXT), 0);
     }}
 }}"#
         );
@@ -92,11 +118,12 @@ mod tests {{
     let cargo_content = format!(
         r#"[package]
 name = "aoc_{year}"
+description = "Advent of Code {year} solutions"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-aoc_shared = {{ path = "../aoc_shared" }}"#
+aoc_shared.workspace = true"#
     );
     let mut cargo_file = File::create(cargo_path)?;
     cargo_file.write_all(cargo_content.as_bytes())?;

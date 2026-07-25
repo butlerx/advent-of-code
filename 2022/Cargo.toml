@@ -1,13 +1,12 @@
 [package]
-name = "aoc_2022"
-version.workspace = true
-authors.workspace = true
-readme.workspace = true
+name                 = "aoc_2022"
+version.workspace    = true
+authors.workspace    = true
+edition              = "2021"
+description          = "Advent of Code 2022 solutions"
+readme.workspace     = true
 repository.workspace = true
-edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-itertools = "0.10.5"
+itertools  = "0.10.5"
 serde_json = "1.0"

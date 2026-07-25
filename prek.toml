@@ -1,0 +1,40 @@
+# Configuration file for `prek`, a git hook framework written in Rust.
+# See https://prek.j178.dev for more information.
+#:schema https://www.schemastore.org/prek.json
+
+update = { cooldown_days = 7, freeze = true }
+
+[[repos]]
+repo  = "https://github.com/LiquidFun/aoc_tiles"
+rev   = "e21407de531873e73d1d52d89925a87d85774778"  # frozen: 0.7.2
+hooks = [{ id = "aoc-tiles" }]
+
+[[repos]]
+repo  = "https://github.com/pre-commit/pre-commit-hooks"
+rev   = "3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"
+hooks = [
+  { id = "trailing-whitespace" },
+  { id = "end-of-file-fixer" },
+  { id = "check-yaml" },
+  { id = "check-json" },
+  { id = "check-merge-conflict" }
+]
+
+[[repos]]
+repo  = "https://github.com/tombi-toml/tombi-pre-commit"
+rev   = "c067d5a9d51d677772a0236eaf1d31fc0219ffba"        # frozen: v1.2.2
+hooks = [{ id = "tombi-format" }, { id = "tombi-lint" }]
+
+[[repos]]
+repo  = "https://github.com/google/yamlfmt"
+rev   = "21ca5323a9c87ee37a434e0ca908efc0a89daa07"
+hooks = [{ id = "yamlfmt" }]
+
+[[repos]]
+repo  = "https://github.com/doublify/pre-commit-rust"
+rev   = "eeee35a89e69d5772bdee97db1a6a898467b686e"
+hooks = [
+  { id = "cargo-check", args = ["--workspace"] },
+  { id = "fmt" },
+  { id = "clippy", args = ["--", "-D", "warnings"] }
+]

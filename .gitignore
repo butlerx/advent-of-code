@@ -1,6 +1,9 @@
 .aoc_tiles/*
 !.aoc_tiles/tiles/
 
+# Advent of Code puzzle inputs (personal per user)
+**/input/
+
 # Created by https://www.toptal.com/developers/gitignore/api/rust,vim
 # Edit at https://www.toptal.com/developers/gitignore?templates=rust,vim
 

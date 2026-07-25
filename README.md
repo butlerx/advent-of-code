@@ -504,8 +504,32 @@ Solutions for [adventofcode.com](https://adventofcode.com)
   - `input/`: Contains input files for each day (`01.txt`, ..., `25.txt`).
   - `src/bin/`: Contains Rust binaries for each day (`01.rs`, ..., `25.rs`).
   - `src/`: Shared code for the year (e.g., `lib.rs`, utility modules).
+- `aoc_shared/`: Shared library with reusable types (`Grid`, `Point`) and helpers
+  (`time_execution`, `time_execution_us`).
+- `systems_check/`: Minimal crate for verifying the workspace builds correctly.
 
-## Running a Day’s Solution
+## Solution File Conventions
+
+Each daily solution follows the same structure:
+
+```rust
+fn main() {
+    // Prints Part 1 and Part 2 results with execution time
+}
+
+fn part_1(input: &str) -> T { /* ... */ }
+fn part_2(input: &str) -> T { /* ... */ }
+
+#[cfg(test)]
+mod tests {
+    // Tests against example input and the real puzzle input
+}
+```
+
+Input is embedded at compile time via `include_str!` so solutions are
+self-contained binaries.
+
+## Running a Day's Solution
 
 From the repository root, use the `--package` flag:
 
@@ -515,7 +539,7 @@ cargo run --package aoc_2024 --bin 01
 
 This runs Day 1 for 2024 using the input from `2024/input/01.txt`.
 
-## Testing a Day’s Solution
+## Testing a Day's Solution
 
 From the repository root, use the `--package` flag:
 
@@ -523,11 +547,11 @@ From the repository root, use the `--package` flag:
 cargo test --package aoc_2024 --bin 01
 ```
 
-This runs tests for Day 1 for 2024. Each day’s file includes its own tests.
+This runs tests for Day 1 for 2024. Each day's file includes its own tests.
 
 ## Adding a New Year
 
-To scaffold a new year’s directory and files, use the helper binary in
+To scaffold a new year's directory and files, use the helper binary in
 `aoc_shared`:
 
 ```sh
@@ -537,5 +561,22 @@ cargo run --package aoc_shared --bin new_year [YEAR]
 - If `[YEAR]` is omitted, it uses the current year.
 - This creates the directory, input files, binaries, and sets up `Cargo.toml`
   and `lib.rs` for you.
+
+## Development
+
+### Git Hooks
+
+This repository uses [prek](https://prek.j178.dev) with the following
+hooks:
+
+- **aoc-tiles** — Auto-generates the progress tile images in the README.
+- **cargo-check** — Runs `cargo check --workspace` to catch compilation errors.
+- **clippy** — Runs Clippy with `-D warnings` and auto-fixes where possible.
+
+Install hooks with:
+
+```sh
+prek install
+```
 
 ---

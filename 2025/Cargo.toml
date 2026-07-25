@@ -1,10 +1,11 @@
 [package]
-name = "aoc_2025"
-version.workspace = true
-authors.workspace = true
-readme.workspace = true
+name                 = "aoc_2025"
+version.workspace    = true
+authors.workspace    = true
+edition.workspace    = true
+description          = "Advent of Code 2025 solutions"
+readme.workspace     = true
 repository.workspace = true
-edition.workspace = true
 
 [dependencies]
-aoc_shared = { path = "../aoc_shared" }
+aoc_shared.workspace = true
