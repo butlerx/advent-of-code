@@ -167,11 +167,13 @@ fn write_cargo_toml(
     let cargo_path = year_dir.join("Cargo.toml");
     let cargo_content = format!(
         r#"[package]
-name = "{crate_name}"
-description = "Advent of Code {year} solutions"
-version = "0.1.0"
-edition = "2024"
-readme = "README.md"
+name                 = "{crate_name}"
+version.workspace    = true
+authors.workspace    = true
+edition.workspace    = true
+description          = "Advent of Code {year} solutions"
+readme               = "README.md"
+repository.workspace = true
 
 [dependencies]
 aoc_shared.workspace = true"#
