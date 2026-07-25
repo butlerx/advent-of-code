@@ -1,19 +1,8 @@
 //! Systems Check - Mission 1
 //!
 //! <https://systemscheck.dev/missions/1>
-#![warn(clippy::pedantic, clippy::perf)]
 
-use aoc_shared::time_execution;
 use std::collections::{HashMap, HashSet};
-static INPUT_TXT: &str = include_str!("../../input/01.txt");
-
-fn main() {
-    println!("🌟 --- Mission 1 Results --- 🌟");
-    let (res, duration) = time_execution(|| part_1(INPUT_TXT));
-    println!("📌 Part 1: {res}, complete in {duration} ms");
-    let (res, duration) = time_execution(|| part_2(INPUT_TXT));
-    println!("📌 Part 2: {res}, complete in {duration} ms");
-}
 
 fn parse_line(line: &str) -> (usize, usize, bool) {
     let parts = line.split_whitespace().collect::<Vec<_>>();
@@ -31,7 +20,10 @@ fn parse_line(line: &str) -> (usize, usize, bool) {
     (time, cell, disabled)
 }
 
-fn part_1(input: &str) -> usize {
+/// # Panics
+///
+/// Panics if input is empty.
+pub fn part_1(input: &str) -> usize {
     let events: Vec<_> = input.trim().lines().map(parse_line).collect();
     let last_time = events.last().expect("No events found").0;
 
@@ -54,7 +46,7 @@ fn part_1(input: &str) -> usize {
         .max(max_duration)
 }
 
-fn part_2(input: &str) -> usize {
+pub fn part_2(input: &str) -> usize {
     input
         .trim()
         .lines()

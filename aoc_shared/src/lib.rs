@@ -16,10 +16,14 @@
 //! assert_eq!(grid.get(p), Some(2));
 //! ```
 
+mod args;
 mod grid;
+mod input;
 mod point;
 mod timer;
 
+pub use args::Args;
 pub use grid::Grid;
+pub use input::read_input;
 pub use point::Point;
 pub use timer::*;

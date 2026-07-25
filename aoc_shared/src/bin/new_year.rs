@@ -2,7 +2,7 @@
 
 //! Scaffolds a new Advent of Code year directory.
 //!
-//! Creates the standard directory layout with input files, binary templates, and
+//! Creates the standard directory layout with input files, library modules, and
 //! Cargo configuration for a given year:
 //!
 //! ```text
@@ -12,8 +12,8 @@
 //! │   ├── 01.txt ... 12.txt
 //! └── src/
 //!     ├── lib.rs
-//!     └── bin/
-//!         ├── 01.rs ... 12.rs
+//!     ├── main.rs
+//!     ├── day_01.rs ... day_12.rs
 //! ```
 //!
 //! # Usage
@@ -47,39 +47,25 @@ fn main() -> std::io::Result<()> {
         process::exit(1);
     }
 
-    // Create directory structure
-    fs::create_dir_all(year_dir.join("src/bin"))?;
+    fs::create_dir_all(year_dir.join("src"))?;
     fs::create_dir_all(year_dir.join("input"))?;
+    File::create(year_dir.join("input/.gitkeep"))?;
 
-    // Create 12 day files
     for day in 1..=12 {
         let day_str = format!("{day:02}");
-        let bin_path = year_dir.join(format!("src/bin/{day_str}.rs"));
+        let module_path = year_dir.join(format!("src/day_{day_str}.rs"));
         let input_path = year_dir.join(format!("input/{day_str}.txt"));
 
-        let rust_template = format!(
+        let module_template = format!(
             r#"//! Advent of Code {year} - Day {day}
 //!
 //! <https://adventofcode.com/{year}/day/{day}>
-#![warn(clippy::pedantic, clippy::perf)]
 
-use aoc_shared::time_execution;
-static INPUT_TXT: &str = include_str!("../../input/{day_str}.txt");
-
-fn main() {{
-    println!("🌟 --- Day {day} Results --- 🌟");
-    let (res_1, duration_1) = time_execution(|| part_1(INPUT_TXT));
-    println!("📌 Part 1: {{res_1}}, complete in {{duration_1}} ms");
-
-    let (res_2, duration_2) = time_execution(|| part_2(INPUT_TXT));
-    println!("📌 Part 2: {{res_2}}, complete in {{duration_2}} ms");
-}}
-
-fn part_1(_input: &str) -> usize {{
+pub fn part_1(_input: &str) -> usize {{
     0
 }}
 
-fn part_2(_input: &str) -> usize {{
+pub fn part_2(_input: &str) -> usize {{
     0
 }}
 
@@ -90,34 +76,75 @@ mod tests {{
     const TEST_INPUT: &str = "";
 
     #[test]
-    fn test_part1() {{
+    fn test_part_1() {{
         assert_eq!(part_1(TEST_INPUT), 0);
     }}
 
     #[test]
-    fn test_part2() {{
+    fn test_part_2() {{
         assert_eq!(part_2(TEST_INPUT), 0);
     }}
 }}"#
         );
 
-        let mut bin_file = File::create(bin_path)?;
-        bin_file.write_all(rust_template.as_bytes())?;
+        let mut module_file = File::create(module_path)?;
+        module_file.write_all(module_template.as_bytes())?;
 
         File::create(input_path)?;
     }
 
-    // Create lib.rs
     let lib_path = year_dir.join("src/lib.rs");
-    let lib_content = r"#![warn(clippy::pedantic, clippy::perf)]";
+    let lib_content = "#![warn(clippy::pedantic, clippy::perf)]\n\n".to_owned()
+        + &(1..=12)
+            .map(|day| format!("pub mod day_{day:02};"))
+            .collect::<Vec<_>>()
+            .join("\n")
+        + "\n";
     let mut lib_file = File::create(lib_path)?;
     lib_file.write_all(lib_content.as_bytes())?;
 
-    // Create Cargo.toml (use edition = "2021" instead of "2024")
+    let main_path = year_dir.join("src/main.rs");
+    let crate_name = format!("aoc_{year}");
+    let main_content = format!(
+        r#"#![warn(clippy::pedantic, clippy::perf)]
+
+use aoc_shared::{{read_input, time_execution, Args}};
+
+type Solver = fn(&str) -> usize;
+
+fn main() {{
+    let args = Args::parse("{crate_name}");
+    let input = read_input(env!("CARGO_MANIFEST_DIR"), args.day);
+
+    let (part_1, part_2): (Solver, Solver) = match args.day {{
+{match_arms}
+        _ => panic!("Unknown day: {{}}", args.day),
+    }};
+
+    println!("🌟 --- Day {{}} Results --- 🌟", args.day);
+    if args.part != Some(2) {{
+        let (res, duration) = time_execution(|| part_1(&input));
+        println!("📌 Part 1: {{res}}, complete in {{duration}} ms");
+    }}
+    if args.part != Some(1) {{
+        let (res, duration) = time_execution(|| part_2(&input));
+        println!("📌 Part 2: {{res}}, complete in {{duration}} ms");
+    }}
+}}"#,
+        match_arms = (1..=12)
+            .map(|day| format!(
+                "        {day} => ({crate_name}::day_{day:02}::part_1, {crate_name}::day_{day:02}::part_2),"
+            ))
+            .collect::<Vec<_>>()
+            .join("\n")
+    );
+    let mut main_file = File::create(main_path)?;
+    main_file.write_all(main_content.as_bytes())?;
+
     let cargo_path = year_dir.join("Cargo.toml");
     let cargo_content = format!(
         r#"[package]
-name = "aoc_{year}"
+name = "{crate_name}"
 description = "Advent of Code {year} solutions"
 version = "0.1.0"
 edition = "2024"

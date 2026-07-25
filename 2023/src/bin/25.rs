@@ -101,6 +101,6 @@ frs: qnr lhk lsr";
     #[test]
     fn test_part_1() {
         assert_eq!(part_1(INPUT), 54);
-        assert_eq!(part_1(INPUT_TXT), 559143);
+        assert_eq!(part_1(INPUT_TXT), 559_143);
     }
 }
