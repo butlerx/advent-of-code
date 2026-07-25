@@ -47,10 +47,23 @@ fn main() -> std::io::Result<()> {
         process::exit(1);
     }
 
+    let crate_name = format!("aoc_{year}");
+
     fs::create_dir_all(year_dir.join("src"))?;
     fs::create_dir_all(year_dir.join("input"))?;
     File::create(year_dir.join("input/.gitkeep"))?;
 
+    write_day_modules(&year_dir, &year)?;
+    write_lib(&year_dir)?;
+    write_main(&year_dir, &crate_name)?;
+    write_cargo_toml(&year_dir, &year, &crate_name)?;
+    write_readme(&year_dir, &year, &crate_name)?;
+
+    println!("Created Advent of Code directory for {year}");
+    Ok(())
+}
+
+fn write_day_modules(year_dir: &std::path::Path, year: &str) -> std::io::Result<()> {
     for day in 1..=12 {
         let day_str = format!("{day:02}");
         let module_path = year_dir.join(format!("src/day_{day_str}.rs"));
@@ -92,7 +105,10 @@ mod tests {{
 
         File::create(input_path)?;
     }
+    Ok(())
+}
 
+fn write_lib(year_dir: &std::path::Path) -> std::io::Result<()> {
     let lib_path = year_dir.join("src/lib.rs");
     let lib_content = "#![warn(clippy::pedantic, clippy::perf)]\n\n".to_owned()
         + &(1..=12)
@@ -101,10 +117,11 @@ mod tests {{
             .join("\n")
         + "\n";
     let mut lib_file = File::create(lib_path)?;
-    lib_file.write_all(lib_content.as_bytes())?;
+    lib_file.write_all(lib_content.as_bytes())
+}
 
+fn write_main(year_dir: &std::path::Path, crate_name: &str) -> std::io::Result<()> {
     let main_path = year_dir.join("src/main.rs");
-    let crate_name = format!("aoc_{year}");
     let main_content = format!(
         r#"#![warn(clippy::pedantic, clippy::perf)]
 
@@ -139,8 +156,14 @@ fn main() {{
             .join("\n")
     );
     let mut main_file = File::create(main_path)?;
-    main_file.write_all(main_content.as_bytes())?;
+    main_file.write_all(main_content.as_bytes())
+}
 
+fn write_cargo_toml(
+    year_dir: &std::path::Path,
+    year: &str,
+    crate_name: &str,
+) -> std::io::Result<()> {
     let cargo_path = year_dir.join("Cargo.toml");
     let cargo_content = format!(
         r#"[package]
@@ -148,13 +171,48 @@ name = "{crate_name}"
 description = "Advent of Code {year} solutions"
 version = "0.1.0"
 edition = "2024"
+readme = "README.md"
 
 [dependencies]
 aoc_shared.workspace = true"#
     );
     let mut cargo_file = File::create(cargo_path)?;
-    cargo_file.write_all(cargo_content.as_bytes())?;
+    cargo_file.write_all(cargo_content.as_bytes())
+}
 
-    println!("Created Advent of Code directory for {year}");
-    Ok(())
+fn write_readme(year_dir: &std::path::Path, year: &str, crate_name: &str) -> std::io::Result<()> {
+    let readme_path = year_dir.join("README.md");
+    let readme_content = format!(
+        r"# Advent of Code {year}
+
+Solutions for [Advent of Code {year}](https://adventofcode.com/{year}) in Rust.
+
+## Structure
+
+- `src/main.rs` — CLI entrypoint, dispatches to the selected day solver.
+- `src/day_XX.rs` — Solution for each day (parts 1 and 2).
+- `src/lib.rs` — Shared utilities for the year.
+- `input/XX.txt` — Puzzle input for each day.
+
+## Running
+
+```sh
+cargo run --package {crate_name} -- --day 1
+```
+
+Run a single part:
+
+```sh
+cargo run --package {crate_name} -- --day 1 --part 1
+```
+
+## Testing
+
+```sh
+cargo test --package {crate_name}
+```
+"
+    );
+    let mut readme_file = File::create(readme_path)?;
+    readme_file.write_all(readme_content.as_bytes())
 }

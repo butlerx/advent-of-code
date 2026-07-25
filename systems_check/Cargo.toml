@@ -3,6 +3,7 @@ name        = "systems_check"
 version     = "0.1.0"
 edition     = "2024"
 description = "Systems Check solutions"
+readme      = "README.md"
 
 [dependencies]
 aoc_shared.workspace = true
