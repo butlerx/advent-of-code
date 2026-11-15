@@ -30,7 +30,7 @@ mod part_1 {
         }
     }
 
-    pub fn eval(chars: Vec<char>) -> i64 {
+    pub fn eval(chars: &[char]) -> i64 {
         let (mut res, mut i, mut op) = (0, 0, '+');
         loop {
             if i >= chars.len() {
@@ -41,7 +41,7 @@ mod part_1 {
                 '0'..='9' => res = oper(op, res, i64::from(chars[i].to_digit(10).unwrap())),
                 '(' => {
                     let end = i + find_matching_par(&chars[i..]);
-                    res = oper(op, res, eval(chars[i + 1..end].to_vec()));
+                    res = oper(op, res, eval(&chars[i + 1..end]));
                     i = end;
                 }
                 _ => unreachable!(),
@@ -58,22 +58,22 @@ mod part_2 {
         match chars[i] {
             '(' => {
                 let j = find_matching_par(&chars[i..]);
-                (eval(chars[i + 1..i + j].to_vec()), j)
+                (eval(&chars[i + 1..i + j]), j)
             }
             _ => (i64::from(chars[i].to_digit(10).unwrap()), 0),
         }
     }
 
-    pub fn eval(chars: Vec<char>) -> i64 {
+    pub fn eval(chars: &[char]) -> i64 {
         let (mut res, mut i) = (1, 0);
         loop {
             if i >= chars.len() {
                 break res;
             }
-            let (mut val, step) = gat_value(&chars, i);
+            let (mut val, step) = gat_value(chars, i);
             i += step;
             while let Some('+') = chars.get(i + 1) {
-                let (tmp, step) = gat_value(&chars, i + 2);
+                let (tmp, step) = gat_value(chars, i + 2);
                 val += tmp;
                 i += step + 2;
             }
@@ -87,11 +87,11 @@ fn run(input: &str, part_two: bool) -> i64 {
     input
         .lines()
         .map(|line| {
-            let sums = line.chars().filter(|c| c != &' ').collect();
+            let sums: Vec<char> = line.chars().filter(|c| c != &' ').collect();
             if part_two {
-                part_2::eval(sums)
+                part_2::eval(&sums)
             } else {
-                part_1::eval(sums)
+                part_1::eval(&sums)
             }
         })
         .sum()

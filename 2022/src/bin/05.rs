@@ -68,10 +68,10 @@ fn part_2(input: &str) -> String {
 #[cfg(test)]
 mod day_5_tests {
     use super::*;
-    static INPUT: &str = "    [D]    
-[N] [C]    
+    static INPUT: &str = "    [D]
+[N] [C]
 [Z] [M] [P]
- 1   2   3 
+ 1   2   3
 
 move 1 from 2 to 1
 move 3 from 1 to 3

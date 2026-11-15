@@ -1,10 +1,11 @@
+use std::convert::TryFrom;
 fn main() {
     let input = include_str!("../../input/04.txt");
     println!("Part 1: {}", run(input, false));
     println!("Part 2: {}", run(input, true));
 }
 
-fn valid_password(password: &i64, max: bool) -> bool {
+fn valid_password(password: i64, max: bool) -> bool {
     let mut head = password / 10;
     let mut tail = password % 10;
     let mut pair = false;
@@ -44,9 +45,12 @@ fn run(input: &str, part_two: bool) -> i64 {
         .split('-')
         .map(|num| num.trim().parse::<i64>().unwrap())
         .collect();
-    (range[0]..range[1])
-        .filter(|pass| valid_password(pass, part_two))
-        .count() as i64
+    i64::try_from(
+        (range[0]..range[1])
+            .filter(|pass| valid_password(*pass, part_two))
+            .count(),
+    )
+    .expect("cast within range")
 }
 
 #[cfg(test)]

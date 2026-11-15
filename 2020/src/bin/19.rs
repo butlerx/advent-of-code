@@ -1,5 +1,6 @@
 use itertools::Itertools;
 use std::collections::{HashMap, VecDeque};
+use std::convert::TryFrom;
 
 fn main() {
     let input = include_str!("../../input/19.txt");
@@ -67,10 +68,13 @@ fn run(input: &str, part_two: bool) -> i64 {
         schema.insert(8, Rule::Alt(vec![42], vec![42, 8]));
         schema.insert(11, Rule::Alt(vec![42, 31], vec![42, 11, 31]));
     }
-    messages
-        .lines()
-        .filter(|line| validate_msg(&schema, line, vec![0].into_iter().collect()))
-        .count() as i64
+    i64::try_from(
+        messages
+            .lines()
+            .filter(|line| validate_msg(&schema, line, vec![0].into_iter().collect()))
+            .count(),
+    )
+    .expect("cast within range")
 }
 
 #[cfg(test)]

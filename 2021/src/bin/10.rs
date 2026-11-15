@@ -26,7 +26,7 @@ fn part_1(input: &str) -> i64 {
                             };
                         }
                     }
-                };
+                }
             }
             None
         })

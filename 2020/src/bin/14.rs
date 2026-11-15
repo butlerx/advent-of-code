@@ -1,5 +1,6 @@
 use regex::Regex;
 use std::collections::HashMap;
+use std::convert::TryFrom;
 
 const MASK_36_BIT: u64 = (1u64 << 36) - 1;
 
@@ -30,7 +31,7 @@ fn parse_mask(mask: &str) -> (u64, u64) {
             b'1' => ones += 1,
             b'0' => zeroes += 1,
             _ => (),
-        };
+        }
     }
     (zeroes, ones)
 }
@@ -42,7 +43,7 @@ fn parse_mask_floating(mask: &str) -> Vec<u64> {
             '0' => parsed.push(0),
             'X' => parsed.push(2),
             _ => (),
-        };
+        }
     }
     parsed
 }
@@ -92,7 +93,7 @@ fn part_one(instructions: &str) -> i64 {
             mem.insert(pos, (value | ones_mask) & zeroes_mask);
         }
     }
-    mem.values().sum::<u64>() as i64
+    i64::try_from(mem.values().sum::<u64>()).expect("cast within range")
 }
 
 fn part_two(instructions: &str) -> i64 {
@@ -108,7 +109,7 @@ fn part_two(instructions: &str) -> i64 {
             write(&mut mem, &mask, pos, value, 0);
         }
     }
-    mem.values().sum::<u64>() as i64
+    i64::try_from(mem.values().sum::<u64>()).expect("cast within range")
 }
 
 fn run(input: &str, version_two: bool) -> i64 {
@@ -133,17 +134,17 @@ mem[26] = 1";
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 165);
+        assert_eq!(run(INPUT, false), 165);
         let results = run(include_str!("../../input/14.txt"), false);
         println!("{results}");
-        assert!(results == 17_481_577_045_893);
+        assert_eq!(results, 17_481_577_045_893);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT_2, true) == 208);
+        assert_eq!(run(INPUT_2, true), 208);
         let results = run(include_str!("../../input/14.txt"), true);
         println!("{results}");
-        assert!(results == 4_160_009_892_257);
+        assert_eq!(results, 4_160_009_892_257);
     }
 }

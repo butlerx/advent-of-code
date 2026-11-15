@@ -12,18 +12,17 @@ hooks = [{ id = "aoc-tiles" }]
 [[repos]]
 repo  = "https://github.com/pre-commit/pre-commit-hooks"
 rev   = "3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"
-hooks = [
-  { id = "trailing-whitespace" },
-  { id = "end-of-file-fixer" },
-  { id = "check-yaml" },
-  { id = "check-json" },
-  { id = "check-merge-conflict" }
-]
+hooks = [{ id = "trailing-whitespace", exclude = "/input/" }, { id = "end-of-file-fixer", exclude = "/input/" }, { id = "check-yaml" }, { id = "check-json" }, { id = "check-merge-conflict" }, { id = "check-added-large-files", exclude = "(?x).png" }]
 
 [[repos]]
 repo  = "https://github.com/tombi-toml/tombi-pre-commit"
-rev   = "c067d5a9d51d677772a0236eaf1d31fc0219ffba"        # frozen: v1.2.2
+rev   = "6f428aba5ced98b5a579ff23cab6b39822b4347d"        # v1.11.2, matches mise
 hooks = [{ id = "tombi-format" }, { id = "tombi-lint" }]
+
+[[repos]]
+repo  = "https://github.com/rhysd/actionlint"
+rev   = "914e7df21a07ef503a81201c76d2b11c789d3fca"
+hooks = [{ id = "actionlint" }]
 
 [[repos]]
 repo  = "https://github.com/google/yamlfmt"
@@ -31,10 +30,22 @@ rev   = "21ca5323a9c87ee37a434e0ca908efc0a89daa07"
 hooks = [{ id = "yamlfmt" }]
 
 [[repos]]
+repo  = "https://github.com/zizmorcore/zizmor-pre-commit"
+rev   = "067260dc5fe6ea86b7551bfd6f8b3ba4e6c93129"
+hooks = [{ id = "zizmor", pass_filenames = false, args = ["--no-progress", ".github"] }]
+
+[[repos]]
 repo  = "https://github.com/doublify/pre-commit-rust"
 rev   = "eeee35a89e69d5772bdee97db1a6a898467b686e"
 hooks = [
   { id = "cargo-check", args = ["--workspace"] },
-  { id = "fmt" },
-  { id = "clippy", args = ["--", "-D", "warnings"] }
+  # Without pass_filenames, cargo fmt runs per target and uses each crate's edition.
+  # Passing file paths makes rustfmt fall back to edition 2015, which rejects let chains.
+  { id = "fmt", pass_filenames = false },
+  { id = "clippy", args = ["--all-features", "--", "-D", "warnings"] }
 ]
+
+[[repos]]
+repo  = "https://github.com/compilerla/conventional-pre-commit"
+rev   = "91ab4bf57e58b32adf1a122681f6ebe164d081c8"
+hooks = [{ id = "conventional-pre-commit", stages = ["commit-msg"] }]

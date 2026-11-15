@@ -1,7 +1,8 @@
+use std::convert::TryFrom;
 fn main() {
     let mut comp = Computer::new(include_str!("../../input/09.txt"));
-    println!("Part 1: {}", comp.execute(vec![1]).unwrap());
-    println!("Part 2: {}", comp.execute(vec![2]).unwrap());
+    println!("Part 1: {}", comp.execute(&[1]).unwrap());
+    println!("Part 2: {}", comp.execute(&[2]).unwrap());
 }
 
 #[derive(Clone)]
@@ -28,7 +29,7 @@ impl Computer {
     // parse opscode, returning the code and if the args are in position mode or imediate
     // if an arg is true its in  imediate mode
     fn parse_opcode(&self) -> usize {
-        self.memory[self.pointer] as usize % 100
+        usize::try_from(self.memory[self.pointer]).expect("cast within range") % 100
     }
 
     fn move_pointer(&mut self, op: usize) {
@@ -42,16 +43,19 @@ impl Computer {
 
     fn read(&mut self, mem: usize) -> &mut i64 {
         let pos = self.pointer + mem;
-        let address = match self.memory[self.pointer] / 10i64.pow(mem as u32 + 1) % 10 {
-            0 => self.memory[pos] as usize,
+        let address = match self.memory[self.pointer]
+            / 10i64.pow(u32::try_from(mem).expect("cast within range") + 1)
+            % 10
+        {
+            0 => usize::try_from(self.memory[pos]).expect("cast within range"),
             1 => pos,
-            2 => (self.base + self.memory[pos]) as usize,
+            2 => usize::try_from(self.base + self.memory[pos]).expect("cast within range"),
             _ => unreachable!(),
         };
         &mut self.memory[address]
     }
 
-    fn execute(&mut self, input: Vec<i64>) -> Option<i64> {
+    fn execute(&mut self, input: &[i64]) -> Option<i64> {
         let mut input = input.iter();
         loop {
             let op = self.parse_opcode();
@@ -61,11 +65,11 @@ impl Computer {
                 3 => *self.read(1) = *input.next().unwrap(),
                 4 => break Some(*self.read(1)),
                 5 if *self.read(1) != 0 => {
-                    self.pointer = *self.read(2) as usize;
+                    self.pointer = usize::try_from(*self.read(2)).expect("cast within range");
                     continue;
                 }
                 6 if *self.read(1) == 0 => {
-                    self.pointer = *self.read(2) as usize;
+                    self.pointer = usize::try_from(*self.read(2)).expect("cast within range");
                     continue;
                 }
                 7 => *self.read(3) = i64::from(*self.read(1) < *self.read(2)),
@@ -91,17 +95,17 @@ mod tests {
     #[test]
     fn test_small_input() {
         let mut c0 = Computer::new(INPUT[0]);
-        assert_eq!(c0.execute(vec![1]).unwrap(), 109);
+        assert_eq!(c0.execute(&[1]).unwrap(), 109);
         let mut c1 = Computer::new(INPUT[1]);
-        assert_eq!(c1.execute(vec![1]).unwrap().to_string().len(), 16);
+        assert_eq!(c1.execute(&[1]).unwrap().to_string().len(), 16);
         let mut c2 = Computer::new(INPUT[2]);
-        assert_eq!(c2.execute(vec![1]).unwrap(), 1_125_899_906_842_624);
+        assert_eq!(c2.execute(&[1]).unwrap(), 1_125_899_906_842_624);
     }
 
     #[test]
     fn test_large_input() {
         let mut comp = Computer::new(include_str!("../../input/09.txt"));
-        assert_eq!(comp.execute(vec![1]).unwrap(), 3_454_977_209);
-        assert_eq!(comp.execute(vec![2]).unwrap(), 50120);
+        assert_eq!(comp.execute(&[1]).unwrap(), 3_454_977_209);
+        assert_eq!(comp.execute(&[2]).unwrap(), 50120);
     }
 }

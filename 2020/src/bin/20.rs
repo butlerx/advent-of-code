@@ -1,6 +1,7 @@
 use itertools::Itertools;
 use pathfinding::prelude::Matrix;
 use std::collections::{HashMap, HashSet};
+use std::convert::TryFrom;
 
 fn main() {
     let input = include_str!("../../input/20.txt");
@@ -96,8 +97,8 @@ fn find_corners(tiles: &[Tile]) -> Vec<usize> {
     }
     let mut counter = HashMap::new();
     matching
-        .into_iter()
-        .filter_map(|(_, v)| {
+        .into_values()
+        .filter_map(|v| {
             if v.len() == 1 {
                 Some(v.into_iter().next().unwrap())
             } else {
@@ -109,6 +110,35 @@ fn find_corners(tiles: &[Tile]) -> Vec<usize> {
         .into_iter()
         .filter_map(|(s, i)| if i == 4 { Some(s) } else { None })
         .collect()
+}
+
+fn roughness(all_assembled: &[Matrix<bool>]) -> usize {
+    let monster_pos = [
+        "                  # ",
+        "#    ##    ##    ###",
+        " #  #  #  #  #  #   ",
+    ]
+    .iter()
+    .enumerate()
+    .flat_map(|(r, l)| {
+        l.chars()
+            .enumerate()
+            .filter_map(move |(c, ch)| if ch == '#' { Some((r, c)) } else { None })
+    })
+    .collect::<Vec<_>>();
+    let monsters = all_assembled
+        .iter()
+        .map(|t| {
+            (0..t.rows - 2)
+                .map(|r| {
+                    (0..t.columns - 19)
+                        .filter(|c| monster_pos.iter().all(|&(or, oc)| t[&(r + or, c + oc)]))
+                        .count()
+                })
+                .sum::<usize>()
+        })
+        .sum::<usize>();
+    all_assembled[0].values().filter(|&&b| b).count() - monsters * monster_pos.len()
 }
 
 fn find_img(tiles: &[Tile]) -> usize {
@@ -189,32 +219,7 @@ fn find_img(tiles: &[Tile]) -> usize {
     .into_iter()
     .map(|t| t.data)
     .collect::<Vec<_>>();
-    let monster_pos = [
-        "                  # ",
-        "#    ##    ##    ###",
-        " #  #  #  #  #  #   ",
-    ]
-    .iter()
-    .enumerate()
-    .flat_map(|(r, l)| {
-        l.chars()
-            .enumerate()
-            .filter_map(move |(c, ch)| if ch == '#' { Some((r, c)) } else { None })
-    })
-    .collect::<Vec<_>>();
-    let monsters = all_assembled
-        .iter()
-        .map(|t| {
-            (0..t.rows - 2)
-                .map(|r| {
-                    (0..t.columns - 19)
-                        .filter(|c| monster_pos.iter().all(|&(or, oc)| t[&(r + or, c + oc)]))
-                        .count()
-                })
-                .sum::<usize>()
-        })
-        .sum::<usize>();
-    all_assembled[0].values().filter(|&&b| b).count() - monsters * monster_pos.len()
+    roughness(&all_assembled)
 }
 
 fn run(input: &str, part_two: bool) -> i64 {
@@ -226,11 +231,12 @@ fn run(input: &str, part_two: bool) -> i64 {
             Tile::new(id.parse::<usize>().unwrap(), img).collection()
         })
         .collect();
-    (if part_two {
+    i64::try_from(if part_two {
         find_img(&tiles)
     } else {
         find_corners(&tiles).into_iter().product()
-    }) as i64
+    })
+    .expect("cast within range")
 }
 
 #[cfg(test)]

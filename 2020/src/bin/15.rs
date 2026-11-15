@@ -1,10 +1,11 @@
+use std::convert::TryFrom;
 fn main() {
     let input = include_str!("../../input/15.txt");
     println!("Part 1: {}", run(input, false));
     println!("Part 2: {}", run(input, true));
 }
 
-fn play_game(nums: Vec<usize>, turns: usize) -> i64 {
+fn play_game(nums: &[usize], turns: usize) -> i64 {
     let mut spoken: Vec<(usize, usize)> = vec![(usize::MAX, usize::MAX); turns];
     for (i, num) in nums.iter().enumerate() {
         spoken[*num].1 = i;
@@ -13,7 +14,7 @@ fn play_game(nums: Vec<usize>, turns: usize) -> i64 {
     let mut turn_num = nums.len();
     loop {
         if turn_num >= turns {
-            break next_num as i64;
+            break i64::try_from(next_num).expect("cast within range");
         }
         let (last_turn, turn) = spoken[next_num];
         next_num = if last_turn != usize::MAX && turn != usize::MAX {
@@ -27,12 +28,12 @@ fn play_game(nums: Vec<usize>, turns: usize) -> i64 {
 }
 
 fn run(input: &str, part_two: bool) -> i64 {
-    let nums = input
+    let nums: Vec<usize> = input
         .trim()
         .split(',')
         .map(|n| n.parse::<usize>().unwrap())
         .collect();
-    play_game(nums, if part_two { 30_000_000 } else { 2020 })
+    play_game(&nums, if part_two { 30_000_000 } else { 2020 })
 }
 
 #[cfg(test)]

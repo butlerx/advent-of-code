@@ -1,4 +1,5 @@
 use std::collections::HashSet;
+use std::convert::TryFrom;
 
 fn main() {
     let input = include_str!("../../input/23.txt");
@@ -6,45 +7,58 @@ fn main() {
     println!("Part 2: {}", run(input, true));
 }
 
-fn move_cups(input: Vec<i64>, rounds: usize) -> Vec<i64> {
+fn move_cups(input: &[i64], rounds: usize) -> Vec<i64> {
     let (n, mut pointers) = if rounds <= 100 {
-        (input.len() as i64, [0i64; 10].to_vec())
+        (
+            i64::try_from(input.len()).expect("cast within range"),
+            [0i64; 10].to_vec(),
+        )
     } else {
         let n = 1_000_000;
         let mut pointers: Vec<i64> = (1..(n + 2)).collect();
-        pointers[n as usize] = input[0];
+        pointers[usize::try_from(n).expect("cast within range")] = input[0];
         (n, pointers)
     };
     for w in input.windows(2) {
-        pointers[w[0] as usize] = w[1];
+        pointers[usize::try_from(w[0]).expect("cast within range")] = w[1];
     }
-    pointers[input[input.len() - 1] as usize] = if n == 9 {
+    pointers[usize::try_from(input[input.len() - 1]).expect("cast within range")] = if n == 9 {
         input[0]
     } else {
-        (input.len() + 1) as i64
+        i64::try_from(input.len() + 1).expect("cast within range")
     };
     let mut cur = input[0];
     for _ in 0..rounds {
         let n = pointers.len() - 1;
-        let t0 = pointers[cur as usize];
-        let t1 = pointers[t0 as usize];
-        let t2 = pointers[t1 as usize];
+        let t0 = pointers[usize::try_from(cur).expect("cast within range")];
+        let t1 = pointers[usize::try_from(t0).expect("cast within range")];
+        let t2 = pointers[usize::try_from(t1).expect("cast within range")];
         let ts: HashSet<i64> = [t0, t1, t2].iter().copied().collect();
 
-        pointers[cur as usize] = pointers[t2 as usize];
+        pointers[usize::try_from(cur).expect("cast within range")] =
+            pointers[usize::try_from(t2).expect("cast within range")];
 
-        let mut dst = if cur > 1 { cur - 1 } else { n as i64 };
+        let mut dst = if cur > 1 {
+            cur - 1
+        } else {
+            i64::try_from(n).expect("cast within range")
+        };
         while ts.contains(&dst) {
-            dst = if dst > 1 { dst - 1 } else { n as i64 };
+            dst = if dst > 1 {
+                dst - 1
+            } else {
+                i64::try_from(n).expect("cast within range")
+            };
         }
-        pointers[t2 as usize] = pointers[dst as usize];
-        pointers[dst as usize] = t0;
-        cur = pointers[cur as usize];
+        pointers[usize::try_from(t2).expect("cast within range")] =
+            pointers[usize::try_from(dst).expect("cast within range")];
+        pointers[usize::try_from(dst).expect("cast within range")] = t0;
+        cur = pointers[usize::try_from(cur).expect("cast within range")];
     }
     let mut res: Vec<i64> = Vec::new();
     let mut pointer = 1;
     loop {
-        pointer = pointers[pointer as usize];
+        pointer = pointers[usize::try_from(pointer).expect("cast within range")];
         if pointer == 1 || res.len() > 9 {
             break res;
         }
@@ -53,16 +67,16 @@ fn move_cups(input: Vec<i64>, rounds: usize) -> Vec<i64> {
 }
 
 fn run(input: &str, part_two: bool) -> i64 {
-    let nums = input
+    let nums: Vec<i64> = input
         .trim()
         .chars()
         .map(|n| i64::from(n.to_digit(10).unwrap()))
         .collect();
     if part_two {
-        let res = move_cups(nums, 10_000_000);
-        (res[0] * res[1]) as i64
+        let res = move_cups(&nums, 10_000_000);
+        res[0] * res[1]
     } else {
-        move_cups(nums, 100)
+        move_cups(&nums, 100)
             .iter()
             .map(std::string::ToString::to_string)
             .collect::<String>()

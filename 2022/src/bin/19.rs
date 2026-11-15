@@ -17,13 +17,13 @@ const ROBOTS_GEO: u8 = 1 << 3;
 const ROBOTS_ALL: u8 = ROBOTS_ORE | ROBOTS_CLAY | ROBOTS_OBS | ROBOTS_GEO;
 
 struct Blueprint {
-    ore_robot_cost: i64,
-    clay_robot_cost: i64,
-    obs_robot_cost: (i64, i64),
-    geode_robot_cost: (i64, i64),
-    max_ore_cost: i64,
-    max_clay_cost: i64,
-    max_obs_cost: i64,
+    ore_robot: i64,
+    clay_robot: i64,
+    obs_robot: (i64, i64),
+    geode_robot: (i64, i64),
+    max_ore: i64,
+    max_clay: i64,
+    max_obs: i64,
 }
 
 impl std::str::FromStr for Blueprint {
@@ -37,13 +37,13 @@ impl std::str::FromStr for Blueprint {
             .map(|n| n.parse::<i64>().unwrap())
             .collect::<Vec<_>>();
         Ok(Self {
-            ore_robot_cost: costs[0],
-            clay_robot_cost: costs[1],
-            obs_robot_cost: (costs[2], costs[3]),
-            geode_robot_cost: (costs[4], costs[5]),
-            max_ore_cost: costs[0].max(costs[1]).max(costs[2]).max(costs[4]),
-            max_clay_cost: costs[3],
-            max_obs_cost: costs[5],
+            ore_robot: costs[0],
+            clay_robot: costs[1],
+            obs_robot: (costs[2], costs[3]),
+            geode_robot: (costs[4], costs[5]),
+            max_ore: costs[0].max(costs[1]).max(costs[2]).max(costs[4]),
+            max_clay: costs[3],
+            max_obs: costs[5],
         })
     }
 }
@@ -62,9 +62,9 @@ impl Blueprint {
         }
 
         let new_costs = (
-            cmp::min(costs.0 + robots.0, self.max_ore_cost * time),
-            cmp::min(costs.1 + robots.1, self.max_clay_cost * time),
-            cmp::min(costs.2 + robots.2, self.max_obs_cost * time),
+            cmp::min(costs.0 + robots.0, self.max_ore * time),
+            cmp::min(costs.1 + robots.1, self.max_clay * time),
+            cmp::min(costs.2 + robots.2, self.max_obs * time),
         );
 
         let key = (time, new_costs, robots, available_robots);
@@ -72,7 +72,7 @@ impl Blueprint {
             let mut max_geodes = 0;
             let mut new_available_robots = 0;
 
-            if (costs.0 < self.geode_robot_cost.0) || (costs.2 < self.geode_robot_cost.1) {
+            if (costs.0 < self.geode_robot.0) || (costs.2 < self.geode_robot.1) {
                 new_available_robots |= ROBOTS_GEO;
             } else if (available_robots & ROBOTS_GEO) != 0 {
                 max_geodes = cmp::max(
@@ -80,9 +80,9 @@ impl Blueprint {
                     self.max_geodes(
                         time - 1,
                         (
-                            new_costs.0 - self.geode_robot_cost.0,
+                            new_costs.0 - self.geode_robot.0,
                             new_costs.1,
-                            new_costs.2 - self.geode_robot_cost.1,
+                            new_costs.2 - self.geode_robot.1,
                         ),
                         robots,
                         ROBOTS_ALL,
@@ -93,14 +93,14 @@ impl Blueprint {
 
             let next_potential = (time - 1) / 2 * time;
             if next_potential > max_geodes {
-                if costs.0 < self.ore_robot_cost {
+                if costs.0 < self.ore_robot {
                     new_available_robots |= ROBOTS_ORE;
-                } else if (self.max_ore_cost > robots.0) && ((available_robots & ROBOTS_ORE) != 0) {
+                } else if (self.max_ore > robots.0) && ((available_robots & ROBOTS_ORE) != 0) {
                     max_geodes = cmp::max(
                         max_geodes,
                         self.max_geodes(
                             time - 1,
-                            (new_costs.0 - self.ore_robot_cost, new_costs.1, new_costs.2),
+                            (new_costs.0 - self.ore_robot, new_costs.1, new_costs.2),
                             (robots.0 + 1, robots.1, robots.2),
                             ROBOTS_ALL,
                             cache,
@@ -108,15 +108,14 @@ impl Blueprint {
                     );
                 }
 
-                if costs.0 < self.clay_robot_cost {
+                if costs.0 < self.clay_robot {
                     new_available_robots |= ROBOTS_CLAY;
-                } else if (self.max_clay_cost > robots.1) && ((available_robots & ROBOTS_CLAY) != 0)
-                {
+                } else if (self.max_clay > robots.1) && ((available_robots & ROBOTS_CLAY) != 0) {
                     max_geodes = cmp::max(
                         max_geodes,
                         self.max_geodes(
                             time - 1,
-                            (new_costs.0 - self.clay_robot_cost, new_costs.1, new_costs.2),
+                            (new_costs.0 - self.clay_robot, new_costs.1, new_costs.2),
                             (robots.0, robots.1 + 1, robots.2),
                             ROBOTS_ALL,
                             cache,
@@ -124,16 +123,16 @@ impl Blueprint {
                     );
                 }
 
-                if (costs.0 < self.obs_robot_cost.0) || (costs.1 < self.obs_robot_cost.1) {
+                if (costs.0 < self.obs_robot.0) || (costs.1 < self.obs_robot.1) {
                     new_available_robots |= ROBOTS_OBS;
-                } else if (self.max_obs_cost > robots.2) && ((available_robots & ROBOTS_OBS) != 0) {
+                } else if (self.max_obs > robots.2) && ((available_robots & ROBOTS_OBS) != 0) {
                     max_geodes = cmp::max(
                         max_geodes,
                         self.max_geodes(
                             time - 1,
                             (
-                                new_costs.0 - self.obs_robot_cost.0,
-                                new_costs.1 - self.obs_robot_cost.1,
+                                new_costs.0 - self.obs_robot.0,
+                                new_costs.1 - self.obs_robot.1,
                                 new_costs.2,
                             ),
                             (robots.0, robots.1, robots.2 + 1),
@@ -166,7 +165,8 @@ fn part_1(input: &str) -> i64 {
         .enumerate()
         .map(|(i, b)| {
             let mut cache = HashMap::new();
-            (i as i64 + 1) * b.max_geodes(24, (0, 0, 0), (1, 0, 0), ROBOTS_ALL, &mut cache)
+            (i64::try_from(i).expect("cast within range") + 1)
+                * b.max_geodes(24, (0, 0, 0), (1, 0, 0), ROBOTS_ALL, &mut cache)
         })
         .sum()
 }

@@ -33,9 +33,8 @@ fn moves(maze: &[Vec<char>]) -> Vec<(i64, Vec<Vec<char>>)> {
             } else {
                 continue;
             };
-            let i = match (2..=room_len).take_while(|&i| maze[i][room] == '.').last() {
-                Some(i) => i,
-                _ => continue,
+            let Some(i) = (2..=room_len).take_while(|&i| maze[i][room] == '.').last() else {
+                continue;
             };
             if i != room_len && maze[i + 1][room] != maze[1][y] {
                 continue;
@@ -44,13 +43,14 @@ fn moves(maze: &[Vec<char>]) -> Vec<(i64, Vec<Vec<char>>)> {
             m[i][room] = maze[1][y];
             m[1][y] = '.';
             cost += i - 1;
-            moves.push(((cost * exp) as i64, m));
+            moves.push((i64::try_from(cost * exp).expect("cast within range"), m));
         }
     }
     for (x, y) in (2..=room_len).cartesian_product([3, 5, 7, 9]) {
         if (2..x).any(|i| maze[i][y] != '.') || (x + 1..=room_len).any(|i| maze[i][y] == '.') {
             continue;
-        } else if let 'A'..='D' = maze[x][y] {
+        }
+        if let 'A'..='D' = maze[x][y] {
             let exp = match maze[x][y] {
                 'A' => Some(1),
                 'B' => Some(10),
@@ -70,7 +70,7 @@ fn moves(maze: &[Vec<char>]) -> Vec<(i64, Vec<Vec<char>>)> {
                 let mut m = maze.to_owned();
                 m[1][i] = maze[x][y];
                 m[x][y] = '.';
-                moves.push(((cost * exp) as i64, m));
+                moves.push((i64::try_from(cost * exp).expect("cast within range"), m));
             }
             for i in (1..=y).rev() {
                 if maze[1][i] != '.' {
@@ -83,7 +83,7 @@ fn moves(maze: &[Vec<char>]) -> Vec<(i64, Vec<Vec<char>>)> {
                 let mut m = maze.to_owned();
                 m[1][i] = maze[x][y];
                 m[x][y] = '.';
-                moves.push(((cost * exp) as i64, m));
+                moves.push((i64::try_from(cost * exp).expect("cast within range"), m));
             }
         }
     }

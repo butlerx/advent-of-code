@@ -23,24 +23,23 @@ impl<'a> std::convert::TryFrom<&'a str> for Value<'a> {
     type Error = ();
 
     fn try_from(s: &'a str) -> Result<Self, Self::Error> {
-        Ok(match s.parse::<i64>() {
-            Ok(num) => Value::Number(num),
-            Err(_) => {
-                let value: Vec<_> = s.split_whitespace().collect();
-                let op = match value[1] {
-                    "+" => Op::Add,
-                    "-" => Op::Minus,
-                    "*" => Op::Multiply,
-                    "/" => Op::Divide,
-                    _ => unreachable!(),
-                };
-                Value::Operation(value[0], op, value[2])
-            }
+        Ok(if let Ok(num) = s.parse::<i64>() {
+            Value::Number(num)
+        } else {
+            let value: Vec<_> = s.split_whitespace().collect();
+            let op = match value[1] {
+                "+" => Op::Add,
+                "-" => Op::Minus,
+                "*" => Op::Multiply,
+                "/" => Op::Divide,
+                _ => unreachable!(),
+            };
+            Value::Operation(value[0], op, value[2])
         })
     }
 }
 
-impl<'a> Value<'a> {
+impl Value<'_> {
     fn get(&self, monkeys: &Monkeys) -> i64 {
         match self {
             Value::Number(value) => *value,

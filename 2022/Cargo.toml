@@ -10,3 +10,6 @@ repository.workspace = true
 [dependencies]
 itertools  = "0.10.5"
 serde_json = "1.0"
+
+[lints]
+workspace = true

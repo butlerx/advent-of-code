@@ -7,7 +7,7 @@ fn main() {
 fn dec_to_snafu(mut num: i64) -> String {
     let mut res = Vec::new();
     while num > 0 {
-        let c = match (num % 5) as u32 {
+        let c = match u32::try_from(num % 5).expect("cast within range") {
             d if d < 3 => std::char::from_digit(d, 10).unwrap(),
             3 => {
                 num += 2;

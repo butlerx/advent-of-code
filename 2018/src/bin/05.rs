@@ -7,7 +7,7 @@ fn main() {
 
 fn parse_input(input: &[u8]) -> Vec<u8> {
     input.iter().fold(vec![], |mut result, a| {
-        if result.last().filter(|&b| a ^ b == 0x20).is_some() {
+        if result.last().as_ref().is_some_and(|&b| a ^ b == 0x20) {
             result.pop();
         } else {
             result.push(*a);

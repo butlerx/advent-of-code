@@ -49,12 +49,12 @@ fn parse_tickets(input: &str) -> Vec<Ticket> {
 fn invalid_fields(schema: &Schema, ticket: &[i64]) -> i64 {
     ticket
         .iter()
-        .filter(|value| !schema.values().any(|ranges| valid_rule(ranges, value)))
+        .filter(|&value| !schema.values().any(|ranges| valid_rule(ranges, *value)))
         .sum()
 }
 
-fn valid_rule(ranges: &Rule, value: &i64) -> bool {
-    ranges.0.contains(value) || ranges.1.contains(value)
+fn valid_rule(ranges: &Rule, value: i64) -> bool {
+    ranges.0.contains(&value) || ranges.1.contains(&value)
 }
 
 fn generate_name_index(mut map: HashMap<String, HashSet<usize>>) -> HashMap<String, usize> {
@@ -75,10 +75,10 @@ fn generate_name_index(mut map: HashMap<String, HashSet<usize>>) -> HashMap<Stri
     name_index
 }
 
-fn departure_data(schema: Schema, nearby_tickets: Vec<Vec<i64>>, your_ticket: Ticket) -> i64 {
+fn departure_data(schema: &Schema, nearby_tickets: &[Ticket], your_ticket: &[i64]) -> i64 {
     let valid_tickets: Vec<_> = nearby_tickets
         .iter()
-        .filter(|ticket| invalid_fields(&schema, ticket) == 0)
+        .filter(|ticket| invalid_fields(schema, ticket) == 0)
         .collect();
     generate_name_index(
         schema
@@ -89,7 +89,7 @@ fn departure_data(schema: Schema, nearby_tickets: Vec<Vec<i64>>, your_ticket: Ti
                         valid_tickets
                             .iter()
                             .map(|ticket| ticket[*field_index])
-                            .all(|field| valid_rule(rule, &field))
+                            .all(|field| valid_rule(rule, field))
                     })
                     .collect();
                 (name.clone(), valid_options)
@@ -108,7 +108,7 @@ fn run(input: &str, part_two: bool) -> i64 {
     let nearby_tickets = parse_tickets(data[2]);
     if part_two {
         let your_ticket = parse_tickets(data[1]);
-        departure_data(schema, nearby_tickets, your_ticket[0].clone())
+        departure_data(&schema, &nearby_tickets, &your_ticket[0])
     } else {
         nearby_tickets
             .iter()
@@ -134,16 +134,16 @@ nearby tickets:
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 71);
+        assert_eq!(run(INPUT, false), 71);
         let results = run(include_str!("../../input/16.txt"), false);
         println!("{results}");
-        assert!(results == 22057);
+        assert_eq!(results, 22057);
     }
 
     #[test]
     fn test_part_2() {
         let results = run(include_str!("../../input/16.txt"), true);
         println!("{results}");
-        assert!(results == 1_093_427_331_937);
+        assert_eq!(results, 1_093_427_331_937);
     }
 }

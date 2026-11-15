@@ -18,7 +18,10 @@ fn run(input: &str) -> (usize, usize) {
                 .enumerate()
                 .map(|(x, c)| {
                     (
-                        (x as isize, y as isize),
+                        (
+                            isize::try_from(x).expect("cast within range"),
+                            isize::try_from(y).expect("cast within range"),
+                        ),
                         c.to_string().parse::<usize>().unwrap(),
                     )
                 })

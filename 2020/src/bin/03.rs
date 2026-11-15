@@ -49,22 +49,22 @@ mod day_3_tests {
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 7);
-        assert!(run(include_str!("../../input/03.txt"), false) == 250);
+        assert_eq!(run(INPUT, false), 7);
+        assert_eq!(run(include_str!("../../input/03.txt"), false), 250);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT, true) == 336);
-        assert!(run(include_str!("../../input/03.txt"), true) == 1_592_662_500);
+        assert_eq!(run(INPUT, true), 336);
+        assert_eq!(run(include_str!("../../input/03.txt"), true), 1_592_662_500);
     }
 
     #[test]
     fn test_run() {
-        assert!(find_path(INPUT, 1, 1) == 2);
-        assert!(find_path(INPUT, 3, 1) == 7);
-        assert!(find_path(INPUT, 5, 1) == 3);
-        assert!(find_path(INPUT, 7, 1) == 4);
-        assert!(find_path(INPUT, 1, 2) == 2);
+        assert_eq!(find_path(INPUT, 1, 1), 2);
+        assert_eq!(find_path(INPUT, 3, 1), 7);
+        assert_eq!(find_path(INPUT, 5, 1), 3);
+        assert_eq!(find_path(INPUT, 7, 1), 4);
+        assert_eq!(find_path(INPUT, 1, 2), 2);
     }
 }

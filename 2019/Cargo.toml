@@ -9,3 +9,6 @@ repository.workspace = true
 
 [dependencies]
 itertools = "0.9"
+
+[lints]
+workspace = true

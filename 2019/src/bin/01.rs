@@ -4,27 +4,28 @@ fn main() {
     println!("Part 2: {}", run(input, true));
 }
 
-fn calculate_fuel(mass: f64) -> f64 {
-    (mass / 3.0).floor() - 2.0
+fn calculate_fuel(mass: i64) -> i64 {
+    mass / 3 - 2
 }
 
 fn run(input: &str, part_two: bool) -> i64 {
     input
         .lines()
         .map(|line| {
+            let mass = line.trim().parse::<i64>().unwrap();
             if part_two {
-                cumalitive_fuel(line.trim().parse::<f64>().unwrap())
+                cumalitive_fuel(mass)
             } else {
-                calculate_fuel(line.trim().parse::<f64>().unwrap())
+                calculate_fuel(mass)
             }
         })
-        .sum::<f64>() as i64
+        .sum()
 }
 
-fn cumalitive_fuel(mass: f64) -> f64 {
-    let mut total_fuel = 0.0;
+fn cumalitive_fuel(mass: i64) -> i64 {
+    let mut total_fuel = 0;
     let mut fuel = calculate_fuel(mass);
-    while fuel > 0.0 {
+    while fuel > 0 {
         total_fuel += fuel;
         fuel = calculate_fuel(fuel);
     }

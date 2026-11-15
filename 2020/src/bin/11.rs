@@ -1,4 +1,5 @@
 use itertools::iproduct;
+use std::convert::TryFrom;
 
 fn main() {
     let input = include_str!("../../input/11.txt");
@@ -21,12 +22,16 @@ fn count_neighbors(map: &[Vec<char>], y: usize, x: usize) -> usize {
 }
 // check if current coordinate is in the grid
 fn on_grid(grid: &[Vec<char>], c: (i64, i64)) -> bool {
-    c.1 >= 0 && c.0 >= 0 && c.1 < grid[0].len() as i64 && c.0 < grid.len() as i64
+    c.1 >= 0
+        && c.0 >= 0
+        && c.1 < i64::try_from(grid[0].len()).expect("cast within range")
+        && c.0 < i64::try_from(grid.len()).expect("cast within range")
 }
 
 // index into grid using i64 instead of usize with current coordinate
 fn check_grid(grid: &[Vec<char>], c: (i64, i64)) -> char {
-    grid[c.0 as usize][c.1 as usize]
+    grid[usize::try_from(c.0).expect("cast within range")]
+        [usize::try_from(c.1).expect("cast within range")]
 }
 
 fn count_visible_neighbors(map: &[Vec<char>], y: usize, x: usize) -> usize {
@@ -38,7 +43,10 @@ fn count_visible_neighbors(map: &[Vec<char>], y: usize, x: usize) -> usize {
                 continue;
             }
 
-            let mut current = (y as i64 + dy, x as i64 + dx);
+            let mut current = (
+                i64::try_from(y).expect("cast within range") + dy,
+                i64::try_from(x).expect("cast within range") + dx,
+            );
             if !on_grid(map, current) {
                 continue;
             }
@@ -50,7 +58,7 @@ fn count_visible_neighbors(map: &[Vec<char>], y: usize, x: usize) -> usize {
             }
 
             match check_grid(map, current) {
-                'L' => continue,
+                'L' => {}
                 '#' => total += 1,
                 _ => unreachable!(),
             }
@@ -83,10 +91,11 @@ fn run(input: &str, part_two: bool) -> i64 {
     let mut map: Vec<Vec<_>> = input.lines().map(|l| l.chars().collect()).collect();
     let mut next = fill_seats(&map, part_two);
     while map != next {
-        map = next.clone();
+        map.clone_from(&next);
         next = fill_seats(&map, part_two);
     }
-    map.into_iter().flatten().filter(|x| x == &'#').count() as i64
+    i64::try_from(map.into_iter().flatten().filter(|x| x == &'#').count())
+        .expect("cast within range")
 }
 
 #[cfg(test)]
@@ -105,17 +114,17 @@ L.LLLLL.LL";
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 37);
+        assert_eq!(run(INPUT, false), 37);
         let results = run(include_str!("../../input/11.txt"), false);
         println!("{results}");
-        assert!(results == 2438);
+        assert_eq!(results, 2438);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT, true) == 26);
+        assert_eq!(run(INPUT, true), 26);
         let results = run(include_str!("../../input/11.txt"), true);
         println!("{results}");
-        assert!(results == 2174);
+        assert_eq!(results, 2174);
     }
 }

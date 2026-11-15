@@ -45,7 +45,8 @@ fn part_1(input: &str) -> i64 {
         .iter()
         .max_by_key(|(_, v)| v.iter().sum::<i64>())
         .unwrap();
-    id * enumerate(timetable).max_by_key(|&(_, c)| c).unwrap().0 as i64
+    id * i64::try_from(enumerate(timetable).max_by_key(|&(_, c)| c).unwrap().0)
+        .expect("cast within range")
 }
 
 fn part_2(input: &str) -> i64 {
@@ -54,7 +55,8 @@ fn part_2(input: &str) -> i64 {
         .iter()
         .max_by_key(|(_, v)| *v.iter().max().unwrap())
         .unwrap();
-    id * enumerate(timetable).max_by_key(|&(_, c)| c).unwrap().0 as i64
+    id * i64::try_from(enumerate(timetable).max_by_key(|&(_, c)| c).unwrap().0)
+        .expect("cast within range")
 }
 
 #[cfg(test)]

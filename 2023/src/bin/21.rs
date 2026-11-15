@@ -43,13 +43,30 @@ fn get_graph(garden: &[Vec<char>]) -> HashMap<Position, Vec<Position>> {
         .filter(|&(x, y)| garden[y][x] == '.')
         .map(|(x, y)| {
             let neighbors = vec![
-                (x as isize - 1, y as isize),
-                (x as isize + 1, y as isize),
-                (x as isize, y as isize - 1),
-                (x as isize, y as isize + 1),
+                (
+                    isize::try_from(x).expect("cast within range") - 1,
+                    isize::try_from(y).expect("cast within range"),
+                ),
+                (
+                    isize::try_from(x).expect("cast within range") + 1,
+                    isize::try_from(y).expect("cast within range"),
+                ),
+                (
+                    isize::try_from(x).expect("cast within range"),
+                    isize::try_from(y).expect("cast within range") - 1,
+                ),
+                (
+                    isize::try_from(x).expect("cast within range"),
+                    isize::try_from(y).expect("cast within range") + 1,
+                ),
             ]
             .into_iter()
-            .filter(|&(x, y)| x >= 0 && y >= 0 && x < width as isize && y < height as isize)
+            .filter(|&(x, y)| {
+                x >= 0
+                    && y >= 0
+                    && x < isize::try_from(width).expect("cast within range")
+                    && y < isize::try_from(height).expect("cast within range")
+            })
             .filter(|&(x, y)| garden[y.unsigned_abs()][x.unsigned_abs()] == '.')
             .map(|(x, y)| (x.unsigned_abs(), y.unsigned_abs()))
             .collect();

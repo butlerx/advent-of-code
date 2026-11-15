@@ -1,5 +1,6 @@
 use regex::Regex;
 use std::collections::HashMap;
+use std::convert::TryFrom;
 
 fn main() {
     let input = include_str!("../../input/07.txt");
@@ -36,7 +37,7 @@ fn unpack(
     let inner_bags = bags.get(name).unwrap();
     inner_bags
         .iter()
-        .map(|(count, bag)| (multiplier * count, bag.to_string()))
+        .map(|(count, bag)| (multiplier * count, bag.clone()))
         .chain(
             inner_bags
                 .iter()
@@ -47,13 +48,14 @@ fn unpack(
 
 fn run(input: &str, part_two: bool) -> i64 {
     let bags = parse_input(input);
-    if !part_two {
-        bags.keys().filter(|k| contains_gold(&bags, k)).count() as i64
-    } else {
+    if part_two {
         unpack(&bags, "shiny gold", 1)
             .iter()
             .map(|(count, _bag)| count)
             .sum::<i64>()
+    } else {
+        i64::try_from(bags.keys().filter(|k| contains_gold(&bags, k)).count())
+            .expect("cast within range")
     }
 }
 
@@ -79,15 +81,15 @@ dark violet bags contain no other bags.";
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT_1, false) == 4);
-        assert!(run(INPUT_2, false) == 0);
-        assert!(run(include_str!("../../input/07.txt"), false) == 177);
+        assert_eq!(run(INPUT_1, false), 4);
+        assert_eq!(run(INPUT_2, false), 0);
+        assert_eq!(run(include_str!("../../input/07.txt"), false), 177);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT_1, true) == 32);
-        assert!(run(INPUT_2, true) == 126);
-        assert!(run(include_str!("../../input/07.txt"), true) == 34988);
+        assert_eq!(run(INPUT_1, true), 32);
+        assert_eq!(run(INPUT_2, true), 126);
+        assert_eq!(run(include_str!("../../input/07.txt"), true), 34988);
     }
 }

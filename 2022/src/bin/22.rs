@@ -74,130 +74,138 @@ impl Position {
 
     fn cube_next_position(&self, map: &[Vec<char>]) -> Self {
         match self.facing {
-            0 => {
-                if map[self.y].len() - 1 > self.x {
-                    Self {
-                        x: self.x + 1,
-                        y: self.y,
-                        facing: self.facing,
-                    }
-                } else if self.y < GRID_SIZE {
-                    Self {
-                        x: 2 * GRID_SIZE - 1,
-                        y: 3 * GRID_SIZE - 1 - self.y,
-                        facing: 2,
-                    }
-                } else if self.y < 2 * GRID_SIZE {
-                    Self {
-                        x: GRID_SIZE + self.y,
-                        y: GRID_SIZE - 1,
-                        facing: 3,
-                    }
-                } else if self.y < 3 * GRID_SIZE {
-                    Self {
-                        x: 3 * GRID_SIZE - 1,
-                        y: 3 * GRID_SIZE - self.y - 1,
-                        facing: 2,
-                    }
-                } else {
-                    Self {
-                        x: self.y - 2 * GRID_SIZE,
-                        y: 3 * GRID_SIZE - 1,
-                        facing: 3,
-                    }
-                }
-            }
-            1 => {
-                if map.len() - 1 > self.y
-                    && map[self.y + 1].len() > self.x
-                    && map[self.y + 1][self.x] != ' '
-                {
-                    Self {
-                        x: self.x,
-                        y: self.y + 1,
-                        facing: self.facing,
-                    }
-                } else if self.x < GRID_SIZE {
-                    Self {
-                        x: self.x + 2 * GRID_SIZE,
-                        y: 0,
-                        facing: self.facing,
-                    }
-                } else if self.x < 2 * GRID_SIZE {
-                    Self {
-                        x: GRID_SIZE - 1,
-                        y: self.x + 2 * GRID_SIZE,
-                        facing: 2,
-                    }
-                } else {
-                    Self {
-                        x: 2 * GRID_SIZE - 1,
-                        y: self.x - GRID_SIZE,
-                        facing: 2,
-                    }
-                }
-            }
-            2 => {
-                if self.x != 0 && map[self.y][self.x - 1] != ' ' {
-                    Self {
-                        x: self.x - 1,
-                        y: self.y,
-                        facing: self.facing,
-                    }
-                } else if self.y < GRID_SIZE {
-                    Self {
-                        x: 0,
-                        y: 3 * GRID_SIZE - 1 - self.y,
-                        facing: 0,
-                    }
-                } else if self.y < 2 * GRID_SIZE {
-                    Self {
-                        x: self.y - GRID_SIZE,
-                        y: 2 * GRID_SIZE,
-                        facing: 1,
-                    }
-                } else if self.y < 3 * GRID_SIZE {
-                    Self {
-                        x: GRID_SIZE,
-                        y: 3 * GRID_SIZE - 1 - self.y,
-                        facing: 0,
-                    }
-                } else {
-                    Self {
-                        x: self.y - 2 * GRID_SIZE,
-                        y: 0,
-                        facing: 1,
-                    }
-                }
-            }
-            3 => {
-                if self.y != 0 && map[self.y - 1][self.x] != ' ' {
-                    Self {
-                        x: self.x,
-                        y: self.y - 1,
-                        facing: self.facing,
-                    }
-                } else if self.x < GRID_SIZE {
-                    Self {
-                        x: GRID_SIZE,
-                        y: self.x + GRID_SIZE,
-                        facing: 0,
-                    }
-                } else if self.x < 2 * GRID_SIZE {
-                    Self {
-                        x: 0,
-                        y: self.x + 2 * GRID_SIZE,
-                        facing: 0,
-                    }
-                } else {
-                    Self {
-                        x: self.x - 2 * GRID_SIZE,
-                        y: 4 * GRID_SIZE - 1,
-                        facing: self.facing,
-                    }
-                }
-            }
+            0 => self.cube_step_right(map),
+            1 => self.cube_step_down(map),
+            2 => self.cube_step_left(map),
+            3 => self.cube_step_up(map),
             _ => unreachable!(),
+        }
+    }
+
+    fn cube_step_right(&self, map: &[Vec<char>]) -> Self {
+        if map[self.y].len() - 1 > self.x {
+            Self {
+                x: self.x + 1,
+                y: self.y,
+                facing: self.facing,
+            }
+        } else if self.y < GRID_SIZE {
+            Self {
+                x: 2 * GRID_SIZE - 1,
+                y: 3 * GRID_SIZE - 1 - self.y,
+                facing: 2,
+            }
+        } else if self.y < 2 * GRID_SIZE {
+            Self {
+                x: GRID_SIZE + self.y,
+                y: GRID_SIZE - 1,
+                facing: 3,
+            }
+        } else if self.y < 3 * GRID_SIZE {
+            Self {
+                x: 3 * GRID_SIZE - 1,
+                y: 3 * GRID_SIZE - self.y - 1,
+                facing: 2,
+            }
+        } else {
+            Self {
+                x: self.y - 2 * GRID_SIZE,
+                y: 3 * GRID_SIZE - 1,
+                facing: 3,
+            }
+        }
+    }
+
+    fn cube_step_down(&self, map: &[Vec<char>]) -> Self {
+        if map.len() - 1 > self.y
+            && map[self.y + 1].len() > self.x
+            && map[self.y + 1][self.x] != ' '
+        {
+            Self {
+                x: self.x,
+                y: self.y + 1,
+                facing: self.facing,
+            }
+        } else if self.x < GRID_SIZE {
+            Self {
+                x: self.x + 2 * GRID_SIZE,
+                y: 0,
+                facing: self.facing,
+            }
+        } else if self.x < 2 * GRID_SIZE {
+            Self {
+                x: GRID_SIZE - 1,
+                y: self.x + 2 * GRID_SIZE,
+                facing: 2,
+            }
+        } else {
+            Self {
+                x: 2 * GRID_SIZE - 1,
+                y: self.x - GRID_SIZE,
+                facing: 2,
+            }
+        }
+    }
+
+    fn cube_step_left(&self, map: &[Vec<char>]) -> Self {
+        if self.x != 0 && map[self.y][self.x - 1] != ' ' {
+            Self {
+                x: self.x - 1,
+                y: self.y,
+                facing: self.facing,
+            }
+        } else if self.y < GRID_SIZE {
+            Self {
+                x: 0,
+                y: 3 * GRID_SIZE - 1 - self.y,
+                facing: 0,
+            }
+        } else if self.y < 2 * GRID_SIZE {
+            Self {
+                x: self.y - GRID_SIZE,
+                y: 2 * GRID_SIZE,
+                facing: 1,
+            }
+        } else if self.y < 3 * GRID_SIZE {
+            Self {
+                x: GRID_SIZE,
+                y: 3 * GRID_SIZE - 1 - self.y,
+                facing: 0,
+            }
+        } else {
+            Self {
+                x: self.y - 2 * GRID_SIZE,
+                y: 0,
+                facing: 1,
+            }
+        }
+    }
+
+    fn cube_step_up(&self, map: &[Vec<char>]) -> Self {
+        if self.y != 0 && map[self.y - 1][self.x] != ' ' {
+            Self {
+                x: self.x,
+                y: self.y - 1,
+                facing: self.facing,
+            }
+        } else if self.x < GRID_SIZE {
+            Self {
+                x: GRID_SIZE,
+                y: self.x + GRID_SIZE,
+                facing: 0,
+            }
+        } else if self.x < 2 * GRID_SIZE {
+            Self {
+                x: 0,
+                y: self.x + 2 * GRID_SIZE,
+                facing: 0,
+            }
+        } else {
+            Self {
+                x: self.x - 2 * GRID_SIZE,
+                y: 4 * GRID_SIZE - 1,
+                facing: self.facing,
+            }
         }
     }
 }
@@ -207,7 +215,9 @@ fn walk(map: &[Vec<char>], mut path: &str, cube: bool) -> i64 {
     let mut pos = Position { x, y: 0, facing: 0 };
     loop {
         if path.is_empty() {
-            break 1000 * (pos.y + 1) as i64 + 4 * (pos.x + 1) as i64 + pos.facing;
+            break 1000 * i64::try_from(pos.y + 1).expect("cast within range")
+                + 4 * i64::try_from(pos.x + 1).expect("cast within range")
+                + pos.facing;
         }
         match &path[..1] {
             "L" => {
@@ -228,10 +238,10 @@ fn walk(map: &[Vec<char>], mut path: &str, cube: bool) -> i64 {
                     } else {
                         pos.next_position(map)
                     };
-                    if map[next.y][next.x] != '#' {
-                        next
-                    } else {
+                    if map[next.y][next.x] == '#' {
                         pos
+                    } else {
+                        next
                     }
                 });
             }

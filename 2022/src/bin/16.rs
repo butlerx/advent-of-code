@@ -38,8 +38,8 @@ fn get_flowrates(input: &str) -> (Flowrate, Snapshot) {
         .map(|(i, (x, _))| (x.as_str(), i))
         .collect();
 
-    let mut snapshot: Snapshot = Default::default();
-    let mut flowrate: Flowrate = Default::default();
+    let mut snapshot: Snapshot = HashMap::default();
+    let mut flowrate: Flowrate = HashMap::default();
     flowrate.insert((0, "AA".to_string(), 0), 0);
 
     for time in 1..=30 {

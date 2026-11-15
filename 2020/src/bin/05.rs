@@ -1,3 +1,4 @@
+use std::convert::TryFrom;
 fn main() {
     let input = include_str!("../../input/05.txt");
     println!("Part 1: {}", run(input, false));
@@ -31,14 +32,14 @@ fn part_2(input: &str) -> i64 {
     let mut max_occupied = 0;
     for line in input.lines() {
         let seat_id = parse_space_partition(line);
-        occupied[seat_id as usize] = true;
+        occupied[usize::try_from(seat_id).expect("cast within range")] = true;
         if seat_id > max_occupied {
             max_occupied = seat_id;
         }
     }
     (0..max_occupied)
         .rev()
-        .find(|&seat_id| !occupied[seat_id as usize])
+        .find(|&seat_id| !occupied[usize::try_from(seat_id).expect("cast within range")])
         .unwrap()
 }
 
@@ -52,13 +53,13 @@ BBFFBBFRLL";
 
     #[test]
     fn test_part_1() {
-        assert!(part_1(INPUT) == 820);
-        assert!(part_1(include_str!("../../input/05.txt")) == 901);
+        assert_eq!(part_1(INPUT), 820);
+        assert_eq!(part_1(include_str!("../../input/05.txt")), 901);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(part_2(INPUT) == 819);
-        assert!(part_2(include_str!("../../input/05.txt")) == 661);
+        assert_eq!(part_2(INPUT), 819);
+        assert_eq!(part_2(include_str!("../../input/05.txt")), 661);
     }
 }

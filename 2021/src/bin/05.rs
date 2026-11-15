@@ -1,8 +1,10 @@
 use std::collections::HashMap;
 
+type Line = ((i64, i64), (i64, i64));
+
 fn main() {
     let input = parse_input(include_str!("../../input/05.txt"));
-    println!("Part 1: {}", part_1(input.clone()));
+    println!("Part 1: {}", part_1(&input));
     println!("Part 2: {}", part_2(input));
 }
 
@@ -24,7 +26,7 @@ fn parse_input(input: &str) -> Vec<((i64, i64), (i64, i64))> {
         .collect()
 }
 
-fn part_1(lines: Vec<((i64, i64), (i64, i64))>) -> usize {
+fn part_1(lines: &[Line]) -> usize {
     count_points_covered(
         lines
             .iter()
@@ -61,8 +63,8 @@ fn count_points_covered(lines: Vec<((i64, i64), (i64, i64))>) -> usize {
     }
 
     points_covered
-        .into_iter()
-        .filter_map(|(_, num_lines)| Some(num_lines).filter(|&x| x >= 2))
+        .into_values()
+        .filter_map(|num_lines| Some(num_lines).filter(|&x| x >= 2))
         .count()
 }
 
@@ -83,14 +85,14 @@ mod day_5_tests {
     #[test]
     fn test_small_input() {
         let input = parse_input(INPUT);
-        assert_eq!(part_1(input.clone()), 5);
+        assert_eq!(part_1(&input), 5);
         assert_eq!(part_2(input), 12);
     }
 
     #[test]
     fn test_large_input() {
         let input = parse_input(include_str!("../../input/05.txt"));
-        assert_eq!(part_1(input.clone()), 7297);
+        assert_eq!(part_1(&input), 7297);
         assert_eq!(part_2(input), 21038);
     }
 }

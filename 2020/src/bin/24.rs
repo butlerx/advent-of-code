@@ -1,4 +1,5 @@
 use std::collections::HashSet;
+use std::convert::TryFrom;
 
 fn main() {
     let input = include_str!("../../input/24.txt");
@@ -6,7 +7,7 @@ fn main() {
     println!("Part 2: {}", run(input, true));
 }
 
-fn find_tile(input: &str, x: i64, y: i64) -> (usize, usize) {
+fn find_tile(input: &str, x: i64, y: i64) -> (i64, i64) {
     let (x, y, _) = input.chars().fold((x, y, None), |(x, y, prev), c| match c {
         'n' => (x, y, Some('n')),
         's' => (x, y, Some('s')),
@@ -24,7 +25,7 @@ fn find_tile(input: &str, x: i64, y: i64) -> (usize, usize) {
         },
         _ => (x, y, prev),
     });
-    (x as usize, y as usize)
+    (x, y)
 }
 
 struct Tile {
@@ -49,6 +50,10 @@ fn flip_100(input: &str) -> i64 {
     let mut black = HashSet::new();
     for line in input.lines() {
         let (x, y) = find_tile(line, GRID_SIZE / 2, GRID_SIZE / 2);
+        let (x, y) = (
+            usize::try_from(x).expect("cast within range"),
+            usize::try_from(y).expect("cast within range"),
+        );
         if !black.insert((x, y)) {
             black.remove(&(x, y));
         }
@@ -63,7 +68,12 @@ fn flip_100(input: &str) -> i64 {
     for i in 0..100 {
         for &(x, y) in &black {
             for (dx, dy) in neighbors.iter().chain([(0, 0)].iter()) {
-                let (x, y) = ((x as isize + dx) as usize, (y as isize + dy) as usize);
+                let (x, y) = (
+                    usize::try_from(isize::try_from(x).expect("cast within range") + dx)
+                        .expect("cast within range"),
+                    usize::try_from(isize::try_from(y).expect("cast within range") + dy)
+                        .expect("cast within range"),
+                );
                 let tile = &mut tiles[x][y];
                 if tile.timestamp != i {
                     tile.timestamp = i;
@@ -72,7 +82,12 @@ fn flip_100(input: &str) -> i64 {
                 }
             }
             for (dx, dy) in &neighbors {
-                let (x, y) = ((x as isize + dx) as usize, (y as isize + dy) as usize);
+                let (x, y) = (
+                    usize::try_from(isize::try_from(x).expect("cast within range") + dx)
+                        .expect("cast within range"),
+                    usize::try_from(isize::try_from(y).expect("cast within range") + dy)
+                        .expect("cast within range"),
+                );
                 tiles[x][y].neighbors += 1;
             }
         }
@@ -91,7 +106,7 @@ fn flip_100(input: &str) -> i64 {
             .collect();
     }
 
-    black.len() as i64
+    i64::try_from(black.len()).expect("cast within range")
 }
 
 fn flip_tiles(input: &str) -> i64 {
@@ -102,7 +117,7 @@ fn flip_tiles(input: &str) -> i64 {
             black.remove(&cooridinates);
         }
     }
-    black.len() as i64
+    i64::try_from(black.len()).expect("cast within range")
 }
 
 fn run(input: &str, part_two: bool) -> i64 {

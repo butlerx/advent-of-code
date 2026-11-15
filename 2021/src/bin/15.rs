@@ -6,7 +6,7 @@ fn main() {
     println!("Part 2: {}", part_2(input));
 }
 
-fn shortest_path(map: Vec<Vec<i64>>) -> i64 {
+fn shortest_path(map: &[Vec<i64>]) -> i64 {
     let success = (map.len() - 1, map[0].len() - 1);
     let mut costs = vec![vec![i64::MAX; map[0].len()]; map.len()];
     let mut to_see = BinaryHeap::new();
@@ -50,23 +50,24 @@ fn parse_input(input: &str) -> Vec<Vec<i64>> {
 
 fn part_1(input: &str) -> i64 {
     let map = parse_input(input);
-    shortest_path(map)
+    shortest_path(&map)
 }
 
 fn part_2(input: &str) -> i64 {
     let map = parse_input(input);
     let (num_row, num_col) = (map.len(), map[0].len());
-    let expanded_map = (0..(5 * map.len()))
+    let expanded_map: Vec<Vec<i64>> = (0..(5 * map.len()))
         .map(|row| {
             (0..(5 * map[0].len()))
                 .map(|col| {
-                    let increase = ((row / num_row) + (col / num_col) - 1) as i64;
+                    let increase = i64::try_from((row / num_row) + (col / num_col) - 1)
+                        .expect("cast within range");
                     ((map[row % num_row][col % num_col] + increase) % 9) + 1
                 })
                 .collect()
         })
         .collect();
-    shortest_path(expanded_map)
+    shortest_path(&expanded_map)
 }
 
 #[cfg(test)]

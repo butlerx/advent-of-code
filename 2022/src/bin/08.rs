@@ -18,20 +18,23 @@ fn parse_input(input: &str) -> (Vec<Vec<u32>>, usize, usize) {
 
 fn part_1(input: &str) -> u32 {
     let (grid, rows, cols) = parse_input(input);
-    (1..rows).fold((2 * (rows + cols)) as u32, |visible, row| {
-        (1..cols).fold(visible, |visible, col| {
-            let height = grid[row][col];
-            if (0..col).all(|i| grid[row][i] < height)
-                || (0..row).all(|j| grid[j][col] < height)
-                || (col + 1..=cols).all(|i| grid[row][i] < height)
-                || (row + 1..=rows).all(|j| grid[j][col] < height)
-            {
-                visible + 1
-            } else {
-                visible
-            }
-        })
-    })
+    (1..rows).fold(
+        u32::try_from(2 * (rows + cols)).expect("cast within range"),
+        |visible, row| {
+            (1..cols).fold(visible, |visible, col| {
+                let height = grid[row][col];
+                if (0..col).all(|i| grid[row][i] < height)
+                    || (0..row).all(|j| grid[j][col] < height)
+                    || (col + 1..=cols).all(|i| grid[row][i] < height)
+                    || (row + 1..=rows).all(|j| grid[j][col] < height)
+                {
+                    visible + 1
+                } else {
+                    visible
+                }
+            })
+        },
+    )
 }
 
 fn part_2(input: &str) -> u32 {
@@ -57,7 +60,7 @@ fn part_2(input: &str) -> u32 {
                 .enumerate()
                 .find(|(_, r)| grid[*r][col] >= height)
                 .map_or(rows - row, |(i, _)| i + 1);
-            score.max((left * up * right * down) as u32)
+            score.max(u32::try_from(left * up * right * down).expect("cast within range"))
         })
     })
 }

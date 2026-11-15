@@ -40,33 +40,33 @@ mod day_1_tests {
     #[test]
     fn test_parse_expense() {
         let results = vec![1721, 979, 366, 299, 675, 1456];
-        assert!(parse_expense("1721\n979\n366\n299\n675\n1456") == results);
+        assert_eq!(parse_expense("1721\n979\n366\n299\n675\n1456"), results);
     }
 
     #[test]
     fn test_find_2020_multiple() {
         let input = vec![1721, 979, 366, 299, 675, 1456];
         let result = find_2020_multiple(input, 2);
-        assert!(514_579 == result);
+        assert_eq!(514_579, result);
     }
 
     #[test]
     fn test_find_2020_multple_depth() {
         let input = vec![1721, 979, 366, 299, 675, 1456];
         let result = find_2020_multiple(input, 3);
-        assert!(241_861_950 == result);
+        assert_eq!(241_861_950, result);
     }
     #[test]
     fn test_part_1() {
         let results = run(include_str!("../../input/01.txt"), 2);
         println!("{results}");
-        assert!(results == 864_864);
+        assert_eq!(results, 864_864);
     }
 
     #[test]
     fn test_part_2() {
         let results = run(include_str!("../../input/01.txt"), 3);
         println!("{results}");
-        assert!(results == 281_473_080);
+        assert_eq!(results, 281_473_080);
     }
 }
