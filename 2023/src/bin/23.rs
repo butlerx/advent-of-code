@@ -1,7 +1,7 @@
 #![warn(clippy::pedantic, clippy::perf)]
 use std::{
     cmp::max,
-    collections::{HashSet, VecDeque},
+    collections::{HashMap, HashSet, VecDeque},
 };
 
 static INPUT_TXT: &str = include_str!("../../input/23.txt");
@@ -83,33 +83,92 @@ fn part_1(input: &str) -> usize {
     max_path - 1
 }
 
+fn open_neighbours(grid: &[Vec<char>], (x, y): (usize, usize)) -> Vec<(usize, usize)> {
+    const DIRECTIONS: [(isize, isize); 4] = [(0, -1), (0, 1), (-1, 0), (1, 0)];
+    DIRECTIONS
+        .iter()
+        .filter_map(|&(dx, dy)| {
+            let nx = x.checked_add_signed(dx)?;
+            let ny = y.checked_add_signed(dy)?;
+            let cell = *grid.get(ny)?.get(nx)?;
+            (cell != '#').then_some((nx, ny))
+        })
+        .collect()
+}
+
+/// Longest path length (in steps) from `node` to `end` that does not revisit a junction.
+fn longest_path(
+    edges: &[Vec<(usize, usize)>],
+    node: usize,
+    end: usize,
+    visited: u64,
+) -> Option<usize> {
+    if node == end {
+        return Some(0);
+    }
+    edges[node]
+        .iter()
+        .filter(|&&(next, _)| visited & (1_u64 << next) == 0)
+        .filter_map(|&(next, len)| {
+            longest_path(edges, next, end, visited | (1_u64 << next)).map(|rest| rest + len)
+        })
+        .max()
+}
+
 fn part_2(input: &str) -> usize {
     let grid = parse_input(input);
-    let mut queue = find_start_positions(&grid);
-    let mut max_path = 0;
-    while !queue.is_empty() {
-        let (x, y, mut visited) = queue.pop_front().unwrap();
-        if !visited.insert((x, y)) {
-            continue;
-        }
-        if y == grid.len() - 1 {
-            max_path = max(max_path, visited.len());
-            continue;
-        }
-        if grid[y][x] == '#' {
-        } else {
-            let directions: &[(isize, isize); 4] = &[(0, -1), (0, 1), (-1, 0), (1, 0)];
-            for (dx, dy) in directions {
-                let new_x = x.wrapping_add(dx.unsigned_abs());
-                let new_y = y.wrapping_add(dy.unsigned_abs());
-                if new_x < grid[0].len() && new_y < grid.len() && grid[new_y][new_x] != '#' {
-                    queue.push_back((new_x, new_y, visited.clone()));
-                }
+    let height = grid.len();
+    let width = grid[0].len();
+    let start = (
+        grid[0]
+            .iter()
+            .position(|&c| c == '.')
+            .expect("open start on top row"),
+        0,
+    );
+    let end = (
+        grid[height - 1]
+            .iter()
+            .position(|&c| c == '.')
+            .expect("open end on bottom row"),
+        height - 1,
+    );
+
+    // Junctions (more than two open neighbours, or the start and end) are the graph nodes;
+    // the corridors between them become weighted edges.
+    let is_junction = |pos| pos == start || pos == end || open_neighbours(&grid, pos).len() > 2;
+    let junctions = (0..height)
+        .flat_map(|y| (0..width).map(move |x| (x, y)))
+        .filter(|&(x, y)| grid[y][x] != '#' && is_junction((x, y)))
+        .collect::<Vec<_>>();
+    let index = junctions
+        .iter()
+        .enumerate()
+        .map(|(i, &pos)| (pos, i))
+        .collect::<HashMap<_, _>>();
+
+    let mut edges = vec![Vec::new(); junctions.len()];
+    for (from_idx, &from) in junctions.iter().enumerate() {
+        for first in open_neighbours(&grid, from) {
+            let (mut prev, mut cur, mut len) = (from, first, 1);
+            while !is_junction(cur) {
+                let Some(next) = open_neighbours(&grid, cur).into_iter().find(|&p| p != prev)
+                else {
+                    break;
+                };
+                prev = cur;
+                cur = next;
+                len += 1;
+            }
+            if let Some(&to_idx) = index.get(&cur) {
+                edges[from_idx].push((to_idx, len));
             }
         }
     }
 
-    max_path - 1
+    let start_idx = index[&start];
+    let end_idx = index[&end];
+    longest_path(&edges, start_idx, end_idx, 1_u64 << start_idx).expect("end is reachable")
 }
 
 #[cfg(test)]
