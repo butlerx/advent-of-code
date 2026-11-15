@@ -26,6 +26,9 @@ jobs:
           toolchain: stable
           components: clippy, rustfmt
       - uses: j178/prek-action@4e14d07f9231acabce116ccfca13b13dd9755ece # v3.0.0
+        env:
+          # aoc-tiles regenerates tracked tile images and README stats; skip it in CI.
+          SKIP: aoc-tiles
 
   test:
     runs-on: ubuntu-latest
