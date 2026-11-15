@@ -12,10 +12,8 @@ fn main() {
 struct Hailstone {
     x: f64,
     y: f64,
-    z: f64,
     vel_x: f64,
     vel_y: f64,
-    vel_z: f64,
 }
 
 impl From<&str> for Hailstone {
@@ -34,10 +32,8 @@ impl From<&str> for Hailstone {
         Self {
             x: xyz[0],
             y: xyz[1],
-            z: xyz[2],
             vel_x: vel_xyz[0],
             vel_y: vel_xyz[1],
-            vel_z: vel_xyz[2],
         }
     }
 }
@@ -88,94 +84,123 @@ fn part_1(input: &str) -> usize {
     intersections_between(&stones, 200_000_000_000_000.0, 400_000_000_000_000.0)
 }
 
-/// Equality for values that are whole numbers stored as floats. Their difference is
-/// exact, so it is zero only when the values are equal, and at least one otherwise.
-fn approx_eq(a: f64, b: f64) -> bool {
-    (a - b).abs() < f64::EPSILON
+/// A hailstone with exact integer coordinates, used by part 2 so that every
+/// intermediate value is exact.
+#[derive(Debug, Clone, Copy)]
+struct IntHailstone {
+    pos: [i128; 3],
+    vel: [i128; 3],
 }
 
-fn find_possible_speeds(
-    possible_speeds: &HashSet<i32>,
-    differential: f64,
-    velocity: f64,
-) -> HashSet<i32> {
-    let current_possible_speeds = (-300_i32..300)
-        .filter(|&speed| {
-            let relative = f64::from(speed) - velocity;
-            !approx_eq(relative, 0.0) && approx_eq(differential % relative, 0.0)
+fn parse_vector(s: &str) -> [i128; 3] {
+    let values = s
+        .split(',')
+        .map(|n| n.trim().parse::<i128>().unwrap())
+        .collect::<Vec<_>>();
+    [values[0], values[1], values[2]]
+}
+
+fn parse_integer_stones(input: &str) -> Vec<IntHailstone> {
+    input
+        .trim()
+        .lines()
+        .map(|line| {
+            let (pos, vel) = line.split_once(" @ ").unwrap();
+            IntHailstone {
+                pos: parse_vector(pos),
+                vel: parse_vector(vel),
+            }
         })
-        .collect::<HashSet<_>>();
-
-    if possible_speeds.is_empty() {
-        current_possible_speeds
-    } else {
-        possible_speeds
-            .intersection(&current_possible_speeds)
-            .copied()
-            .collect()
-    }
+        .collect()
 }
 
-fn calculate_position(stones: &[Hailstone], vel_x: f64, vel_y: f64, vel_z: f64) -> f64 {
-    let a = stones[0];
-    let b = stones[1];
+fn sub(a: [i128; 3], b: [i128; 3]) -> [i128; 3] {
+    [a[0] - b[0], a[1] - b[1], a[2] - b[2]]
+}
 
-    let ma = (a.vel_y - vel_y) / (a.vel_x - vel_x);
-    let mb = (b.vel_y - vel_y) / (b.vel_x - vel_x);
+fn cross(a: [i128; 3], b: [i128; 3]) -> [i128; 3] {
+    [
+        a[1] * b[2] - a[2] * b[1],
+        a[2] * b[0] - a[0] * b[2],
+        a[0] * b[1] - a[1] * b[0],
+    ]
+}
 
-    let ca = a.y - (ma * a.x);
-    let cb = b.y - (mb * b.x);
+fn dot(a: [i128; 3], b: [i128; 3]) -> i128 {
+    a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+}
 
-    let x_pos = (cb - ca) / (ma - mb);
-    let y_pos = ma * x_pos + ca;
+/// Rock speeds on one axis that fit every pair of stones moving at the same speed on it.
+/// A pair gives `differential` divisible by `speed - stone_speed`, or no constraint when
+/// the rock moves with that stone on this axis.
+fn candidate_speeds(stones: &[IntHailstone], axis: usize) -> Vec<i128> {
+    let mut candidates: Option<HashSet<i128>> = None;
+    for (i, a) in stones.iter().enumerate() {
+        for b in &stones[i + 1..] {
+            if a.vel[axis] != b.vel[axis] {
+                continue;
+            }
+            let differential = b.pos[axis] - a.pos[axis];
+            let possible = (-300..300)
+                .filter(|&speed| speed == a.vel[axis] || differential % (speed - a.vel[axis]) == 0)
+                .collect::<HashSet<_>>();
+            candidates = Some(match candidates {
+                Some(previous) => previous.intersection(&possible).copied().collect(),
+                None => possible,
+            });
+        }
+    }
+    candidates.unwrap_or_default().into_iter().collect()
+}
 
-    let time = (x_pos - a.x) / (a.vel_x - vel_x);
-    let z_pos = a.z + (a.vel_z - vel_z) * time;
+/// The rock's starting position for a given rock velocity, if one exists that every
+/// stone's path meets. Uses the first two stones, then checks the rest exactly.
+fn rock_start(stones: &[IntHailstone], velocity: [i128; 3]) -> Option<[i128; 3]> {
+    let (a, b) = (stones[0], stones[1]);
+    let rel_a = sub(a.vel, velocity);
+    let rel_b = sub(b.vel, velocity);
+    let normal = cross(rel_a, rel_b);
+    let denom = dot(normal, normal);
+    if denom == 0 {
+        return None;
+    }
+    // The rock starts at a.pos + t * rel_a, where t solves (a.pos - b.pos + t * rel_a) x rel_b = 0.
+    let offset = dot(cross(sub(a.pos, b.pos), rel_b), normal);
+    let numerators = [0, 1, 2].map(|i| a.pos[i] * denom - offset * rel_a[i]);
+    if numerators.iter().any(|n| n % denom != 0) {
+        return None;
+    }
+    let start = numerators.map(|n| n / denom);
+    stones
+        .iter()
+        .all(|s| cross(sub(start, s.pos), sub(s.vel, velocity)) == [0, 0, 0])
+        .then_some(start)
+}
 
-    x_pos + y_pos + z_pos
+/// Converts an integer to `f64` exactly, splitting it into 32-bit halves so that no
+/// rounding happens for values up to 2^63.
+fn to_f64(value: i128) -> f64 {
+    let high = i32::try_from(value >> 32).expect("value fits in 2^63");
+    let low = u32::try_from(value & 0xffff_ffff).expect("masked to 32 bits");
+    f64::from(high) * 4_294_967_296.0 + f64::from(low)
 }
 
 fn part_2(input: &str) -> f64 {
-    let mut stones = input
-        .trim()
-        .lines()
-        .map(Hailstone::from)
-        .collect::<Vec<_>>();
-    stones.sort_by(|a, b| {
-        a.x.partial_cmp(&b.x)
-            .unwrap()
-            .then_with(|| a.y.partial_cmp(&b.y).unwrap())
-            .then_with(|| a.z.partial_cmp(&b.z).unwrap())
-    });
+    let stones = parse_integer_stones(input);
+    let speeds_x = candidate_speeds(&stones, 0);
+    let speeds_y = candidate_speeds(&stones, 1);
+    let speeds_z = candidate_speeds(&stones, 2);
 
-    let mut speeds_x: HashSet<i32> = HashSet::new();
-    let mut speeds_y: HashSet<i32> = HashSet::new();
-    let mut speeds_z: HashSet<i32> = HashSet::new();
-
-    for (i, h1) in stones.iter().enumerate() {
-        for h2 in stones.iter().skip(i + 1) {
-            if approx_eq(h1.vel_x, h2.vel_x) {
-                let dx = h2.x - h1.x;
-                speeds_x = find_possible_speeds(&speeds_x, dx, h1.vel_x);
-            }
-
-            if approx_eq(h1.vel_y, h2.vel_y) {
-                let dy = h2.y - h1.y;
-                speeds_y = find_possible_speeds(&speeds_y, dy, h1.vel_y);
-            }
-
-            if approx_eq(h1.vel_z, h2.vel_z) {
-                let dz = h2.z - h1.z;
-                speeds_z = find_possible_speeds(&speeds_z, dz, h1.vel_z);
+    for &vx in &speeds_x {
+        for &vy in &speeds_y {
+            for &vz in &speeds_z {
+                if let Some(start) = rock_start(&stones, [vx, vy, vz]) {
+                    return to_f64(start.iter().sum());
+                }
             }
         }
     }
-
-    let vel_x = f64::from(*speeds_x.iter().next().unwrap());
-    let vel_y = f64::from(*speeds_y.iter().next().unwrap());
-    let vel_z = f64::from(*speeds_z.iter().next().unwrap());
-
-    calculate_position(&stones, vel_x, vel_y, vel_z)
+    panic!("no rock trajectory matches every hailstone");
 }
 
 #[cfg(test)]

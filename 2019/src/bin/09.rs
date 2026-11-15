@@ -1,8 +1,8 @@
 use std::convert::TryFrom;
 fn main() {
-    let mut comp = Computer::new(include_str!("../../input/09.txt"));
-    println!("Part 1: {}", comp.execute(&[1]).unwrap());
-    println!("Part 2: {}", comp.execute(&[2]).unwrap());
+    let input = include_str!("../../input/09.txt");
+    println!("Part 1: {}", Computer::new(input).execute(&[1]).unwrap());
+    println!("Part 2: {}", Computer::new(input).execute(&[2]).unwrap());
 }
 
 #[derive(Clone)]
@@ -104,8 +104,8 @@ mod tests {
 
     #[test]
     fn test_large_input() {
-        let mut comp = Computer::new(include_str!("../../input/09.txt"));
-        assert_eq!(comp.execute(&[1]).unwrap(), 3_454_977_209);
-        assert_eq!(comp.execute(&[2]).unwrap(), 50120);
+        let input = include_str!("../../input/09.txt");
+        assert_eq!(Computer::new(input).execute(&[1]).unwrap(), 3_454_977_209);
+        assert_eq!(Computer::new(input).execute(&[2]).unwrap(), 50120);
     }
 }
