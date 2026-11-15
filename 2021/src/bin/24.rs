@@ -22,15 +22,19 @@ enum Source {
     Val(i64),
 }
 
+fn register(s: &str) -> Option<usize> {
+    match s {
+        "w" => Some(0),
+        "x" => Some(1),
+        "y" => Some(2),
+        "z" => Some(3),
+        _ => None,
+    }
+}
+
 impl Source {
     fn from_str(s: &str) -> Self {
-        match s {
-            "w" => Self::Reg(0),
-            "x" => Self::Reg(1),
-            "y" => Self::Reg(2),
-            "z" => Self::Reg(3),
-            _ => Self::Val(s.parse().unwrap()),
-        }
+        register(s).map_or_else(|| Self::Val(s.parse().unwrap()), Self::Reg)
     }
 
     fn val(&self, regs: &[i64; 4]) -> i64 {
@@ -64,14 +68,19 @@ impl Instruction {
     }
 
     fn from_str(s: &str) -> Option<Self> {
-        let src = s[4..5].parse::<usize>().unwrap();
-        match &s[..3] {
-            "inp" => Some(Self::Inp),
-            "add" => Some(Self::Add(src, Source::from_str(&s[6..]))),
-            "mul" => Some(Self::Mul(src, Source::from_str(&s[6..]))),
-            "div" => Some(Self::Div(src, Source::from_str(&s[6..]))),
-            "mod" => Some(Self::Mod(src, Source::from_str(&s[6..]))),
-            "eql" => Some(Self::Eql(src, Source::from_str(&s[6..]))),
+        let mut parts = s.split_whitespace();
+        let op = parts.next()?;
+        if op == "inp" {
+            return Some(Self::Inp);
+        }
+        let dst = register(parts.next()?)?;
+        let src = Source::from_str(parts.next()?);
+        match op {
+            "add" => Some(Self::Add(dst, src)),
+            "mul" => Some(Self::Mul(dst, src)),
+            "div" => Some(Self::Div(dst, src)),
+            "mod" => Some(Self::Mod(dst, src)),
+            "eql" => Some(Self::Eql(dst, src)),
             _ => None,
         }
     }
@@ -83,34 +92,33 @@ fn parse_input(input: &str) -> Vec<Instruction> {
 
 fn find_model_num(
     cache: &mut Cache,
-    instrunctions: &[Instruction],
+    instructions: &[Instruction],
     pc: usize,
     z: i64,
     range: &[i64],
 ) -> Option<i64> {
     if let Some(&answer) = cache.get(&(z, pc)) {
-        answer
-    } else {
-        for &digit in range {
-            let mut regs = [digit, 0, 0, z];
-            for _ in pc..pc + 17 {
-                instrunctions[pc].exec(&mut regs);
-            }
-            let z = regs[3];
-            if pc + 17 == instrunctions.len() {
-                if z == 0 {
-                    cache.insert((z, pc), Some(digit));
-                    return Some(digit);
-                }
-            } else if let Some(best) = find_model_num(cache, instrunctions, pc + 18, z, range) {
-                cache.insert((z, pc), Some(best * 10 + digit));
-                return Some(best * 10 + digit);
-            }
-        }
-
-        cache.insert((z, pc), None);
-        None
+        return answer;
     }
+    let mut result = None;
+    for &digit in range {
+        let mut regs = [digit, 0, 0, z];
+        for instruction in &instructions[pc..pc + 17] {
+            instruction.exec(&mut regs);
+        }
+        let next_z = regs[3];
+        if pc + 17 == instructions.len() {
+            if next_z == 0 {
+                result = Some(digit);
+                break;
+            }
+        } else if let Some(best) = find_model_num(cache, instructions, pc + 18, next_z, range) {
+            result = Some(best * 10 + digit);
+            break;
+        }
+    }
+    cache.insert((z, pc), result);
+    result
 }
 
 fn run(instrunctions: &[Instruction], biggest: bool) -> i64 {
