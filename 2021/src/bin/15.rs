@@ -16,7 +16,7 @@ fn shortest_path(map: &[Vec<i64>]) -> i64 {
         if (x, y) == success {
             break -cost;
         }
-        if -cost < costs[x][y] {
+        if -cost > costs[x][y] {
             continue;
         }
         for (x1, y1) in get_neighbours(x, y) {
@@ -60,9 +60,9 @@ fn part_2(input: &str) -> i64 {
         .map(|row| {
             (0..(5 * map[0].len()))
                 .map(|col| {
-                    let increase = i64::try_from((row / num_row) + (col / num_col) - 1)
+                    let tile = i64::try_from((row / num_row) + (col / num_col))
                         .expect("cast within range");
-                    ((map[row % num_row][col % num_col] + increase) % 9) + 1
+                    ((map[row % num_row][col % num_col] + tile - 1) % 9) + 1
                 })
                 .collect()
         })
