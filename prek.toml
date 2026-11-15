@@ -12,18 +12,11 @@ hooks = [{ id = "aoc-tiles" }]
 [[repos]]
 repo  = "https://github.com/pre-commit/pre-commit-hooks"
 rev   = "3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"
-hooks = [
-  { id = "trailing-whitespace", exclude = "/input/" },
-  { id = "end-of-file-fixer", exclude = "/input/" },
-  { id = "check-yaml" },
-  { id = "check-json" },
-  { id = "check-merge-conflict" },
-  { id = "check-added-large-files", exclude = "(?x).png" }
-]
+hooks = [{ id = "trailing-whitespace", exclude = "/input/" }, { id = "end-of-file-fixer", exclude = "/input/" }, { id = "check-yaml" }, { id = "check-json" }, { id = "check-merge-conflict" }, { id = "check-added-large-files", exclude = "(?x).png" }]
 
 [[repos]]
 repo  = "https://github.com/tombi-toml/tombi-pre-commit"
-rev   = "fa5f9b65866b1bcfca4ddc351288aa226f17d9db"        # v1.2.5, matches mise
+rev   = "6f428aba5ced98b5a579ff23cab6b39822b4347d"        # v1.11.2, matches mise
 hooks = [{ id = "tombi-format" }, { id = "tombi-lint" }]
 
 [[repos]]
@@ -39,13 +32,7 @@ hooks = [{ id = "yamlfmt" }]
 [[repos]]
 repo  = "https://github.com/zizmorcore/zizmor-pre-commit"
 rev   = "067260dc5fe6ea86b7551bfd6f8b3ba4e6c93129"
-hooks = [
-  {
-    id             = "zizmor",
-    pass_filenames = false,
-    args           = ["--no-progress", ".github"]
-  }
-]
+hooks = [{ id = "zizmor", pass_filenames = false, args = ["--no-progress", ".github"] }]
 
 [[repos]]
 repo  = "https://github.com/doublify/pre-commit-rust"
