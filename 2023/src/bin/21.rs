@@ -10,13 +10,6 @@ fn main() {
 
 type Position = (usize, usize);
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
-struct BigPosition {
-    position: Position,
-    x: isize,
-    y: isize,
-}
-
 fn parse_input(input: &str) -> (Vec<Vec<char>>, Position) {
     let mut start = (0, 0);
 
@@ -105,108 +98,81 @@ fn part_1(input: &str) -> usize {
     take_steps(input, 64)
 }
 
-fn get_big_positions_by_grid(
-    big_positions: &HashSet<BigPosition>,
-) -> HashMap<(isize, isize), usize> {
-    big_positions
+/// One step of the exact-step reachable set on the infinite, tiled garden.
+fn step_infinite(
+    garden: &[Vec<char>],
+    positions: &HashSet<(isize, isize)>,
+) -> HashSet<(isize, isize)> {
+    let width = isize::try_from(garden[0].len()).expect("cast within range");
+    let height = isize::try_from(garden.len()).expect("cast within range");
+    positions
         .iter()
-        .fold(HashMap::new(), |mut counts, &BigPosition { x, y, .. }| {
-            *counts.entry((x, y)).or_insert(0) += 1;
-            counts
+        .flat_map(|&(x, y)| [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)])
+        .filter(|&(x, y)| {
+            let col = usize::try_from(x.rem_euclid(width)).expect("cast within range");
+            let row = usize::try_from(y.rem_euclid(height)).expect("cast within range");
+            garden[row][col] == '.'
         })
+        .collect()
 }
 
-fn get_big_destination_count(
-    graph: &HashMap<Position, Vec<Position>>,
-    width: usize,
-    height: usize,
-    start: Position,
-    steps: usize,
-) -> usize {
-    let big_start = BigPosition {
-        position: start,
-        x: 0,
-        y: 0,
-    };
-    let big_positions =
-        get_big_destinations(graph, width, height, big_start, steps % width + width * 2);
-    let counts = get_big_positions_by_grid(&big_positions);
-
-    let tip = counts.get(&(-2, 0)).unwrap_or(&0)
-        + counts.get(&(2, 0)).unwrap_or(&0)
-        + counts.get(&(0, -2)).unwrap_or(&0)
-        + counts.get(&(0, 2)).unwrap_or(&0);
-    let edge1 = counts.get(&(-2, -1)).unwrap_or(&0)
-        + counts.get(&(-2, 1)).unwrap_or(&0)
-        + counts.get(&(2, -1)).unwrap_or(&0)
-        + counts.get(&(2, 1)).unwrap_or(&0);
-    let edge2 = counts.get(&(-1, -1)).unwrap_or(&0)
-        + counts.get(&(-1, 1)).unwrap_or(&0)
-        + counts.get(&(1, -1)).unwrap_or(&0)
-        + counts.get(&(1, 1)).unwrap_or(&0);
-    let center1 = counts.get(&(0, 1)).unwrap_or(&0);
-    let center2 = counts.get(&(0, 0)).unwrap_or(&0);
-
-    let num = steps / width;
-    tip + edge1 * num + edge2 * (num - 1) + center1 * num * num + center2 * (num - 1) * (num - 1)
-}
-
-fn get_big_destinations(
-    graph: &HashMap<Position, Vec<Position>>,
-    width: usize,
-    height: usize,
-    start: BigPosition,
-    steps: usize,
-) -> HashSet<BigPosition> {
-    let mut position_set = HashSet::new();
-    position_set.insert(start);
-
-    for _ in 0..steps {
-        let mut new_set = HashSet::new();
-        for &BigPosition { position, x, y } in &position_set {
-            if let Some(neighbors) = graph.get(&position) {
-                new_set.extend(neighbors.iter().map(|&p| BigPosition { position: p, x, y }));
-                if position.0 == 0 {
-                    new_set.insert(BigPosition {
-                        position: (width - 1, position.1),
-                        x: x - 1,
-                        y,
-                    });
-                }
-                if position.0 == width - 1 {
-                    new_set.insert(BigPosition {
-                        position: (0, position.1),
-                        x: x + 1,
-                        y,
-                    });
-                }
-                if position.1 == 0 {
-                    new_set.insert(BigPosition {
-                        position: (position.0, height - 1),
-                        x,
-                        y: y - 1,
-                    });
-                }
-                if position.1 == height - 1 {
-                    new_set.insert(BigPosition {
-                        position: (position.0, 0),
-                        x,
-                        y: y + 1,
-                    });
-                }
-            }
-        }
-        position_set = new_set;
+/// Extrapolates the count at tile `n` from the samples in `counts` (one per whole tile),
+/// once the last five samples show the per-tile count is quadratic.
+fn extrapolate_tiles(counts: &[usize], tile: usize) -> Option<usize> {
+    let samples = counts
+        .iter()
+        .map(|&c| i128::try_from(c).expect("count fits in i128"))
+        .collect::<Vec<_>>();
+    let last = samples.len().checked_sub(1)?;
+    if last < 4 {
+        return None;
     }
-    position_set
+    let second_diff = |i: usize| samples[i + 2] - 2 * samples[i + 1] + samples[i];
+    let curvature = second_diff(last - 2);
+    if second_diff(last - 4) != curvature || second_diff(last - 3) != curvature {
+        return None;
+    }
+    let base = last - 4;
+    let offset = i128::try_from(tile - base).expect("index fits in i128");
+    let value = samples[base]
+        + offset * (samples[base + 1] - samples[base])
+        + offset * (offset - 1) / 2 * curvature;
+    usize::try_from(value).ok()
+}
+
+/// Counts the garden plots reachable in exactly `steps` steps on the tiled grid.
+///
+/// Each whole tile adds a quadratic number of plots once the pattern settles, so the
+/// counts at `steps % width + k * width` are sampled until they do, then extrapolated.
+fn get_big_destination_count(garden: &[Vec<char>], start: Position, steps: usize) -> usize {
+    let width = garden[0].len();
+    let tiles = steps / width;
+    let mut positions = HashSet::from([(
+        isize::try_from(start.0).expect("cast within range"),
+        isize::try_from(start.1).expect("cast within range"),
+    )]);
+    for _ in 0..steps % width {
+        positions = step_infinite(garden, &positions);
+    }
+
+    let mut counts = Vec::new();
+    loop {
+        counts.push(positions.len());
+        if tiles < counts.len() {
+            return counts[tiles];
+        }
+        if let Some(value) = extrapolate_tiles(&counts, tiles) {
+            return value;
+        }
+        for _ in 0..width {
+            positions = step_infinite(garden, &positions);
+        }
+    }
 }
 
 fn take_big_steps(input: &str, steps: usize) -> usize {
     let (garden, start) = parse_input(input);
-    let width = garden[0].len();
-    let height = garden.len();
-    let graph = get_graph(&garden);
-    get_big_destination_count(&graph, width, height, start, steps)
+    get_big_destination_count(&garden, start, steps)
 }
 
 fn part_2(input: &str) -> usize {
