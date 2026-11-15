@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet, hash_map::Entry};
+use std::collections::{hash_map::Entry, HashMap, HashSet};
 use std::convert::TryFrom;
 
 type Allergens = HashMap<String, HashSet<String>>;
