@@ -39,3 +39,8 @@ opt-level = 0
 
 [profile.release]
 opt-level = 3
+
+# Several solutions (e.g. 2021 day 24, 2023 day 21) take a minute or more
+# unoptimised; tests run against the real puzzle inputs.
+[profile.test]
+opt-level = 3
