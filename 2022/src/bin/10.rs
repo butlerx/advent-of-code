@@ -215,27 +215,37 @@ noop";
         assert_eq!(part_1(INPUT_TXT), 16060);
     }
 
+    /// Trailing spaces on each line are not significant for the display, and
+    /// editors and pre-commit hooks strip them, so compare lines with them trimmed.
+    fn trimmed_lines(s: &str) -> Vec<&str> {
+        s.lines().map(str::trim_end).collect()
+    }
+
     #[test]
     fn test_part_2() {
         assert_eq!(
-            part_2(INPUT),
-            "##  ##  ##  ##  ##  ##  ##  ##  ##  ##
+            trimmed_lines(&part_2(INPUT)),
+            trimmed_lines(
+                "##  ##  ##  ##  ##  ##  ##  ##  ##  ##
 ###   ###   ###   ###   ###   ###   ###
 ####    ####    ####    ####    ####
 #####     #####     #####     #####
 ######      ######      ######      ####
 #######       #######       #######
 "
+            )
         );
         assert_eq!(
-            part_2(INPUT_TXT),
-            "###   ##   ##  #### #  # #    #  # ####
+            trimmed_lines(&part_2(INPUT_TXT)),
+            trimmed_lines(
+                "###   ##   ##  #### #  # #    #  # ####
 #  # #  # #  # #    # #  #    #  # #
 ###  #  # #    ###  ##   #    #### ###
 #  # #### #    #    # #  #    #  # #
 #  # #  # #  # #    # #  #    #  # #
 ###  #  #  ##  #### #  # #### #  # #
 "
+            )
         );
     }
 }
