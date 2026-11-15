@@ -1,6 +1,19 @@
 [workspace]
 resolver = "3"
-members  = ["20[0-9]*", "aoc_shared", "systems_check"]
+# Listed explicitly: dependabot can't expand globs in workspace members.
+# Add each new year here.
+members  = [
+  "2018",
+  "2019",
+  "2020",
+  "2021",
+  "2022",
+  "2023",
+  "2024",
+  "2025",
+  "aoc_shared",
+  "systems_check",
+]
 
 [workspace.package]
 version     = "0.1.0"
