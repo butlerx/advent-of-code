@@ -10,3 +10,6 @@ repository.workspace = true
 [dependencies]
 itertools = "0.10.5"
 regex     = "1.7.0"
+
+[lints]
+workspace = true

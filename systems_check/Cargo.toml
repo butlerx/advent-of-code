@@ -7,3 +7,6 @@ readme      = "README.md"
 
 [dependencies]
 aoc_shared.workspace = true
+
+[lints]
+workspace = true

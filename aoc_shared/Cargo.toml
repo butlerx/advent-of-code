@@ -9,3 +9,6 @@ repository.workspace = true
 
 [dependencies]
 chrono = "0.4"
+
+[lints]
+workspace = true
