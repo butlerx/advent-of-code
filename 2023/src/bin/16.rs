@@ -14,18 +14,18 @@ fn parse_input(input: &str) -> Vec<Vec<char>> {
         .collect::<Vec<_>>()
 }
 
-fn step(row: usize, col: usize, dir: usize) -> (usize, usize, usize) {
+fn step(row: usize, col: usize, dir: usize) -> Option<(usize, usize, usize)> {
     let (dr, dc) = match dir {
         0 => (-1, 0),
         1 => (0, 1),
         2 => (1, 0),
         _ => (0, -1),
     };
-    (
-        (isize::try_from(row).unwrap() + dr).unsigned_abs() as _,
-        (isize::try_from(col).unwrap() + dc).unsigned_abs() as _,
+    Some((
+        row.checked_add_signed(dr)?,
+        col.checked_add_signed(dc)?,
         dir,
-    )
+    ))
 }
 
 fn energized_tiles(grid: &[Vec<char>], start: (usize, usize, usize)) -> usize {
@@ -42,13 +42,19 @@ fn energized_tiles(grid: &[Vec<char>], start: (usize, usize, usize)) -> usize {
                     false
                 }
             })
-            .flat_map(|(row, col, dir)| match (grid[row][col], dir) {
-                ('.', _) | ('|', 0 | 2) | ('-', 1 | 3) => vec![step(row, col, dir)],
-                ('\\', _) => vec![step(row, col, [3, 2, 1, 0][dir])],
-                ('/', _) => vec![step(row, col, [1, 0, 3, 2][dir])],
-                ('|', _) => vec![step(row, col, 0), step(row, col, 2)],
-                ('-', _) => vec![step(row, col, 1), step(row, col, 3)],
-                _ => unreachable!(),
+            .flat_map(|(row, col, dir)| {
+                let next_dirs: [Option<usize>; 2] = match (grid[row][col], dir) {
+                    ('.', _) | ('|', 0 | 2) | ('-', 1 | 3) => [Some(dir), None],
+                    ('\\', _) => [Some([3, 2, 1, 0][dir]), None],
+                    ('/', _) => [Some([1, 0, 3, 2][dir]), None],
+                    ('|', _) => [Some(0), Some(2)],
+                    ('-', _) => [Some(1), Some(3)],
+                    _ => unreachable!(),
+                };
+                next_dirs
+                    .into_iter()
+                    .flatten()
+                    .filter_map(move |next| step(row, col, next))
             })
             .collect();
     }
