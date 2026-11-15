@@ -41,10 +41,16 @@ fn dijkstra(grid: &[Vec<i32>], min_step: isize, max_step: isize) -> i32 {
             }
             let mut next_cost = -cost;
             for steps in 1..=max_step {
-                let next_row = (isize::try_from(row).unwrap() + delta_row * steps).unsigned_abs();
-                let next_col = (isize::try_from(col).unwrap() + delta_col * steps).unsigned_abs();
+                let next_row = isize::try_from(row).unwrap() + delta_row * steps;
+                let next_col = isize::try_from(col).unwrap() + delta_col * steps;
+                // Signed coordinates: a negative value must leave the grid, not wrap back into it.
+                let (Ok(next_row), Ok(next_col)) =
+                    (usize::try_from(next_row), usize::try_from(next_col))
+                else {
+                    break;
+                };
                 if next_row >= grid.len() || next_col >= grid[0].len() {
-                    continue;
+                    break;
                 }
                 next_cost += grid[next_row][next_col];
                 let key = (next_row, next_col, (delta_row, delta_col));
