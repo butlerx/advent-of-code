@@ -1,0 +1,86 @@
+[tools]
+rust                   = { version = "stable", profile = "default", components = "rust-analyzer" }
+prek                   = "latest"
+tombi                  = "1.2.5"
+zizmor                 = "latest"
+"cargo:cargo-binstall" = "latest"
+"cargo:cargo-audit"    = "latest"
+"cargo:cargo-nextest"  = "latest"
+
+[settings]
+experimental   = true
+lockfile       = true
+cargo.binstall = true
+
+[tasks.build]
+description = "Build all years"
+usage       = 'arg "[args]" var=#true help="Additional arguments passed to cargo build"'
+run         = "cargo build --workspace ${usage_args:-}"
+alias       = "b"
+sources     = [
+  "Cargo.lock",
+  "Cargo.toml",
+  "*/Cargo.toml",
+  "*/src/**/*.rs",
+  "aoc_shared/src/**/*.rs"
+]
+
+[tasks.test]
+description = "Run tests"
+usage       = 'arg "[args]" var=#true help="Additional arguments passed to cargo nextest"'
+run         = "cargo nextest run --workspace --all-features ${usage_args:-}"
+alias       = "t"
+sources     = [
+  "Cargo.lock",
+  "Cargo.toml",
+  "*/Cargo.toml",
+  "*/src/**/*.rs",
+  "aoc_shared/src/**/*.rs"
+]
+
+[tasks.lint]
+description = "Lint code with clippy"
+usage       = 'arg "[args]" var=#true help="Additional arguments passed to cargo clippy"'
+run         = "cargo clippy --workspace --all-targets --all-features ${usage_args:-} -- -D warnings"
+
+[tasks."lint:fix"]
+description = "Fix lint issues"
+usage       = 'arg "[args]" var=#true help="Additional arguments passed to cargo clippy"'
+run         = "cargo clippy --fix --workspace --all-targets --all-features --allow-staged ${usage_args:-} -- -D warnings"
+
+[tasks.format]
+description = "Format Rust and TOML"
+run         = ["cargo fmt --all", "tombi format"]
+alias       = "f"
+sources     = [
+  "*/src/**/*.rs",
+  "aoc_shared/src/**/*.rs",
+  "Cargo.toml",
+  "*/Cargo.toml"
+]
+
+[tasks."format:check"]
+description = "Check Rust and TOML formatting"
+run         = ["cargo fmt --all --check", "tombi format --check"]
+sources     = [
+  "*/src/**/*.rs",
+  "aoc_shared/src/**/*.rs",
+  "Cargo.toml",
+  "*/Cargo.toml"
+]
+
+[tasks.audit]
+description = "Audit dependencies for known vulnerabilities"
+run         = "cargo audit"
+
+[tasks.check]
+description = "Run all checks (format, lint, test, audit)"
+depends     = ["format:check", "lint", "test", "audit"]
+
+[tasks."check:actions"]
+description = "Lint GitHub Actions workflows"
+run         = "zizmor --no-progress .github"
+
+[tasks.hooks]
+description = "Install the prek git hooks"
+run         = "prek install --install-hooks --hook-type pre-commit --hook-type commit-msg"
