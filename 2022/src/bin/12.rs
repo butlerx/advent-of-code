@@ -18,8 +18,9 @@ fn find_path(grid: &[Vec<u8>], start: Point, goal: Point) -> Option<usize> {
             return Some(len);
         }
         for (dx, dy) in [(0, -1), (-1, 0), (0, 1), (1, 0)] {
-            let nx = (x as isize + dx) as usize;
-            let ny = (y as isize + dy) as usize;
+            let (Some(nx), Some(ny)) = (x.checked_add_signed(dx), y.checked_add_signed(dy)) else {
+                continue;
+            };
             let Some(&next_square) = grid.get(nx).and_then(|row| row.get(ny)) else {
                 continue;
             };

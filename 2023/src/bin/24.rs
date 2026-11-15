@@ -88,13 +88,22 @@ fn part_1(input: &str) -> usize {
     intersections_between(&stones, 200_000_000_000_000.0, 400_000_000_000_000.0)
 }
 
+/// Equality for values that are whole numbers stored as floats. Their difference is
+/// exact, so it is zero only when the values are equal, and at least one otherwise.
+fn approx_eq(a: f64, b: f64) -> bool {
+    (a - b).abs() < f64::EPSILON
+}
+
 fn find_possible_speeds(
-    possible_speeds: &HashSet<i128>,
-    differential: i128,
-    velocity: i128,
-) -> HashSet<i128> {
-    let current_possible_speeds = (-300..300)
-        .filter(|speed| *speed != velocity && differential % (speed - velocity) == 0)
+    possible_speeds: &HashSet<i32>,
+    differential: f64,
+    velocity: f64,
+) -> HashSet<i32> {
+    let current_possible_speeds = (-300_i32..300)
+        .filter(|&speed| {
+            let relative = f64::from(speed) - velocity;
+            !approx_eq(relative, 0.0) && approx_eq(differential % relative, 0.0)
+        })
         .collect::<HashSet<_>>();
 
     if possible_speeds.is_empty() {
@@ -133,38 +142,38 @@ fn part_2(input: &str) -> f64 {
         .map(Hailstone::from)
         .collect::<Vec<_>>();
     stones.sort_by(|a, b| {
-        let x = a.x.partial_cmp(&b.x).unwrap();
-        let y = a.y.partial_cmp(&b.y).unwrap();
-        let z = a.z.partial_cmp(&b.z).unwrap();
-        x.then(y).then(z)
+        a.x.partial_cmp(&b.x)
+            .unwrap()
+            .then_with(|| a.y.partial_cmp(&b.y).unwrap())
+            .then_with(|| a.z.partial_cmp(&b.z).unwrap())
     });
 
-    let mut possible_x_speeds: HashSet<i128> = HashSet::new();
-    let mut possible_y_speeds: HashSet<i128> = HashSet::new();
-    let mut possible_z_speeds: HashSet<i128> = HashSet::new();
+    let mut speeds_x: HashSet<i32> = HashSet::new();
+    let mut speeds_y: HashSet<i32> = HashSet::new();
+    let mut speeds_z: HashSet<i32> = HashSet::new();
 
     for (i, h1) in stones.iter().enumerate() {
         for h2 in stones.iter().skip(i + 1) {
-            if h1.vel_x == h2.vel_x {
-                let dx = (h2.x - h1.x) as i128;
-                possible_x_speeds = find_possible_speeds(&possible_x_speeds, dx, h1.vel_x as i128);
+            if approx_eq(h1.vel_x, h2.vel_x) {
+                let dx = h2.x - h1.x;
+                speeds_x = find_possible_speeds(&speeds_x, dx, h1.vel_x);
             }
 
-            if h1.vel_y == h2.vel_y {
-                let dy = (h2.y - h1.y) as i128;
-                possible_y_speeds = find_possible_speeds(&possible_y_speeds, dy, h1.vel_y as i128);
+            if approx_eq(h1.vel_y, h2.vel_y) {
+                let dy = h2.y - h1.y;
+                speeds_y = find_possible_speeds(&speeds_y, dy, h1.vel_y);
             }
 
-            if h1.vel_z == h2.vel_z {
-                let dz = (h2.z - h1.z) as i128;
-                possible_z_speeds = find_possible_speeds(&possible_z_speeds, dz, h1.vel_z as i128);
+            if approx_eq(h1.vel_z, h2.vel_z) {
+                let dz = h2.z - h1.z;
+                speeds_z = find_possible_speeds(&speeds_z, dz, h1.vel_z);
             }
         }
     }
 
-    let vel_x = *possible_x_speeds.iter().next().unwrap() as f64;
-    let vel_y = *possible_y_speeds.iter().next().unwrap() as f64;
-    let vel_z = *possible_z_speeds.iter().next().unwrap() as f64;
+    let vel_x = f64::from(*speeds_x.iter().next().unwrap());
+    let vel_y = f64::from(*speeds_y.iter().next().unwrap());
+    let vel_z = f64::from(*speeds_z.iter().next().unwrap());
 
     calculate_position(&stones, vel_x, vel_y, vel_z)
 }

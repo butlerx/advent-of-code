@@ -26,7 +26,7 @@ struct Chamber {
 }
 
 fn to_index((x, y): Point) -> usize {
-    (y * 7 + x) as usize
+    usize::try_from(y * 7 + x).expect("cast within range")
 }
 
 impl Chamber {
@@ -100,7 +100,11 @@ impl Chamber {
                     self.height = y + 1;
                     self.grid.extend(vec![
                         false;
-                        (self.height as usize + 1 - self.grid.len() / 7) * 7
+                        (usize::try_from(self.height)
+                            .expect("cast within range")
+                            + 1
+                            - self.grid.len() / 7)
+                            * 7
                     ]);
                 }
                 self.grid[to_index((x, y))] = true;
@@ -140,7 +144,7 @@ fn part_2(input: &str) -> i64 {
     let mut ops = input.trim().chars().cycle();
     let mut chamber = Chamber::new();
     let deltas = {
-        let mut deltas = [0; 5000];
+        let mut deltas = vec![0; 5000];
         let mut previous = 0;
         let mut count = 0;
         loop {
@@ -170,7 +174,7 @@ fn part_2(input: &str) -> i64 {
     count -= offset;
     let cycle_deltas: Vec<_> = delta_iter.take(size).copied().collect();
     let cycle_delta = cycle_deltas.iter().sum::<i64>();
-    let cycle_count = (count / size) as i64;
+    let cycle_count = i64::try_from(count / size).expect("cast within range");
     count %= size;
     offset_delta + cycle_count * cycle_delta + cycle_deltas.into_iter().take(count).sum::<i64>()
 }

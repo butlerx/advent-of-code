@@ -92,16 +92,16 @@ enum Divisor {
     Custom(i64),
 }
 
-fn calculate(mut monkeys: Vec<Monkey>, num_rounds: usize, inspect: Divisor) -> i64 {
+fn calculate(mut monkeys: Vec<Monkey>, num_rounds: usize, inspect: &Divisor) -> i64 {
     for _ in 0..num_rounds {
         for monkey in 0..monkeys.len() {
             let items = monkeys[monkey].items.clone();
-            monkeys[monkey].throws += items.len() as i64;
+            monkeys[monkey].throws += i64::try_from(items.len()).expect("cast within range");
             monkeys[monkey].items.clear();
             for i in items {
                 let item = match inspect {
                     Divisor::Three => monkeys[monkey].operation.execute(i) / 3,
-                    Divisor::Custom(d) => monkeys[monkey].operation.execute(i) % d,
+                    Divisor::Custom(d) => monkeys[monkey].operation.execute(i) % *d,
                 };
                 let next_monkey = if item % monkeys[monkey].test == 0 {
                     monkeys[monkey].on_true
@@ -113,7 +113,7 @@ fn calculate(mut monkeys: Vec<Monkey>, num_rounds: usize, inspect: Divisor) -> i
         }
     }
 
-    monkeys.sort_by(|a, b| b.throws.cmp(&a.throws));
+    monkeys.sort_by_key(|monkey| std::cmp::Reverse(monkey.throws));
     monkeys[0].throws * monkeys[1].throws
 }
 
@@ -123,7 +123,7 @@ fn part_1(input: &str) -> i64 {
         .split("\n\n")
         .map(|monkey| monkey.parse().unwrap())
         .collect();
-    calculate(monkeys, 20, Divisor::Three)
+    calculate(monkeys, 20, &Divisor::Three)
 }
 
 fn part_2(input: &str) -> i64 {
@@ -133,7 +133,7 @@ fn part_2(input: &str) -> i64 {
         .map(|monkey| monkey.parse().unwrap())
         .collect();
     let mod_product = monkeys.iter().map(|x| x.test).product::<i64>();
-    calculate(monkeys, 10_000, Divisor::Custom(mod_product))
+    calculate(monkeys, 10_000, &Divisor::Custom(mod_product))
 }
 
 #[cfg(test)]

@@ -1,11 +1,12 @@
-use std::collections::{hash_map::Entry, HashMap, HashSet};
+use std::collections::{HashMap, HashSet, hash_map::Entry};
+use std::convert::TryFrom;
 
 type Allergens = HashMap<String, HashSet<String>>;
 type Ingredients = (Allergens, HashMap<String, usize>);
 
 fn main() {
     let (allergens, occurrences) = parse_input(include_str!("../../input/21.txt"));
-    println!("Part 1: {}", part_1(occurrences));
+    println!("Part 1: {}", part_1(&occurrences));
     println!(
         "Part 2: {}",
         find_danderous_ingrediants(allergens).join(",")
@@ -78,10 +79,10 @@ fn find_danderous_ingrediants(mut allergens: Allergens) -> Vec<String> {
     }
 }
 
-fn part_1(occurrences: HashMap<String, usize>) -> i64 {
-    occurrences
-        .values()
-        .fold(0, |sum, occurrence| sum + *occurrence as i64)
+fn part_1(occurrences: &HashMap<String, usize>) -> i64 {
+    occurrences.values().fold(0, |sum, occurrence| {
+        sum + i64::try_from(*occurrence).expect("cast within range")
+    })
 }
 
 #[cfg(test)]
@@ -95,9 +96,9 @@ sqjhc mxmxvkd sbzzf (contains fish)";
     #[test]
     fn test_part_1() {
         let (_, o) = parse_input(INPUT);
-        assert_eq!(part_1(o), 5);
+        assert_eq!(part_1(&o), 5);
         let (_, occurrences) = parse_input(include_str!("../../input/21.txt"));
-        assert_eq!(part_1(occurrences), 2779);
+        assert_eq!(part_1(&occurrences), 2779);
     }
 
     #[test]

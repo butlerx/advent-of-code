@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use std::convert::TryFrom;
 use std::{collections::HashMap, iter::successors};
 
 fn main() {
@@ -15,7 +16,7 @@ fn calculate(orbits: &HashMap<&str, Vec<&str>>, object: &str, distance: i64) -> 
     }) + distance
 }
 
-fn calc_distance(orbits: HashMap<&str, &str>, source: &str, dest: &str) -> i64 {
+fn calc_distance(orbits: &HashMap<&str, &str>, source: &str, dest: &str) -> i64 {
     let mut you: Vec<_> = successors(orbits.get(source), |&o| orbits.get(o))
         .copied()
         .collect();
@@ -25,13 +26,13 @@ fn calc_distance(orbits: HashMap<&str, &str>, source: &str, dest: &str) -> i64 {
         .collect();
     san.reverse();
     let shared = you.iter().zip(&san).take_while(|(a, b)| a == b).count() * 2;
-    (you.len() + san.len() - shared) as i64
+    i64::try_from(you.len() + san.len() - shared).expect("cast within range")
 }
 
 fn run(input: &str, part_two: bool) -> i64 {
     if part_two {
         calc_distance(
-            input
+            &input
                 .lines()
                 .map(|line| {
                     let l: (&str, &str) = line.split(')').collect_tuple().unwrap();

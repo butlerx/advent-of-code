@@ -1,5 +1,6 @@
 use itertools::Itertools;
 use std::collections::{HashSet, VecDeque};
+use std::convert::TryFrom;
 
 fn main() {
     let input = include_str!("../../input/22.txt");
@@ -7,9 +8,9 @@ fn main() {
     println!("Part 2: {}", run(input, true));
 }
 
-fn find_score(deck: VecDeque<i64>) -> i64 {
+fn find_score(deck: &VecDeque<i64>) -> i64 {
     deck.iter().enumerate().fold(0, |total, (pos, card)| {
-        total + (*card * (deck.len() - pos) as i64)
+        total + (*card * i64::try_from(deck.len() - pos).expect("cast within range"))
     })
 }
 
@@ -21,16 +22,26 @@ fn recursive_combat(
     let mut previous_round = HashSet::new();
     loop {
         if !previous_round.insert((player_1.clone(), player_2.clone())) || player_2.is_empty() {
-            break (1, if score { find_score(player_1) } else { 0 });
+            break (1, if score { find_score(&player_1) } else { 0 });
         } else if player_1.is_empty() {
-            break (2, find_score(player_2));
+            break (2, find_score(&player_2));
         }
 
         let (c_1, c_2) = (player_1.pop_front().unwrap(), player_2.pop_front().unwrap());
-        if c_1 <= player_1.len() as i64 && c_2 <= player_2.len() as i64 {
+        if c_1 <= i64::try_from(player_1.len()).expect("cast within range")
+            && c_2 <= i64::try_from(player_2.len()).expect("cast within range")
+        {
             match recursive_combat(
-                player_1.iter().take(c_1 as usize).copied().collect(),
-                player_2.iter().take(c_2 as usize).copied().collect(),
+                player_1
+                    .iter()
+                    .take(usize::try_from(c_1).expect("cast within range"))
+                    .copied()
+                    .collect(),
+                player_2
+                    .iter()
+                    .take(usize::try_from(c_2).expect("cast within range"))
+                    .copied()
+                    .collect(),
                 false,
             ) {
                 (1, _) => player_1.extend([c_1, c_2].iter()),
@@ -48,9 +59,9 @@ fn recursive_combat(
 fn find_winner(mut player_1: VecDeque<i64>, mut player_2: VecDeque<i64>) -> i64 {
     loop {
         if player_1.is_empty() {
-            break find_score(player_2);
+            break find_score(&player_2);
         } else if player_2.is_empty() {
-            break find_score(player_1);
+            break find_score(&player_1);
         }
         let (c_1, c_2) = (player_1.pop_front().unwrap(), player_2.pop_front().unwrap());
         if c_1 > c_2 {

@@ -1,4 +1,5 @@
 use std::collections::{HashMap, HashSet};
+use std::convert::TryFrom;
 use std::hash::Hash;
 
 type Row3d = (i8, i8, i8);
@@ -137,10 +138,17 @@ fn run(input: &str, part_two: bool) -> i64 {
                 row.chars()
                     .enumerate()
                     .filter(|&(_, b)| b == '#')
-                    .map(move |(x, _)| (x as i8, y as i8, 0, 0))
+                    .map(move |(x, _)| {
+                        (
+                            i8::try_from(x).expect("cast within range"),
+                            i8::try_from(y).expect("cast within range"),
+                            0,
+                            0,
+                        )
+                    })
             })
             .collect();
-        simulate(active, count_neighbours_4d) as i64
+        i64::try_from(simulate(active, count_neighbours_4d)).expect("cast within range")
     } else {
         let active = input
             .lines()
@@ -149,10 +157,16 @@ fn run(input: &str, part_two: bool) -> i64 {
                 row.chars()
                     .enumerate()
                     .filter(|&(_, b)| b == '#')
-                    .map(move |(x, _)| (x as i8, y as i8, 0))
+                    .map(move |(x, _)| {
+                        (
+                            i8::try_from(x).expect("cast within range"),
+                            i8::try_from(y).expect("cast within range"),
+                            0,
+                        )
+                    })
             })
             .collect();
-        simulate(active, count_neighbours_3d) as i64
+        i64::try_from(simulate(active, count_neighbours_3d)).expect("cast within range")
     }
 }
 
@@ -165,17 +179,17 @@ mod dat_17_tests {
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 112);
+        assert_eq!(run(INPUT, false), 112);
         let results = run(include_str!("../../input/17.txt"), false);
         println!("{results}");
-        assert!(results == 310);
+        assert_eq!(results, 310);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT, true) == 848);
+        assert_eq!(run(INPUT, true), 848);
         let results = run(include_str!("../../input/17.txt"), true);
         println!("{results}");
-        assert!(results == 2056);
+        assert_eq!(results, 2056);
     }
 }

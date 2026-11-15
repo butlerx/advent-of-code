@@ -43,7 +43,9 @@ fn parse_input(input: &str) -> (Targets, Targets) {
 
 fn heights(input: &str) -> impl Iterator<Item = i64> {
     let (x, y) = parse_input(input);
-    let min_x = ((8.0 * x.0 as f64 + 1.0).sqrt() / 2.0 - 0.5).ceil() as i64;
+    let min_x = (0..=x.0.max(0))
+        .find(|&vx| vx * (vx + 1) / 2 >= x.0)
+        .unwrap();
     (min_x..=x.1)
         .flat_map(move |vx| (y.0..=-y.0).filter_map(move |vy| find_max_height(x, y, (vx, vy))))
 }

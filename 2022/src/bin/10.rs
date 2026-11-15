@@ -6,25 +6,21 @@ fn main() {
 }
 
 fn part_1(input: &str) -> i64 {
-    let cycles = input
-        .trim()
-        .lines()
-        .fold(vec![1], |mut cycles, line| match line {
-            "noop" => {
-                cycles.push(cycles[cycles.len() - 1]);
-                cycles
-            }
-            _ => {
-                cycles.push(cycles[cycles.len() - 1]);
-                let num = line.split(' ').nth(1).unwrap().parse::<i64>().unwrap();
-                cycles.push(cycles[cycles.len() - 1] + num);
-                cycles
-            }
-        });
+    let cycles = input.trim().lines().fold(vec![1], |mut cycles, line| {
+        if line == "noop" {
+            cycles.push(cycles[cycles.len() - 1]);
+            cycles
+        } else {
+            cycles.push(cycles[cycles.len() - 1]);
+            let num = line.split(' ').nth(1).unwrap().parse::<i64>().unwrap();
+            cycles.push(cycles[cycles.len() - 1] + num);
+            cycles
+        }
+    });
 
     vec![20, 60, 100, 140, 180, 220]
         .into_iter()
-        .map(|cycle| cycle * cycles[(cycle as usize) - 1])
+        .map(|cycle| cycle * cycles[usize::try_from(cycle).expect("cast within range") - 1])
         .sum()
 }
 
@@ -34,12 +30,11 @@ fn part_2(input: &str) -> String {
         .lines()
         .fold(
             (1, 1, String::new()),
-            |(cycle, register, mut display), line| match line {
-                "noop" => {
+            |(cycle, register, mut display), line| {
+                if line == "noop" {
                     output_to_display(&mut display, register, cycle);
                     (cycle + 1, register, display)
-                }
-                _ => {
+                } else {
                     output_to_display(&mut display, register, cycle);
                     output_to_display(&mut display, register, cycle + 1);
                     let num = line.split(' ').nth(1).unwrap().parse::<i64>().unwrap();
@@ -224,22 +219,22 @@ noop";
     fn test_part_2() {
         assert_eq!(
             part_2(INPUT),
-            "##  ##  ##  ##  ##  ##  ##  ##  ##  ##  
-###   ###   ###   ###   ###   ###   ### 
-####    ####    ####    ####    ####    
-#####     #####     #####     #####     
+            "##  ##  ##  ##  ##  ##  ##  ##  ##  ##
+###   ###   ###   ###   ###   ###   ###
+####    ####    ####    ####    ####
+#####     #####     #####     #####
 ######      ######      ######      ####
-#######       #######       #######     
+#######       #######       #######
 "
         );
         assert_eq!(
             part_2(INPUT_TXT),
-            "###   ##   ##  #### #  # #    #  # #### 
-#  # #  # #  # #    # #  #    #  # #    
-###  #  # #    ###  ##   #    #### ###  
-#  # #### #    #    # #  #    #  # #    
-#  # #  # #  # #    # #  #    #  # #    
-###  #  #  ##  #### #  # #### #  # #    
+            "###   ##   ##  #### #  # #    #  # ####
+#  # #  # #  # #    # #  #    #  # #
+###  #  # #    ###  ##   #    #### ###
+#  # #### #    #    # #  #    #  # #
+#  # #  # #  # #    # #  #    #  # #
+###  #  #  ##  #### #  # #### #  # #
 "
         );
     }

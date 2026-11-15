@@ -10,15 +10,22 @@ fn mix(nums: &[i64], iterations: usize) -> Vec<usize> {
         nums.iter().enumerate().fold(res, |mut res, (i, &x)| {
             let pos = res.iter().position(|&y| y == i).unwrap();
             res.remove(pos);
-            res.insert((pos as i64 + x).rem_euclid(res.len() as i64) as usize, i);
+            res.insert(
+                usize::try_from(
+                    (i64::try_from(pos).expect("cast within range") + x)
+                        .rem_euclid(i64::try_from(res.len()).expect("cast within range")),
+                )
+                .expect("cast within range"),
+                i,
+            );
             res
         })
     })
 }
 
-fn decrypt(nums: Vec<i64>, iterations: usize) -> i64 {
+fn decrypt(nums: &[i64], iterations: usize) -> i64 {
     let orig_zero_pos = nums.iter().position(|&i| i == 0).unwrap();
-    let ans = mix(&nums, iterations);
+    let ans = mix(nums, iterations);
     let zero_pos = ans.iter().position(|&i| i == orig_zero_pos).unwrap();
     [1000, 2000, 3000]
         .iter()
@@ -32,7 +39,7 @@ fn part_1(input: &str) -> i64 {
         .lines()
         .map(|l| l.parse().unwrap())
         .collect::<Vec<_>>();
-    decrypt(nums, 1)
+    decrypt(&nums, 1)
 }
 
 fn part_2(input: &str) -> i64 {
@@ -41,7 +48,7 @@ fn part_2(input: &str) -> i64 {
         .lines()
         .map(|l| l.parse::<i64>().unwrap() * 811_589_153)
         .collect::<Vec<_>>();
-    decrypt(nums, 10)
+    decrypt(&nums, 10)
 }
 
 #[cfg(test)]

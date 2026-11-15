@@ -1,3 +1,4 @@
+use std::convert::TryFrom;
 fn main() {
     let input = include_str!("../../input/02.txt");
     println!("Part 1: {}", run(input, false));
@@ -19,7 +20,7 @@ fn execute(memory: Vec<usize>, noun: usize, verb: usize) -> i64 {
                 let (arg_1, arg_2, pos) = (nums[pointer + 1], nums[pointer + 2], nums[pointer + 3]);
                 nums[pos] = nums[arg_1] * nums[arg_2];
             }
-            99 => return nums[0] as i64,
+            99 => return i64::try_from(nums[0]).expect("cast within range"),
             _ => unreachable!(),
         }
         pointer += 4;
@@ -44,7 +45,7 @@ fn run(input: &str, part_two: bool) -> i64 {
                 }
             }
         }
-        (100 * noun + verb) as i64
+        i64::try_from(100 * noun + verb).expect("cast within range")
     } else {
         execute(
             input

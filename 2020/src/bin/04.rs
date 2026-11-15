@@ -1,4 +1,5 @@
 use regex::Regex;
+use std::convert::TryFrom;
 
 fn main() {
     let input = include_str!("../../input/04.txt");
@@ -33,19 +34,18 @@ fn validate_key_value(kv: &str) -> bool {
             .is_match(key_value[1]),
         "ecl" => ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"].contains(&key_value[1]),
         "pid" => Regex::new(r"^\d{9}$").unwrap().is_match(key_value[1]),
-        "cid" => true,
         _ => true,
     }
 }
 
 fn valid_passport(passport: &str) -> bool {
-    if !check_required_fields(passport) {
-        false
-    } else {
+    if check_required_fields(passport) {
         passport
             .replace('\n', " ")
             .split(' ')
             .all(validate_key_value)
+    } else {
+        false
     }
 }
 
@@ -59,16 +59,19 @@ fn check_required_fields(passport: &str) -> bool {
 }
 
 fn run(input: &str, part_2: bool) -> i64 {
-    input
-        .split("\n\n")
-        .filter(|line| {
-            if !part_2 {
-                check_required_fields(line.trim())
-            } else {
-                valid_passport(line.trim())
-            }
-        })
-        .count() as i64
+    i64::try_from(
+        input
+            .split("\n\n")
+            .filter(|line| {
+                if part_2 {
+                    valid_passport(line.trim())
+                } else {
+                    check_required_fields(line.trim())
+                }
+            })
+            .count(),
+    )
+    .expect("cast within range")
 }
 
 #[cfg(test)]
@@ -116,15 +119,15 @@ pid:3556412378 byr:2007";
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 2);
-        assert!(run(include_str!("../../input/04.txt"), false) == 230);
+        assert_eq!(run(INPUT, false), 2);
+        assert_eq!(run(include_str!("../../input/04.txt"), false), 230);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT, true) == 2);
-        assert!(run(VALID, true) == 4);
-        assert!(run(INVALID, true) == 0);
-        assert!(run(include_str!("../../input/04.txt"), true) == 156);
+        assert_eq!(run(INPUT, true), 2);
+        assert_eq!(run(VALID, true), 4);
+        assert_eq!(run(INVALID, true), 0);
+        assert_eq!(run(include_str!("../../input/04.txt"), true), 156);
     }
 }

@@ -13,13 +13,17 @@ fn rotate_heading(heading: (f32, f32), angle_change: f32) -> (f32, f32) {
     )
 }
 
+#[allow(
+    clippy::cast_possible_truncation,
+    reason = "positions are whole-valued f32 from rounded trig; converting to i64 is exact here"
+)]
 fn follow_directions(
-    directions: Vec<(char, f32)>,
+    directions: &[(char, f32)],
     mut heading: (f32, f32),
     part_two: bool,
 ) -> (i64, i64) {
     let mut pos = (0.0, 0.0);
-    for (d, num) in &directions {
+    for (d, num) in directions {
         match d {
             'N' => {
                 if part_two {
@@ -56,7 +60,7 @@ fn follow_directions(
                 pos.0 += num * heading.1;
             }
             _ => unreachable!(),
-        };
+        }
     }
     (pos.0.abs() as i64, pos.1.abs() as i64)
 }
@@ -67,7 +71,7 @@ fn run(input: &str, part_two: bool) -> i64 {
         .map(|line| (line.chars().next().unwrap(), line[1..].parse().unwrap()))
         .collect();
     let (north, east) = follow_directions(
-        directions,
+        &directions,
         if part_two { (10.0, 1.0) } else { (1.0, 0.0) },
         part_two,
     );
@@ -85,17 +89,17 @@ F11";
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 25);
+        assert_eq!(run(INPUT, false), 25);
         let results = run(include_str!("../../input/12.txt"), false);
         println!("{results}");
-        assert!(results == 1007);
+        assert_eq!(results, 1007);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT, true) == 286);
+        assert_eq!(run(INPUT, true), 286);
         let results = run(include_str!("../../input/12.txt"), true);
         println!("{results}");
-        assert!(results == 41212);
+        assert_eq!(results, 41212);
     }
 }

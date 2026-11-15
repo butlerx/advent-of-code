@@ -32,11 +32,7 @@ fn dijkstra(grid: &[Vec<i32>], min_step: isize, max_step: isize) -> i32 {
         if (row, col) == (grid.len() - 1, grid[0].len() - 1) {
             return -cost;
         }
-        if dists
-            .get(&(row, col, dist))
-            .filter(|&&c| -cost > c)
-            .is_some()
-        {
+        if dists.get(&(row, col, dist)).is_some_and(|&c| -cost > c) {
             continue;
         }
         for (delta_row, delta_col) in [(-1, 0), (1, 0), (0, -1), (0, 1)] {

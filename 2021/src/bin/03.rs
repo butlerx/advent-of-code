@@ -32,7 +32,7 @@ fn parse_input(input: &str) -> (Vec<i64>, usize) {
 fn most_common_bit(nums: &[i64], bit: usize) -> i64 {
     let mut c = [0, 0];
     for &x in nums {
-        c[(x as usize >> bit) & 1] += 1;
+        c[(usize::try_from(x).expect("cast within range") >> bit) & 1] += 1;
     }
     i64::from(c[1] >= c[0])
 }

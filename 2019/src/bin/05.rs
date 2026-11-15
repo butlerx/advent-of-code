@@ -1,3 +1,4 @@
+use std::convert::TryFrom;
 fn main() {
     let input = include_str!("../../input/05.txt");
     println!("Part 1: {}", run(input, false));
@@ -7,14 +8,14 @@ fn main() {
 // parse opscode, returning the code and if the args are in position mode or imediate
 // if an arg is true its in  imediate mode
 fn parse_opcode(code: i64) -> usize {
-    code as usize % 100
+    usize::try_from(code).expect("cast within range") % 100
 }
 
 fn read_mem(memory: &[i64], pointer: usize, mem: usize) -> i64 {
-    if (memory[pointer] / 10i64.pow(mem as u32 + 1)) % 10 == 1 {
+    if (memory[pointer] / 10i64.pow(u32::try_from(mem).expect("cast within range") + 1)) % 10 == 1 {
         memory[pointer + mem]
     } else {
-        memory[memory[pointer + mem] as usize]
+        memory[usize::try_from(memory[pointer + mem]).expect("cast within range")]
     }
 }
 
@@ -25,17 +26,17 @@ fn execute(memory: Vec<i64>, input: i64) -> i64 {
     loop {
         pointer = match parse_opcode(mem[pointer]) {
             1 => {
-                let pos = mem[pointer + 3] as usize;
+                let pos = usize::try_from(mem[pointer + 3]).expect("cast within range");
                 mem[pos] = read_mem(&mem, pointer, 1) + read_mem(&mem, pointer, 2);
                 pointer + 4
             }
             2 => {
-                let pos = mem[pointer + 3] as usize;
+                let pos = usize::try_from(mem[pointer + 3]).expect("cast within range");
                 mem[pos] = read_mem(&mem, pointer, 1) * read_mem(&mem, pointer, 2);
                 pointer + 4
             }
             3 => {
-                let pos = mem[pointer + 1] as usize;
+                let pos = usize::try_from(mem[pointer + 1]).expect("cast within range");
                 mem[pos] = input;
                 pointer + 2
             }
@@ -46,25 +47,25 @@ fn execute(memory: Vec<i64>, input: i64) -> i64 {
             }
             5 => {
                 if read_mem(&mem, pointer, 1) != 0 {
-                    read_mem(&mem, pointer, 2) as usize
+                    usize::try_from(read_mem(&mem, pointer, 2)).expect("cast within range")
                 } else {
                     pointer + 3
                 }
             }
             6 => {
                 if read_mem(&mem, pointer, 1) == 0 {
-                    read_mem(&mem, pointer, 2) as usize
+                    usize::try_from(read_mem(&mem, pointer, 2)).expect("cast within range")
                 } else {
                     pointer + 3
                 }
             }
             7 => {
-                let pos = mem[pointer + 3] as usize;
+                let pos = usize::try_from(mem[pointer + 3]).expect("cast within range");
                 mem[pos] = i64::from(read_mem(&mem, pointer, 1) < read_mem(&mem, pointer, 2));
                 pointer + 4
             }
             8 => {
-                let pos = mem[pointer + 3] as usize;
+                let pos = usize::try_from(mem[pointer + 3]).expect("cast within range");
                 mem[pos] = i64::from(read_mem(&mem, pointer, 1) == read_mem(&mem, pointer, 2));
                 pointer + 4
             }

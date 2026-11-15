@@ -32,7 +32,7 @@ fn parse_input(input: &str) -> (Dots, Instructions) {
     )
 }
 
-fn fold(dots: Dots, folds: Instructions) -> Dots {
+fn fold(dots: Dots, folds: &[(char, usize)]) -> Dots {
     dots.into_iter()
         .map(|pos| {
             folds.iter().fold(pos, |(x, y), &(l, n)| match l {
@@ -48,12 +48,12 @@ fn fold(dots: Dots, folds: Instructions) -> Dots {
 fn part_1(input: &str) -> usize {
     let (dots, mut folds) = parse_input(input);
     folds.truncate(1);
-    fold(dots, folds).len()
+    fold(dots, &folds).len()
 }
 
 fn part_2(input: &str) -> String {
     let (dots, folds) = parse_input(input);
-    let folded_dots = fold(dots, folds);
+    let folded_dots = fold(dots, &folds);
     let (max_x, max_y) = folded_dots.iter().fold((0, 0), |(max_x, max_y), &(x, y)| {
         (max_x.max(x), max_y.max(y))
     });

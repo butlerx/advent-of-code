@@ -22,7 +22,11 @@ fn run(input: &str, exponential: bool) -> usize {
             counts
                 .iter()
                 .map(|(pos, count)| {
-                    cost((pos - candidate).unsigned_abs() as usize, exponential) * count
+                    cost(
+                        usize::try_from((pos - candidate).unsigned_abs())
+                            .expect("cast within range"),
+                        exponential,
+                    ) * count
                 })
                 .sum()
         })

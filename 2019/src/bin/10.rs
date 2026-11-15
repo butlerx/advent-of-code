@@ -1,4 +1,5 @@
 use std::collections::BTreeSet;
+use std::convert::TryFrom;
 
 static INPUT_TXT: &str = include_str!("../../input/10.txt");
 
@@ -7,6 +8,11 @@ fn main() {
     println!("Part 2: {}", part_2(INPUT_TXT));
 }
 
+/// Returns the most asteroids visible from any single asteroid.
+///
+/// # Panics
+///
+/// Panics if the input has no asteroids or a grid coordinate does not fit in an `i8`.
 #[must_use]
 pub fn part_1(input: &str) -> usize {
     let asteroids: Vec<_> = input
@@ -16,7 +22,10 @@ pub fn part_1(input: &str) -> usize {
         .flat_map(|(y, line)| {
             line.trim().chars().enumerate().filter_map(move |(x, ch)| {
                 if ch == '#' {
-                    Some((x as i8, y as i8))
+                    Some((
+                        i8::try_from(x).expect("cast within range"),
+                        i8::try_from(y).expect("cast within range"),
+                    ))
                 } else {
                     None
                 }
@@ -30,19 +39,25 @@ pub fn part_1(input: &str) -> usize {
             asteroids
                 .iter()
                 .filter_map(|&to| {
-                    if from != to {
+                    if from == to {
+                        None
+                    } else {
                         let relative = (from.0 - to.0, from.1 - to.1);
+                        // Truncate the angle to whole tenths of a degree and key the set
+                        // on its bit pattern, avoiding a lossy float-to-int cast. Adding
+                        // 0.0 folds -0.0 into 0.0 so equal angles share one key.
                         Some(
-                            (f64::from(relative.1)
+                            ((f64::from(relative.1)
                                 .atan2(f64::from(relative.0))
                                 .to_degrees()
-                                * 10.0) as i16,
+                                * 10.0)
+                                .trunc()
+                                + 0.0)
+                                .to_bits(),
                         )
-                    } else {
-                        None
                     }
                 })
-                .collect::<BTreeSet<i16>>()
+                .collect::<BTreeSet<u64>>()
                 .len()
         })
         .max()

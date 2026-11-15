@@ -8,13 +8,13 @@ fn main() {
     println!("Part 2: {}", part_2(INPUT_TXT));
 }
 
-fn priority(score: i64, v: &char) -> i64 {
+fn priority(score: i64, v: char) -> i64 {
     score
-        + (match v {
-            'a'..='z' => (*v as u8) - b'a' + 1,
-            'A'..='Z' => (*v as u8) - b'A' + 27,
+        + i64::from(match v {
+            'a'..='z' => (v as u8) - b'a' + 1,
+            'A'..='Z' => (v as u8) - b'A' + 27,
             _ => unreachable!(),
-        }) as i64
+        })
 }
 
 fn part_1(input: &str) -> i64 {
@@ -23,10 +23,10 @@ fn part_1(input: &str) -> i64 {
             .chars()
             .chunks(line.len() / 2)
             .into_iter()
-            .map(|part| part.collect::<HashSet<char>>())
+            .map(std::iter::Iterator::collect::<HashSet<char>>)
             .collect_tuple()
             .unwrap();
-        start.intersection(&end).fold(0, priority) + score
+        start.intersection(&end).copied().fold(0, priority) + score
     })
 }
 
@@ -42,7 +42,7 @@ fn part_2(input: &str) -> i64 {
             for line in set_lines {
                 s = s.intersection(&line).copied().collect();
             }
-            priority(score, s.iter().next().unwrap())
+            priority(score, *s.iter().next().unwrap())
         })
 }
 

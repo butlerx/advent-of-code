@@ -66,23 +66,27 @@ fn process_image(input: &str, iterations: usize) -> usize {
 }
 
 fn get_new_pixel(rc: (usize, usize), map: &[Vec<bool>], rules: &[bool], default: bool) -> bool {
-    let (r, c) = (rc.0 as isize, rc.1 as isize);
+    let (r, c) = (
+        isize::try_from(rc.0).expect("cast within range"),
+        isize::try_from(rc.1).expect("cast within range"),
+    );
     let pixel = |col: isize, row: isize| {
-        if col < 0 || row < 0 || col as usize >= map.len() || row as usize >= map.len() {
+        if col < 0
+            || row < 0
+            || usize::try_from(col).expect("cast within range") >= map.len()
+            || usize::try_from(row).expect("cast within range") >= map.len()
+        {
             default
         } else {
-            map[row as usize][col as usize]
+            map[usize::try_from(row).expect("cast within range")]
+                [usize::try_from(col).expect("cast within range")]
         }
     };
 
     rules[(r - 1..r + 2).fold(0, |n, row| {
         (c - 1..c + 2).fold(n, |num, col| {
             let number = num << 1;
-            if pixel(col, row) {
-                number + 1
-            } else {
-                number
-            }
+            if pixel(col, row) { number + 1 } else { number }
         })
     })]
 }

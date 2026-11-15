@@ -254,7 +254,7 @@ mod test {
 
         assert_eq!(grid.width, 0);
         assert_eq!(grid.height, 0);
-        assert!(grid.cells.is_empty());
+        assert_eq!(grid.cells, [] as [i32; 0]);
     }
 
     #[test]

@@ -17,11 +17,13 @@ impl Default for Map {
 }
 impl Map {
     fn is_occupied(&self, (x, y): (i64, i64)) -> bool {
-        self.0[y as usize * WIDTH + x as usize]
+        self.0[usize::try_from(y).expect("cast within range") * WIDTH
+            + usize::try_from(x).expect("cast within range")]
     }
 
     fn set(&mut self, (x, y): (i64, i64)) {
-        self.0[y as usize * WIDTH + x as usize] = true;
+        self.0[usize::try_from(y).expect("cast within range") * WIDTH
+            + usize::try_from(x).expect("cast within range")] = true;
     }
 
     fn is_overflowing(&self, y: i64) -> bool {

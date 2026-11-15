@@ -12,17 +12,23 @@ fn parse_input(input: &str) -> Vec<i64> {
 }
 
 fn part_1(input: &str) -> i64 {
-    parse_input(input)
-        .windows(2)
-        .filter(|w| w[0] < w[1])
-        .count() as i64
+    i64::try_from(
+        parse_input(input)
+            .windows(2)
+            .filter(|w| w[0] < w[1])
+            .count(),
+    )
+    .expect("cast within range")
 }
 
 fn part_2(input: &str) -> i64 {
-    parse_input(input)
-        .windows(4)
-        .filter(|w| w[0] < w[3])
-        .count() as i64
+    i64::try_from(
+        parse_input(input)
+            .windows(4)
+            .filter(|w| w[0] < w[3])
+            .count(),
+    )
+    .expect("cast within range")
 }
 
 #[cfg(test)]

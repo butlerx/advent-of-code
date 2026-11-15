@@ -73,14 +73,14 @@ impl Num {
         match self {
             Num::Nested(a, b) => {
                 let (a_split, a_was_split) = a.split();
-                if !a_was_split {
+                if a_was_split {
+                    (Self::Nested(Box::new(a_split), b), true)
+                } else {
                     let (b_split, b_was_split) = b.split();
                     (
                         Self::Nested(Box::new(a_split), Box::new(b_split)),
                         b_was_split,
                     )
-                } else {
-                    (Self::Nested(Box::new(a_split), b), true)
                 }
             }
             Num::Value(a) if a >= 10 => (

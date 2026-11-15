@@ -1,4 +1,5 @@
 use regex::Regex;
+use std::convert::TryFrom;
 
 fn main() {
     let input = include_str!("../../input/02.txt");
@@ -36,10 +37,13 @@ fn valid_policy(policy: &str, position: bool) -> bool {
 }
 
 fn run(input: &str, position: bool) -> i64 {
-    input
-        .split('\n')
-        .filter(|line| valid_policy(line.trim(), position))
-        .count() as i64
+    i64::try_from(
+        input
+            .split('\n')
+            .filter(|line| valid_policy(line.trim(), position))
+            .count(),
+    )
+    .expect("cast within range")
 }
 
 #[cfg(test)]

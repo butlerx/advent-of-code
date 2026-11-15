@@ -19,7 +19,12 @@ fn parse_input(input: &str) -> Elves {
             l.chars()
                 .enumerate()
                 .filter(|&(_, c)| c == '#')
-                .map(move |(x, _)| (x as i64, y as i64))
+                .map(move |(x, _)| {
+                    (
+                        i64::try_from(x).expect("cast within range"),
+                        i64::try_from(y).expect("cast within range"),
+                    )
+                })
         })
         .collect()
 }
@@ -44,7 +49,9 @@ fn move_elves(round: usize, elves: &Elves) -> Option<Elves> {
         }
         prop
     });
-    if !proposals.is_empty() {
+    if proposals.is_empty() {
+        None
+    } else {
         Some(
             elves
                 .iter()
@@ -54,8 +61,6 @@ fn move_elves(round: usize, elves: &Elves) -> Option<Elves> {
                 })
                 .collect(),
         )
-    } else {
-        None
     }
 }
 
@@ -88,7 +93,8 @@ fn part_1(input: &str) -> i64 {
         }
     }
     let ((x_min, x_max), (y_min, y_max)) = bounds(&elves);
-    (x_max - x_min + 1) * (y_max - y_min + 1) - elves.len() as i64
+    (x_max - x_min + 1) * (y_max - y_min + 1)
+        - i64::try_from(elves.len()).expect("cast within range")
 }
 
 fn part_2(input: &str) -> i64 {
@@ -98,7 +104,7 @@ fn part_2(input: &str) -> i64 {
         if let Some(nelves) = move_elves(r, &elves) {
             elves = nelves;
         } else {
-            break r as i64 + 1;
+            break i64::try_from(r).expect("cast within range") + 1;
         }
         r += 1;
     }

@@ -62,7 +62,9 @@ fn walk(blizzards: Vec<(Point, usize)>, width: i64, height: i64, trips: usize) -
         let dir_vec = DIRECTIONS[dir];
         let dir_period = dir_periods[dir];
         for i in 0.. {
-            bps[current_pos.y as usize][current_pos.x as usize].insert((i, dir_period));
+            bps[usize::try_from(current_pos.y).expect("cast within range")]
+                [usize::try_from(current_pos.x).expect("cast within range")]
+            .insert((i, dir_period));
             current_pos += dir_vec;
             if current_pos.x <= 0 {
                 current_pos.x = width - 1;
@@ -96,9 +98,10 @@ fn walk(blizzards: Vec<(Point, usize)>, width: i64, height: i64, trips: usize) -
                     || current_position.y <= 0
                     || current_position.y >= height)
                     && current_position != start)
-                    || bps[current_position.y as usize][current_position.x as usize]
-                        .iter()
-                        .any(|(offset, period)| (minimum_steps % period) == *offset)
+                    || bps[usize::try_from(current_position.y).expect("cast within range")]
+                        [usize::try_from(current_position.x).expect("cast within range")]
+                    .iter()
+                    .any(|(offset, period)| (minimum_steps % period) == *offset)
                 {
                     continue;
                 }
@@ -122,8 +125,8 @@ fn walk(blizzards: Vec<(Point, usize)>, width: i64, height: i64, trips: usize) -
 
 fn parse_input(input: &str) -> (Vec<(Point, usize)>, i64, i64) {
     let lines = input.trim().lines().collect::<Vec<_>>();
-    let width = (lines[0].len() - 1) as i64;
-    let height = (lines.len() - 1) as i64;
+    let width = i64::try_from(lines[0].len() - 1).expect("cast within range");
+    let height = i64::try_from(lines.len() - 1).expect("cast within range");
     let blizzards = lines
         .into_iter()
         .enumerate()
@@ -140,7 +143,13 @@ fn parse_input(input: &str) -> (Vec<(Point, usize)>, i64, i64) {
                         _ => unreachable!(),
                     };
 
-                    (Point::new(x as i64, y as i64), dir)
+                    (
+                        Point::new(
+                            i64::try_from(x).expect("cast within range"),
+                            i64::try_from(y).expect("cast within range"),
+                        ),
+                        dir,
+                    )
                 })
         })
         .collect::<Vec<_>>();

@@ -41,9 +41,9 @@ fn part_2(input: &str, search_space: i64) -> i64 {
         let mut px = 0;
         'inner: while px <= search_space {
             for &(x, y, d) in &beacons {
-                let p = (x.abs_diff(px) + y.abs_diff(py)) as i64;
+                let p = i64::try_from(x.abs_diff(px) + y.abs_diff(py)).expect("cast within range");
                 if d >= p {
-                    let ydiff = y.abs_diff(py) as i64;
+                    let ydiff = i64::try_from(y.abs_diff(py)).expect("cast within range");
                     let xdiff = d - ydiff;
                     px = x + xdiff + 1;
                     continue 'inner;

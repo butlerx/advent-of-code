@@ -7,21 +7,23 @@ fn main() {
     println!("Part 2: {}", part_2(INPUT_TXT));
 }
 
-fn compare(a: &Value, b: &Value) -> Ordering {
-    match (a, b) {
-        (Value::Number(x), Value::Number(y)) => x.as_i64().unwrap().cmp(&y.as_i64().unwrap()),
-        (Value::Array(a), Value::Array(b)) => (0..std::cmp::max(a.len(), b.len()))
-            .find_map(|i| match (a.get(i), b.get(i)) {
+fn compare(left: &Value, right: &Value) -> Ordering {
+    match (left, right) {
+        (Value::Number(lhs), Value::Number(rhs)) => {
+            lhs.as_i64().unwrap().cmp(&rhs.as_i64().unwrap())
+        }
+        (Value::Array(lhs), Value::Array(rhs)) => (0..std::cmp::max(lhs.len(), rhs.len()))
+            .find_map(|idx| match (lhs.get(idx), rhs.get(idx)) {
                 (None, _) => Some(Ordering::Less),
                 (_, None) => Some(Ordering::Greater),
-                (Some(x), Some(y)) => match compare(x, y) {
+                (Some(lhs_item), Some(rhs_item)) => match compare(lhs_item, rhs_item) {
                     Ordering::Equal => None,
-                    c => Some(c),
+                    order => Some(order),
                 },
             })
             .unwrap_or(Ordering::Equal),
-        (Value::Array(_), Value::Number(_)) => compare(a, &Value::Array(vec![b.clone()])),
-        (Value::Number(_), Value::Array(_)) => compare(&Value::Array(vec![a.clone()]), b),
+        (Value::Array(_), Value::Number(_)) => compare(left, &Value::Array(vec![right.clone()])),
+        (Value::Number(_), Value::Array(_)) => compare(&Value::Array(vec![left.clone()]), right),
         _ => unreachable!(),
     }
 }
@@ -37,7 +39,7 @@ fn part_1(input: &str) -> i64 {
                 .collect::<Vec<_>>();
             compare(&packets[0], &packets[1]) != Ordering::Greater
         })
-        .map(|(i, _)| i as i64 + 1)
+        .map(|(i, _)| i64::try_from(i).expect("cast within range") + 1)
         .sum()
 }
 
@@ -58,7 +60,7 @@ fn part_2(input: &str) -> i64 {
         .iter()
         .enumerate()
         .filter(|(_, packet)| divider_packets.contains(packet))
-        .map(|(i, _)| i as i64 + 1)
+        .map(|(i, _)| i64::try_from(i).expect("cast within range") + 1)
         .product()
 }
 

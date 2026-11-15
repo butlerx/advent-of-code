@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use std::convert::TryFrom;
 
 fn main() {
     let input = include_str!("../../input/08.txt");
@@ -6,7 +7,7 @@ fn main() {
     println!("Part 2: {}", run(input, true));
 }
 
-fn execute(instruction_set: Vec<(&str, i64)>) -> Result<i64, i64> {
+fn execute(instruction_set: &[(&str, i64)]) -> Result<i64, i64> {
     let (mut pointer, mut accumulator) = (0, 0);
     let mut visited = vec![false; instruction_set.len()];
     loop {
@@ -14,23 +15,28 @@ fn execute(instruction_set: Vec<(&str, i64)>) -> Result<i64, i64> {
             break Ok(accumulator);
         } else if visited[pointer] {
             break Err(accumulator);
-        } else {
-            visited[pointer] = true;
         }
+        visited[pointer] = true;
         pointer = match instruction_set[pointer] {
             ("nop", _) => pointer + 1,
             ("acc", arg) => {
                 accumulator += arg;
                 pointer + 1
             }
-            ("jmp", arg) => (pointer as i64 + arg) as usize,
+            ("jmp", arg) => {
+                usize::try_from(i64::try_from(pointer).expect("cast within range") + arg)
+                    .expect("cast within range")
+            }
             _ => unreachable!(),
         }
     }
 }
 
-fn fix_instruction_set(instruction_set: Vec<(&str, i64)>, pointer: usize) -> Vec<(&str, i64)> {
-    let mut new_instruction_set = instruction_set.clone();
+fn fix_instruction_set<'a>(
+    instruction_set: &[(&'a str, i64)],
+    pointer: usize,
+) -> Vec<(&'a str, i64)> {
+    let mut new_instruction_set = instruction_set.to_vec();
     new_instruction_set[pointer].0 = match new_instruction_set[pointer] {
         ("nop", _) => "jmp",
         ("jmp", _) => "nop",
@@ -50,7 +56,7 @@ fn run(input: &str, part_two: bool) -> i64 {
 
     if part_two {
         for i in 0..instruction_set.len() {
-            if let Ok(accumulator) = execute(fix_instruction_set(instruction_set.clone(), i)) {
+            if let Ok(accumulator) = execute(&fix_instruction_set(&instruction_set, i)) {
                 return accumulator;
             }
         }
@@ -58,10 +64,7 @@ fn run(input: &str, part_two: bool) -> i64 {
     } else {
         // Dont care if it fails or succedes just want the value of the accumulator at
         // end of the first run
-        match execute(instruction_set) {
-            Ok(accumulator) => accumulator,
-            Err(accumulator) => accumulator,
-        }
+        execute(&instruction_set).unwrap_or_else(|accumulator| accumulator)
     }
 }
 
@@ -80,17 +83,17 @@ acc +6";
 
     #[test]
     fn test_part_1() {
-        assert!(run(INPUT, false) == 5);
+        assert_eq!(run(INPUT, false), 5);
         let results = run(include_str!("../../input/08.txt"), false);
         println!("{results}");
-        assert!(results == 1528);
+        assert_eq!(results, 1528);
     }
 
     #[test]
     fn test_part_2() {
-        assert!(run(INPUT, true) == 8);
+        assert_eq!(run(INPUT, true), 8);
         let results = run(include_str!("../../input/08.txt"), true);
         println!("{results}");
-        assert!(results == 640);
+        assert_eq!(results, 640);
     }
 }
