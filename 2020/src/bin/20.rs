@@ -23,19 +23,19 @@ impl Tile {
                 .map(|line| line.chars().map(|c| c == '#').collect())
                 .collect::<Vec<Vec<bool>>>(),
         )
-        .unwrap();
+        .expect("valid puzzle input");
         let (n, e, s, w) = (0..4)
             .map(|i| {
                 data.rotated_ccw(i)
                     .iter()
                     .next()
-                    .unwrap()
+                    .expect("valid puzzle input")
                     .iter()
                     .copied()
                     .fold(0, |a, b| (a << 1) | u16::from(b))
             })
             .collect_tuple()
-            .unwrap();
+            .expect("valid puzzle input");
         Tile {
             data,
             id,
@@ -100,7 +100,7 @@ fn find_corners(tiles: &[Tile]) -> Vec<usize> {
         .into_values()
         .filter_map(|v| {
             if v.len() == 1 {
-                Some(v.into_iter().next().unwrap())
+                Some(v.into_iter().next().expect("valid puzzle input"))
             } else {
                 None
             }
@@ -162,8 +162,8 @@ fn find_img(tiles: &[Tile]) -> usize {
                 None
             }
         })
-        .unwrap();
-    let mut placed = Matrix::square_from_vec(vec![0; tiles.len() / 8]).unwrap();
+        .expect("valid puzzle input");
+    let mut placed = Matrix::square_from_vec(vec![0; tiles.len() / 8]).expect("valid puzzle input");
     placed[&(0, 0)] = topleft_index;
     let mut seen = HashSet::new();
     seen.insert(topleft);
@@ -173,7 +173,7 @@ fn find_img(tiles: &[Tile]) -> usize {
             .iter()
             .enumerate()
             .find(|(_, t)| !seen.contains(&t.id) && t.nesw[3] == east_match)
-            .unwrap()
+            .expect("valid puzzle input")
             .0;
         placed[&(0, col)] = next;
         seen.insert(tiles[next].id);
@@ -185,7 +185,7 @@ fn find_img(tiles: &[Tile]) -> usize {
                 .iter()
                 .enumerate()
                 .find(|(_, t)| !seen.contains(&t.id) && t.nesw[0] == south_match)
-                .unwrap()
+                .expect("valid puzzle input")
                 .0;
             placed[&(row, col)] = next;
             seen.insert(tiles[next].id);
@@ -206,7 +206,7 @@ fn find_img(tiles: &[Tile]) -> usize {
                 &tiles[placed[&(row, col)]]
                     .data
                     .slice(1..tile_side - 1, 1..tile_side - 1)
-                    .unwrap(),
+                    .expect("valid puzzle input"),
             );
         }
     }
@@ -226,9 +226,15 @@ fn run(input: &str, part_two: bool) -> i64 {
     let tiles: Vec<Tile> = input
         .split("\n\n")
         .flat_map(|tile| {
-            let (tile_id, img) = tile.split(":\n").collect_tuple().unwrap();
-            let (_, id) = tile_id.split(' ').collect_tuple().unwrap();
-            Tile::new(id.parse::<usize>().unwrap(), img).collection()
+            let (tile_id, img) = tile
+                .split(":\n")
+                .collect_tuple()
+                .expect("valid puzzle input");
+            let (_, id) = tile_id
+                .split(' ')
+                .collect_tuple()
+                .expect("valid puzzle input");
+            Tile::new(id.parse::<usize>().expect("valid puzzle input"), img).collection()
         })
         .collect();
     i64::try_from(if part_two {

@@ -13,7 +13,7 @@ type Edge<'a> = (&'a str, &'a str);
 fn parse_input(input: &str) -> Graph<'_> {
     let mut graph = HashMap::<_, HashSet<_>>::new();
     for l in input.trim().lines() {
-        let (a, rest) = l.split_once(": ").unwrap();
+        let (a, rest) = l.split_once(": ").expect("valid puzzle input");
         for b in rest.split_whitespace() {
             graph.entry(a).or_default().insert(b);
             graph.entry(b).or_default().insert(a);
@@ -77,7 +77,7 @@ fn part_1(input: &str) -> usize {
         .take(3)
         .map(|p| p.0)
         .collect();
-    let start = *graph.keys().next().unwrap();
+    let start = *graph.keys().next().expect("valid puzzle input");
     calculate_group_size(&graph, &cut, start)
 }
 

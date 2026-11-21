@@ -27,7 +27,10 @@ fn recursive_combat(
             break (2, find_score(&player_2));
         }
 
-        let (c_1, c_2) = (player_1.pop_front().unwrap(), player_2.pop_front().unwrap());
+        let (c_1, c_2) = (
+            player_1.pop_front().expect("valid puzzle input"),
+            player_2.pop_front().expect("valid puzzle input"),
+        );
         if c_1 <= i64::try_from(player_1.len()).expect("cast within range")
             && c_2 <= i64::try_from(player_2.len()).expect("cast within range")
         {
@@ -63,7 +66,10 @@ fn find_winner(mut player_1: VecDeque<i64>, mut player_2: VecDeque<i64>) -> i64 
         } else if player_2.is_empty() {
             break find_score(&player_1);
         }
-        let (c_1, c_2) = (player_1.pop_front().unwrap(), player_2.pop_front().unwrap());
+        let (c_1, c_2) = (
+            player_1.pop_front().expect("valid puzzle input"),
+            player_2.pop_front().expect("valid puzzle input"),
+        );
         if c_1 > c_2 {
             player_1.extend([c_1, c_2].iter());
         } else {
@@ -79,11 +85,11 @@ fn run(input: &str, part_two: bool) -> i64 {
             lines
                 .lines()
                 .skip(1)
-                .map(|line| line.parse::<i64>().unwrap())
+                .map(|line| line.parse::<i64>().expect("valid puzzle input"))
                 .collect()
         })
         .collect_tuple()
-        .unwrap();
+        .expect("valid puzzle input");
     if part_two {
         let (_, score) = recursive_combat(player_1, player_2, true);
         score

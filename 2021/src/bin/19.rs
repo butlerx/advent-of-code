@@ -62,11 +62,13 @@ fn parse_input(input: &str) -> Vec<Vec<Point>> {
             s.lines()
                 .skip(1)
                 .map(|line| {
-                    let mut nums = line.split(',').map(|n| n.parse::<i64>().unwrap());
+                    let mut nums = line
+                        .split(',')
+                        .map(|n| n.parse::<i64>().expect("valid puzzle input"));
                     [
-                        nums.next().unwrap(),
-                        nums.next().unwrap(),
-                        nums.next().unwrap(),
+                        nums.next().expect("valid puzzle input"),
+                        nums.next().expect("valid puzzle input"),
+                        nums.next().expect("valid puzzle input"),
                     ]
                 })
                 .collect()
@@ -99,7 +101,7 @@ fn run(input: &str) -> (usize, i64) {
             .tuple_combinations()
             .map(|([x1, y1, z1], [x2, y2, z2])| (x1 - x2).abs() + (y1 - y2).abs() + (z1 - z2).abs())
             .max()
-            .unwrap(),
+            .expect("valid puzzle input"),
     )
 }
 

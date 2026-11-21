@@ -60,7 +60,7 @@ fn build_group(node: &str, neighbors: &HashSet<String>, graph: &Graph) -> Vec<St
     for neighbor in neighbors {
         if group
             .iter()
-            .all(|n| graph.get(neighbor).unwrap().contains(n))
+            .all(|n| graph.get(neighbor).expect("valid puzzle input").contains(n))
         {
             group.push(neighbor.clone());
         }

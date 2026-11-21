@@ -7,17 +7,17 @@ fn main() {
 }
 
 fn parse_line(line: &str) -> (String, (i64, Vec<String>)) {
-    let (a, b) = line.split_once("; ").unwrap();
-    let (a, flow_rate) = a.split_once(" has flow rate=").unwrap();
-    let (_, valve_name) = a.split_once(' ').unwrap();
+    let (a, b) = line.split_once("; ").expect("valid puzzle input");
+    let (a, flow_rate) = a.split_once(" has flow rate=").expect("valid puzzle input");
+    let (_, valve_name) = a.split_once(' ').expect("valid puzzle input");
 
-    let (_, b) = b.split_once(" to ").unwrap();
-    let (_, tunnels) = b.split_once(' ').unwrap();
+    let (_, b) = b.split_once(" to ").expect("valid puzzle input");
+    let (_, tunnels) = b.split_once(' ').expect("valid puzzle input");
 
     (
         valve_name.to_string(),
         (
-            flow_rate.parse().unwrap(),
+            flow_rate.parse().expect("valid puzzle input"),
             tunnels
                 .split(", ")
                 .map(std::string::ToString::to_string)
@@ -103,7 +103,11 @@ fn get_flowrates(input: &str) -> (Flowrate, Snapshot) {
 }
 
 fn part_1(input: &str) -> i64 {
-    *get_flowrates(input).0.values().max().unwrap()
+    *get_flowrates(input)
+        .0
+        .values()
+        .max()
+        .expect("valid puzzle input")
 }
 
 fn part_2(input: &str) -> i64 {

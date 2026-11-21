@@ -17,7 +17,12 @@ fn parse_input(input: &str) -> Grid {
         .flat_map(|(y, line)| {
             line.chars()
                 .enumerate()
-                .map(|(x, c)| ((x, y), c.to_string().parse::<usize>().unwrap()))
+                .map(|(x, c)| {
+                    (
+                        (x, y),
+                        c.to_string().parse::<usize>().expect("valid puzzle input"),
+                    )
+                })
                 .collect::<Vec<(Cell, usize)>>()
         })
         .collect()
@@ -28,7 +33,7 @@ fn step(grid: &mut Grid) -> usize {
     let mut queue = Itertools::cartesian_product(0..10, 0..10).collect_vec();
 
     while let Some(cell) = queue.pop() {
-        let flashes = grid.get_mut(&cell).unwrap();
+        let flashes = grid.get_mut(&cell).expect("valid puzzle input");
         *flashes += 1;
         if *flashes == 10 {
             total_flashed += 1;

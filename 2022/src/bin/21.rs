@@ -86,8 +86,8 @@ fn part_1(input: &str) -> i64 {
         .trim()
         .lines()
         .map(|l| {
-            let (monkey, eq) = l.split_once(": ").unwrap();
-            (monkey, Value::try_from(eq).unwrap())
+            let (monkey, eq) = l.split_once(": ").expect("valid puzzle input");
+            (monkey, Value::try_from(eq).expect("valid puzzle input"))
         })
         .collect();
     monkeys["root"].get(&monkeys)
@@ -98,8 +98,8 @@ fn part_2(input: &str) -> i64 {
         .trim()
         .lines()
         .map(|l| {
-            let (monkey, eq) = l.split_once(": ").unwrap();
-            (monkey, Value::try_from(eq).unwrap())
+            let (monkey, eq) = l.split_once(": ").expect("valid puzzle input");
+            (monkey, Value::try_from(eq).expect("valid puzzle input"))
         })
         .collect();
 

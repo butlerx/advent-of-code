@@ -20,7 +20,7 @@ fn part_2(input: &str) -> usize {
 fn parse_graph(input: &str) -> HashMap<&str, Vec<&str>> {
     let mut graph = HashMap::new();
     for line in input.lines() {
-        let (a, b) = line.split_once('-').unwrap();
+        let (a, b) = line.split_once('-').expect("valid puzzle input");
         graph.entry(a).or_insert_with(Vec::new).push(b);
         graph.entry(b).or_insert_with(Vec::new).push(a);
     }

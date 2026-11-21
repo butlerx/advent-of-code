@@ -1,11 +1,12 @@
 [tools]
-rust                   = { version = "stable", profile = "default", components = "rust-analyzer" }
-prek                   = "latest"
-tombi                  = "1.11.2"
-zizmor                 = "latest"
-"cargo:cargo-binstall" = "latest"
-"cargo:cargo-audit"    = "latest"
-"cargo:cargo-nextest"  = "latest"
+rust                       = { version = "stable", profile = "default", components = "rust-analyzer" }
+prek                       = "latest"
+tombi                      = "1.11.2"
+zizmor                     = "latest"
+"aqua:koalaman/shellcheck" = "0.11.0"
+"cargo:cargo-binstall"     = "latest"
+"cargo:cargo-audit"        = "latest"
+"cargo:cargo-nextest"      = "latest"
 
 [settings]
 experimental   = true

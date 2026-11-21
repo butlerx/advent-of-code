@@ -8,7 +8,7 @@ fn dec_to_snafu(mut num: i64) -> String {
     let mut res = Vec::new();
     while num > 0 {
         let c = match u32::try_from(num % 5).expect("cast within range") {
-            d if d < 3 => std::char::from_digit(d, 10).unwrap(),
+            d if d < 3 => std::char::from_digit(d, 10).expect("valid puzzle input"),
             3 => {
                 num += 2;
                 '='
@@ -34,7 +34,7 @@ fn snafu_to_dec_sum(input: &str) -> i64 {
                 let num = match n {
                     '-' => -1,
                     '=' => -2,
-                    _ => i64::from(n.to_digit(10).unwrap()),
+                    _ => i64::from(n.to_digit(10).expect("valid puzzle input")),
                 };
                 num + (i * 5)
             })

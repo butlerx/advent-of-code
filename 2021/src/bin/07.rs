@@ -9,7 +9,7 @@ fn main() {
 fn run(input: &str, exponential: bool) -> usize {
     let mut nums: Vec<i64> = input
         .split(',')
-        .map(|n| n.trim().parse::<i64>().unwrap())
+        .map(|n| n.trim().parse::<i64>().expect("valid puzzle input"))
         .collect();
     nums.sort_unstable();
     let counts: Vec<(i64, usize)> = nums
@@ -17,7 +17,7 @@ fn run(input: &str, exponential: bool) -> usize {
         .dedup_with_count()
         .map(|(a, b)| (*b, a))
         .collect();
-    (counts.first().unwrap().0..=counts.last().unwrap().0)
+    (counts.first().expect("valid puzzle input").0..=counts.last().expect("valid puzzle input").0)
         .map(|candidate| {
             counts
                 .iter()
@@ -31,7 +31,7 @@ fn run(input: &str, exponential: bool) -> usize {
                 .sum()
         })
         .min()
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 fn cost(num: usize, exponential: bool) -> usize {

@@ -19,9 +19,21 @@ impl From<&str> for Pos {
     fn from(s: &str) -> Self {
         let mut split = s.split(',');
         Self {
-            x: split.next().unwrap().parse().unwrap(),
-            y: split.next().unwrap().parse().unwrap(),
-            z: split.next().unwrap().parse().unwrap(),
+            x: split
+                .next()
+                .expect("valid puzzle input")
+                .parse()
+                .expect("valid puzzle input"),
+            y: split
+                .next()
+                .expect("valid puzzle input")
+                .parse()
+                .expect("valid puzzle input"),
+            z: split
+                .next()
+                .expect("valid puzzle input")
+                .parse()
+                .expect("valid puzzle input"),
         }
     }
 }
@@ -34,7 +46,7 @@ struct Brick {
 
 impl From<&str> for Brick {
     fn from(s: &str) -> Self {
-        let (from, to) = s.split_once('~').unwrap();
+        let (from, to) = s.split_once('~').expect("valid puzzle input");
         Self {
             from: from.into(),
             to: to.into(),

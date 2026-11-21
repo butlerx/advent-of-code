@@ -30,7 +30,7 @@ fn part_2(input: &[u8]) -> usize {
         })
         .map(|polymer| parse_input(&polymer).len())
         .min()
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 #[cfg(test)]

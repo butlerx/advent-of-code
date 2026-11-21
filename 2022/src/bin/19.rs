@@ -34,7 +34,7 @@ impl std::str::FromStr for Blueprint {
             .split(|c: char| !c.is_ascii_digit())
             .filter(|n| !n.is_empty())
             .skip(1)
-            .map(|n| n.parse::<i64>().unwrap())
+            .map(|n| n.parse::<i64>().expect("valid puzzle input"))
             .collect::<Vec<_>>();
         Ok(Self {
             ore_robot: costs[0],
@@ -153,7 +153,7 @@ impl Blueprint {
             cache.insert(key, max_geodes);
         }
 
-        *cache.get(&key).unwrap()
+        *cache.get(&key).expect("valid puzzle input")
     }
 }
 
@@ -161,7 +161,7 @@ fn part_1(input: &str) -> i64 {
     input
         .trim()
         .lines()
-        .map(|l| l.parse::<Blueprint>().unwrap())
+        .map(|l| l.parse::<Blueprint>().expect("valid puzzle input"))
         .enumerate()
         .map(|(i, b)| {
             let mut cache = HashMap::new();
@@ -175,7 +175,7 @@ fn part_2(input: &str) -> i64 {
     input
         .trim()
         .lines()
-        .map(|l| l.parse::<Blueprint>().unwrap())
+        .map(|l| l.parse::<Blueprint>().expect("valid puzzle input"))
         .take(3)
         .map(|b| {
             let mut cache = HashMap::new();

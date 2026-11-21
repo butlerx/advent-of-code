@@ -9,7 +9,11 @@ fn parse_input(input: &str) -> (Vec<Vec<u32>>, usize, usize) {
     let grid: Vec<Vec<u32>> = input
         .trim()
         .lines()
-        .map(|row| row.chars().map(|c| c.to_digit(10).unwrap()).collect())
+        .map(|row| {
+            row.chars()
+                .map(|c| c.to_digit(10).expect("valid puzzle input"))
+                .collect()
+        })
         .collect();
     let rows = grid.len() - 1;
     let cols = grid[0].len() - 1;

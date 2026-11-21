@@ -20,9 +20,14 @@ fn parse_input(input: &str) -> HashMap<&str, Vec<(i64, String)>> {
         .map(|line| {
             let rule: Vec<&str> = line.trim().split("bags contain").collect();
             let bags = Regex::new(r"(\d+) (\w+ \w+) bag")
-                .unwrap()
+                .expect("valid puzzle input")
                 .captures_iter(rule[1])
-                .map(|cap| (cap[1].parse::<i64>().unwrap(), cap[2].to_string()))
+                .map(|cap| {
+                    (
+                        cap[1].parse::<i64>().expect("valid puzzle input"),
+                        cap[2].to_string(),
+                    )
+                })
                 .collect();
             (rule[0].trim(), bags)
         })
@@ -34,7 +39,7 @@ fn unpack(
     name: &str,
     multiplier: i64,
 ) -> Vec<(i64, String)> {
-    let inner_bags = bags.get(name).unwrap();
+    let inner_bags = bags.get(name).expect("valid puzzle input");
     inner_bags
         .iter()
         .map(|(count, bag)| (multiplier * count, bag.clone()))

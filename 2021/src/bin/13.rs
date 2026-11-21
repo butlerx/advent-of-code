@@ -12,21 +12,27 @@ fn main() {
 }
 
 fn parse_input(input: &str) -> (Dots, Instructions) {
-    let (positions, instructions) = input.split_once("\n\n").unwrap();
+    let (positions, instructions) = input.split_once("\n\n").expect("valid puzzle input");
     (
         positions
             .lines()
             .map(|lines| {
-                let (x, y) = lines.split_once(',').unwrap();
-                (x.parse::<usize>().unwrap(), y.parse::<usize>().unwrap())
+                let (x, y) = lines.split_once(',').expect("valid puzzle input");
+                (
+                    x.parse::<usize>().expect("valid puzzle input"),
+                    y.parse::<usize>().expect("valid puzzle input"),
+                )
             })
             .collect(),
         instructions
             .lines()
             .map(|line| {
                 let args = line.replace("fold along", "");
-                let (l, n) = args.trim().split_once('=').unwrap();
-                (l.parse::<char>().unwrap(), n.parse::<usize>().unwrap())
+                let (l, n) = args.trim().split_once('=').expect("valid puzzle input");
+                (
+                    l.parse::<char>().expect("valid puzzle input"),
+                    n.parse::<usize>().expect("valid puzzle input"),
+                )
             })
             .collect(),
     )

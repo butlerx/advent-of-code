@@ -13,15 +13,15 @@ fn parse_input(input: &str) -> Vec<usize> {
         .trim()
         .lines()
         .map(|l| {
-            let (_, cards) = l.trim().split_once(':').unwrap();
-            let (winning_cards, got_cards) = cards.split_once('|').unwrap();
+            let (_, cards) = l.trim().split_once(':').expect("valid puzzle input");
+            let (winning_cards, got_cards) = cards.split_once('|').expect("valid puzzle input");
             let winning: HashSet<u32> = winning_cards
                 .split_whitespace()
-                .map(|n| n.parse::<u32>().unwrap())
+                .map(|n| n.parse::<u32>().expect("valid puzzle input"))
                 .collect();
             let got: HashSet<u32> = got_cards
                 .split_whitespace()
-                .map(|n| n.parse::<u32>().unwrap())
+                .map(|n| n.parse::<u32>().expect("valid puzzle input"))
                 .collect();
             winning.intersection(&got).count()
         })

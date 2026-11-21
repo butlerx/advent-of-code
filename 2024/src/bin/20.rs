@@ -29,11 +29,15 @@ fn count_paths(
     let end_position = input.find_position('E').expect("No end Position");
     let start_distance = bfs(input, start_position);
     let end_distance = bfs(input, end_position);
-    let orig_distance = end_distance.get(start_position).unwrap();
+    let orig_distance = end_distance
+        .get(start_position)
+        .expect("valid puzzle input");
 
     input
         .iter()
-        .filter(|&(p, c)| *c != '#' && start_distance.get(p).unwrap() != i64::MAX)
+        .filter(|&(p, c)| {
+            *c != '#' && start_distance.get(p).expect("valid puzzle input") != i64::MAX
+        })
         .map(|(mid_point, _)| mid_point)
         .map(|mid_point| {
             i64::try_from(
@@ -50,7 +54,7 @@ fn count_paths(
                     .filter(|&(_, manhattan)| (config.distance_check)(manhattan))
                     .filter(|&(e, _)| input.in_bounds(e))
                     .filter(|&(e, _)| input.get(e) != Some('#'))
-                    .filter(|&(e, _)| end_distance.get(e).unwrap() != i64::MAX)
+                    .filter(|&(e, _)| end_distance.get(e).expect("valid puzzle input") != i64::MAX)
                     .filter_map(|(end_point, manhattan)| {
                         let start_dist = start_distance.get(mid_point)?;
                         let end_dist = end_distance.get(end_point)?;
@@ -76,7 +80,7 @@ fn bfs(input: &Grid<char>, start: Point) -> Grid<i64> {
     let mut queue = VecDeque::from([(start, 0i64)]);
 
     while let Some((position, cost)) = queue.pop_front() {
-        if distance.get(position).unwrap() != i64::MAX {
+        if distance.get(position).expect("valid puzzle input") != i64::MAX {
             continue;
         }
 

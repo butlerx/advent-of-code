@@ -15,7 +15,7 @@ fn find_not_sum(nums: &[i64], preable: usize) -> i64 {
                 .map(|comb| comb.iter().copied().sum())
                 .any(|x: i64| x == nums[i])
         })
-        .unwrap()
+        .expect("valid puzzle input")
         + preable]
 }
 
@@ -25,8 +25,8 @@ fn find_range(nums: &[i64], target: i64) -> (i64, i64) {
         sum = if low >= nums.len() {
             break (0, 0);
         } else if sum == target && low + 1 < high {
-            let min = nums[low..high].iter().min().unwrap();
-            let max = nums[low..high].iter().max().unwrap();
+            let min = nums[low..high].iter().min().expect("valid puzzle input");
+            let max = nums[low..high].iter().max().expect("valid puzzle input");
             break (*min, *max);
         } else if sum < target && high < nums.len() {
             high += 1;
@@ -41,7 +41,7 @@ fn find_range(nums: &[i64], target: i64) -> (i64, i64) {
 fn run(input: &str, part_two: bool) -> i64 {
     let nums: Vec<i64> = input
         .lines()
-        .map(|line| line.trim().parse::<i64>().unwrap())
+        .map(|line| line.trim().parse::<i64>().expect("valid puzzle input"))
         .collect();
     let num = find_not_sum(&nums, 25);
     if part_two {
@@ -80,7 +80,7 @@ mod day_9_tests {
     fn test_find_range() {
         let nums: Vec<i64> = INPUT
             .lines()
-            .map(|line| line.parse::<i64>().unwrap())
+            .map(|line| line.parse::<i64>().expect("valid puzzle input"))
             .collect();
         assert_eq!(find_range(&nums, find_not_sum(&nums, 5)), (15, 47));
     }
@@ -89,7 +89,7 @@ mod day_9_tests {
     fn test_find_not_sum() {
         let nums: Vec<i64> = INPUT
             .lines()
-            .map(|line| line.parse::<i64>().unwrap())
+            .map(|line| line.parse::<i64>().expect("valid puzzle input"))
             .collect();
         assert_eq!(find_not_sum(&nums, 5), 127);
     }

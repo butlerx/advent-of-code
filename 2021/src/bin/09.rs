@@ -22,7 +22,7 @@ fn run(input: &str) -> (usize, usize) {
                             isize::try_from(x).expect("cast within range"),
                             isize::try_from(y).expect("cast within range"),
                         ),
-                        c.to_string().parse::<usize>().unwrap(),
+                        c.to_string().parse::<usize>().expect("valid puzzle input"),
                     )
                 })
                 .collect::<Vec<(Coordinate, usize)>>()
@@ -30,7 +30,7 @@ fn run(input: &str) -> (usize, usize) {
         .collect();
     let mut low_points: Vec<Coordinate> = vec![];
     let part_1 = map.keys().fold(0, |total, square| {
-        let height = map.get(square).unwrap();
+        let height = map.get(square).expect("valid puzzle input");
         if get_neighbours(*square)
             .iter()
             .any(|n| height >= map.get(n).unwrap_or(&usize::MAX))
@@ -57,7 +57,7 @@ fn size_of_basin(map: &mut HashMap<Coordinate, usize>, startpoint: Coordinate) -
     let mut considered: VecDeque<Coordinate> = VecDeque::from([startpoint]);
     let mut size = 0;
     while !considered.is_empty() {
-        let c = considered.pop_front().unwrap();
+        let c = considered.pop_front().expect("valid puzzle input");
         size = match map.get(&c) {
             Some(height) => {
                 for n in get_neighbours(c) {

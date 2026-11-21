@@ -18,16 +18,16 @@ struct Hailstone {
 
 impl From<&str> for Hailstone {
     fn from(s: &str) -> Self {
-        let (pos, vel) = s.split_once(" @ ").unwrap();
+        let (pos, vel) = s.split_once(" @ ").expect("valid puzzle input");
         let xyz = pos
             .trim()
             .split(", ")
-            .map(|n| n.parse().unwrap())
+            .map(|n| n.parse().expect("valid puzzle input"))
             .collect::<Vec<_>>();
         let vel_xyz = vel
             .trim()
             .split(", ")
-            .map(|n| n.trim().parse().unwrap())
+            .map(|n| n.trim().parse().expect("valid puzzle input"))
             .collect::<Vec<_>>();
         Self {
             x: xyz[0],
@@ -95,7 +95,7 @@ struct IntHailstone {
 fn parse_vector(s: &str) -> [i128; 3] {
     let values = s
         .split(',')
-        .map(|n| n.trim().parse::<i128>().unwrap())
+        .map(|n| n.trim().parse::<i128>().expect("valid puzzle input"))
         .collect::<Vec<_>>();
     [values[0], values[1], values[2]]
 }
@@ -105,7 +105,7 @@ fn parse_integer_stones(input: &str) -> Vec<IntHailstone> {
         .trim()
         .lines()
         .map(|line| {
-            let (pos, vel) = line.split_once(" @ ").unwrap();
+            let (pos, vel) = line.split_once(" @ ").expect("valid puzzle input");
             IntHailstone {
                 pos: parse_vector(pos),
                 vel: parse_vector(vel),

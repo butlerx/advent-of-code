@@ -134,7 +134,7 @@ fn part_1(input: &str) -> i64 {
         if count == 2022 {
             break chamber.height;
         }
-        if chamber.step(ops.next().unwrap()) {
+        if chamber.step(ops.next().expect("valid puzzle input")) {
             count += 1;
         }
     }
@@ -151,7 +151,7 @@ fn part_2(input: &str) -> i64 {
             if count == 5000 {
                 break deltas;
             }
-            if chamber.step(ops.next().unwrap()) {
+            if chamber.step(ops.next().expect("valid puzzle input")) {
                 deltas[count] = chamber.height - previous;
                 previous = chamber.height;
                 count += 1;
@@ -167,7 +167,7 @@ fn part_2(input: &str) -> i64 {
             });
             size.map(|size| (offset, size))
         })
-        .unwrap();
+        .expect("valid puzzle input");
     let mut delta_iter = deltas.iter();
     let mut count = 1_000_000_000_000;
     let offset_delta = delta_iter.by_ref().take(offset).sum::<i64>();

@@ -14,7 +14,8 @@ fn find_path(input: &str, right: usize, down: usize) -> i64 {
                 let mut chars = line.chars();
                 let len = chars.clone().count();
                 (
-                    num_tree + i64::from(chars.nth(right_count).unwrap() == tree),
+                    num_tree
+                        + i64::from(chars.nth(right_count).expect("valid puzzle input") == tree),
                     (right_count + right) % len,
                 )
             });

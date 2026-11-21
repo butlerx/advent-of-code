@@ -7,7 +7,7 @@ fn main() {
 fn parse_input(input: &str) -> Vec<i64> {
     input
         .lines()
-        .map(|num| num.trim().parse::<i64>().unwrap())
+        .map(|num| num.trim().parse::<i64>().expect("valid puzzle input"))
         .collect()
 }
 

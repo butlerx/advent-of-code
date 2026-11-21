@@ -27,8 +27,11 @@ fn hashmap<'a>(
     lens: &'a str,
 ) -> Vec<VecDeque<(&'a str, usize)>> {
     let (label, focal_length) = if lens.contains('=') {
-        let (a, b) = lens.split_once('=').unwrap();
-        (a, Op::Equals(b.parse::<usize>().unwrap()))
+        let (a, b) = lens.split_once('=').expect("valid puzzle input");
+        (
+            a,
+            Op::Equals(b.parse::<usize>().expect("valid puzzle input")),
+        )
     } else {
         (lens.trim_end_matches('-'), Op::Minus)
     };

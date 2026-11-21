@@ -40,7 +40,7 @@ fn part_2(input: &str) -> i64 {
     (0..max_occupied)
         .rev()
         .find(|&seat_id| !occupied[usize::try_from(seat_id).expect("cast within range")])
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 #[cfg(test)]

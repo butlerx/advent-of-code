@@ -100,7 +100,7 @@ fn binary_output(values: &HashMap<&str, bool>, p: char) -> u64 {
         .iter()
         .filter(|(&key, _)| key.starts_with(p))
         .fold(0, |acc, (&key, &value)| {
-            let i = key[1..].parse::<usize>().unwrap();
+            let i = key[1..].parse::<usize>().expect("valid puzzle input");
             if value {
                 acc | (1 << i)
             } else {

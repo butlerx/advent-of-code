@@ -23,17 +23,17 @@ fn part_2(input: &str) -> i64 {
 
 fn parse_input(input: &str) -> impl Iterator<Item = Cube> + '_ {
     input.lines().map(|l| {
-        let (on, args) = l.split_once(' ').unwrap();
+        let (on, args) = l.split_once(' ').expect("valid puzzle input");
         let (x, y, z) = args
             .split(',')
             .filter_map(|arg| {
                 arg[2..]
                     .split("..")
-                    .map(|x| x.parse().unwrap())
+                    .map(|x| x.parse().expect("valid puzzle input"))
                     .collect_tuple()
             })
             .collect_tuple()
-            .unwrap();
+            .expect("valid puzzle input");
         (on == "on", x, y, z)
     })
 }

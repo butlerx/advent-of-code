@@ -18,12 +18,12 @@ fn part_1(input: &str) -> usize {
                 .map(|range| {
                     range
                         .split('-')
-                        .map(|n| n.parse::<i64>().unwrap())
+                        .map(|n| n.parse::<i64>().expect("valid puzzle input"))
                         .collect_tuple::<(i64, i64)>()
-                        .unwrap()
+                        .expect("valid puzzle input")
                 })
                 .collect_tuple()
-                .unwrap();
+                .expect("valid puzzle input");
             ((a.0 <= b.0) && (a.1 >= b.1)) || ((b.0 <= a.0) && (b.1 >= a.1))
         })
         .count()
@@ -37,12 +37,13 @@ fn part_2(input: &str) -> usize {
             let (a, b) = line
                 .split(',')
                 .map(|range| {
-                    let (start, fininsh) = range.split_once('-').unwrap();
-                    (start.parse::<i64>().unwrap()..=fininsh.parse::<i64>().unwrap())
+                    let (start, fininsh) = range.split_once('-').expect("valid puzzle input");
+                    (start.parse::<i64>().expect("valid puzzle input")
+                        ..=fininsh.parse::<i64>().expect("valid puzzle input"))
                         .collect::<HashSet<_>>()
                 })
                 .collect_tuple()
-                .unwrap();
+                .expect("valid puzzle input");
             a.intersection(&b).count() > 0
         })
         .count()

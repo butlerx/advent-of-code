@@ -34,7 +34,7 @@ fn compact_disk(disk: Vec<(usize, i64)>) -> i64 {
         .flat_map(|&(s, id)| std::iter::repeat_n(id, s))
         .enumerate()
         .filter(|&(_, id)| id != -1)
-        .map(|(i, id)| i64::try_from(i).unwrap() * id)
+        .map(|(i, id)| i64::try_from(i).expect("valid puzzle input") * id)
         .sum()
 }
 

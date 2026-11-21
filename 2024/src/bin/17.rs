@@ -22,7 +22,13 @@ impl From<&str> for Register {
     fn from(s: &str) -> Self {
         let registers_vec = s
             .lines()
-            .map(|x| x.split(": ").nth(1).unwrap().parse().unwrap())
+            .map(|x| {
+                x.split(": ")
+                    .nth(1)
+                    .expect("valid puzzle input")
+                    .parse()
+                    .expect("valid puzzle input")
+            })
             .collect::<Vec<_>>();
         Register {
             a: registers_vec[0],
@@ -89,7 +95,7 @@ fn parse_input(input: &str) -> (Register, Vec<u64>) {
                 .filter_map(|x| x.trim().parse().ok())
                 .collect::<Vec<_>>()
         })
-        .unwrap();
+        .expect("valid puzzle input");
     (registers, program)
 }
 

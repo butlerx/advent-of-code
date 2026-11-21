@@ -10,7 +10,7 @@ fn play_game(nums: &[usize], turns: usize) -> i64 {
     for (i, num) in nums.iter().enumerate() {
         spoken[*num].1 = i;
     }
-    let mut next_num: usize = *nums.last().unwrap();
+    let mut next_num: usize = *nums.last().expect("valid puzzle input");
     let mut turn_num = nums.len();
     loop {
         if turn_num >= turns {
@@ -31,7 +31,7 @@ fn run(input: &str, part_two: bool) -> i64 {
     let nums: Vec<usize> = input
         .trim()
         .split(',')
-        .map(|n| n.parse::<usize>().unwrap())
+        .map(|n| n.parse::<usize>().expect("valid puzzle input"))
         .collect();
     play_game(&nums, if part_two { 30_000_000 } else { 2020 })
 }

@@ -17,11 +17,11 @@ fn run(input: &str, part_two: bool) -> usize {
     input
         .lines()
         .map(|line| {
-            let (s, o) = line.split_once(" | ").unwrap();
+            let (s, o) = line.split_once(" | ").expect("valid puzzle input");
             let output = o.split(' ').map(parse_digit);
             if part_two {
                 let signal: Vec<i64> = s.split(' ').map(parse_digit).collect();
-                let digits = decode_to_order(&signal).unwrap();
+                let digits = decode_to_order(&signal).expect("valid puzzle input");
                 output.fold(0, |res, d| {
                     (res * 10)
                         + digits
@@ -30,7 +30,7 @@ fn run(input: &str, part_two: bool) -> usize {
                             .filter(|(_, segs)| **segs == d)
                             .map(|(n, _)| n)
                             .next()
-                            .unwrap()
+                            .expect("valid puzzle input")
                 })
             } else {
                 output

@@ -24,7 +24,7 @@ fn find_2020_multiple(expenses: Vec<i64>, depth: usize) -> i64 {
             .filter(|combination| combination.iter().sum::<i64>() == goal)
             .map(|combination| combination.iter().product::<i64>())
             .next()
-            .unwrap()
+            .expect("valid puzzle input")
     }
 }
 

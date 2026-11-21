@@ -21,10 +21,10 @@ fn part_2(input: &str) -> i64 {
 }
 
 fn parse_input(input: &str) -> (Vec<i64>, usize) {
-    let bit_length = input.lines().next().unwrap().len();
+    let bit_length = input.lines().next().expect("valid puzzle input").len();
     let nums: Vec<i64> = input
         .lines()
-        .map(|num| i64::from_str_radix(num, 2).unwrap())
+        .map(|num| i64::from_str_radix(num, 2).expect("valid puzzle input"))
         .collect();
     (nums, bit_length)
 }

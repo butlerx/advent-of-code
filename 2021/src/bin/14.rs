@@ -12,7 +12,7 @@ type CharCount = HashMap<char, i64>;
 type Rules = HashMap<(char, char), char>;
 
 fn parse_input(input: &str) -> ((PairCount, CharCount), Rules) {
-    let (template, rules) = input.split_once("\n\n").unwrap();
+    let (template, rules) = input.split_once("\n\n").expect("valid puzzle input");
 
     let pair_count = template
         .chars()
@@ -28,9 +28,12 @@ fn parse_input(input: &str) -> ((PairCount, CharCount), Rules) {
     let pairs = rules
         .lines()
         .map(|line| {
-            let (l, n) = line.split_once(" -> ").unwrap();
+            let (l, n) = line.split_once(" -> ").expect("valid puzzle input");
             let mut letters = l.chars().tuple_windows();
-            (letters.next().unwrap(), n.parse::<char>().unwrap())
+            (
+                letters.next().expect("valid puzzle input"),
+                n.parse::<char>().expect("valid puzzle input"),
+            )
         })
         .collect();
     ((pair_count, char_count), pairs)
@@ -42,7 +45,7 @@ fn run(input: &str, steps: usize) -> i64 {
         let mut new_pair_count = pair_count.clone();
 
         for ((left, right), count) in pair_count {
-            let middle = *rules.get(&(left, right)).unwrap();
+            let middle = *rules.get(&(left, right)).expect("valid puzzle input");
             *new_pair_count.entry((left, right)).or_default() -= count;
             *new_pair_count.entry((left, middle)).or_default() += count;
             *new_pair_count.entry((middle, right)).or_default() += count;
@@ -52,7 +55,8 @@ fn run(input: &str, steps: usize) -> i64 {
         (new_pair_count, char_count)
     });
 
-    results.values().max().unwrap() - results.values().min().unwrap()
+    results.values().max().expect("valid puzzle input")
+        - results.values().min().expect("valid puzzle input")
 }
 
 #[cfg(test)]

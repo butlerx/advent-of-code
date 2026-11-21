@@ -22,7 +22,7 @@ fn marker_pos(input: &[u8], window_size: usize) -> usize {
         .windows(window_size)
         .enumerate()
         .find(|(_, s)| s.iter().collect::<HashSet<_>>().len() == s.len())
-        .unwrap()
+        .expect("valid puzzle input")
         .0
         + window_size
 }
@@ -37,7 +37,7 @@ fn marker_pos_or(input: &[u8], window_size: usize) -> usize {
                 .count_ones() as usize
                 == window_size
         })
-        .unwrap()
+        .expect("valid puzzle input")
         .0
         + window_size
 }

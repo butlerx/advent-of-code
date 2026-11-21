@@ -8,7 +8,7 @@ fn main() {
 }
 
 fn validate_year(year_str: &str, low: i64, high: i64) -> bool {
-    let year = year_str.parse().unwrap();
+    let year = year_str.parse().expect("valid puzzle input");
     (low <= year) && (year <= high)
 }
 
@@ -20,20 +20,28 @@ fn validate_key_value(kv: &str) -> bool {
         "eyr" => validate_year(key_value[1], 2020, 2030),
         "hgt" => {
             if key_value[1].contains("cm") {
-                let height = key_value[1].replace("cm", "").parse().unwrap();
+                let height = key_value[1]
+                    .replace("cm", "")
+                    .parse()
+                    .expect("valid puzzle input");
                 (150..=193).contains(&height)
             } else if key_value[1].contains("in") {
-                let height = key_value[1].replace("in", "").parse().unwrap();
+                let height = key_value[1]
+                    .replace("in", "")
+                    .parse()
+                    .expect("valid puzzle input");
                 (59..=76).contains(&height)
             } else {
                 false
             }
         }
         "hcl" => Regex::new(r"^#[0-9a-f]{6}$")
-            .unwrap()
+            .expect("valid puzzle input")
             .is_match(key_value[1]),
         "ecl" => ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"].contains(&key_value[1]),
-        "pid" => Regex::new(r"^\d{9}$").unwrap().is_match(key_value[1]),
+        "pid" => Regex::new(r"^\d{9}$")
+            .expect("valid puzzle input")
+            .is_match(key_value[1]),
         _ => true,
     }
 }

@@ -68,7 +68,12 @@ fn follow_directions(
 fn run(input: &str, part_two: bool) -> i64 {
     let directions: Vec<(char, f32)> = input
         .lines()
-        .map(|line| (line.chars().next().unwrap(), line[1..].parse().unwrap()))
+        .map(|line| {
+            (
+                line.chars().next().expect("valid puzzle input"),
+                line[1..].parse().expect("valid puzzle input"),
+            )
+        })
         .collect();
     let (north, east) = follow_directions(
         &directions,

@@ -43,7 +43,7 @@ fn valid_password(password: i64, max: bool) -> bool {
 fn run(input: &str, part_two: bool) -> i64 {
     let range: Vec<i64> = input
         .split('-')
-        .map(|num| num.trim().parse::<i64>().unwrap())
+        .map(|num| num.trim().parse::<i64>().expect("valid puzzle input"))
         .collect();
     i64::try_from(
         (range[0]..range[1])

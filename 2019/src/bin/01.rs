@@ -12,7 +12,7 @@ fn run(input: &str, part_two: bool) -> i64 {
     input
         .lines()
         .map(|line| {
-            let mass = line.trim().parse::<i64>().unwrap();
+            let mass = line.trim().parse::<i64>().expect("valid puzzle input");
             if part_two {
                 cumalitive_fuel(mass)
             } else {

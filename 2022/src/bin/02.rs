@@ -7,7 +7,7 @@ fn main() {
 
 fn part_1(input: &str) -> i64 {
     input.trim().lines().fold(0i64, |score, line| {
-        let (move_a, move_b) = line.split_once(' ').unwrap();
+        let (move_a, move_b) = line.split_once(' ').expect("valid puzzle input");
         (match move_a {
             "A" => match move_b {
                 "X" => 1 + 3,
@@ -34,7 +34,7 @@ fn part_1(input: &str) -> i64 {
 
 fn part_2(input: &str) -> i64 {
     input.trim().lines().fold(0i64, |score, line| {
-        let (move_a, move_b) = line.split_once(' ').unwrap();
+        let (move_a, move_b) = line.split_once(' ').expect("valid puzzle input");
         (match move_a {
             "A" => match move_b {
                 "X" => 3,

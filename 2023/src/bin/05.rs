@@ -11,7 +11,7 @@ fn parse_seeds(input: &str) -> Vec<i64> {
     input
         .split_whitespace()
         .skip(1)
-        .map(|s| s.parse().unwrap())
+        .map(|s| s.parse().expect("valid puzzle input"))
         .collect()
 }
 
@@ -24,7 +24,10 @@ struct Mapping {
 
 impl From<&str> for Mapping {
     fn from(s: &str) -> Self {
-        let nums: Vec<i64> = s.split_whitespace().map(|x| x.parse().unwrap()).collect();
+        let nums: Vec<i64> = s
+            .split_whitespace()
+            .map(|x| x.parse().expect("valid puzzle input"))
+            .collect();
         Self {
             src: nums[0],
             dest: nums[1],
@@ -57,7 +60,7 @@ fn part_1(input: &str) -> i64 {
             })
         })
         .min()
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 fn map_field(mapping: &[Mapping], seed: (i64, i64)) -> Vec<(i64, i64)> {

@@ -21,16 +21,16 @@ fn parse_input(input: &str) -> HashMap<&str, Module<'_>> {
         .trim()
         .lines()
         .map(|l| {
-            let (n, t) = l.split_once(" -> ").unwrap();
+            let (n, t) = l.split_once(" -> ").expect("valid puzzle input");
             let targets = t.split(',').map(str::trim).collect::<Vec<_>>();
             match n {
                 "broadcaster" => (n, Module::Broadcaster(targets)),
                 name if name.starts_with('%') => (
-                    name.strip_prefix('%').unwrap(),
+                    name.strip_prefix('%').expect("valid puzzle input"),
                     Module::Flipflop(false, targets),
                 ),
                 name if name.starts_with('&') => (
-                    name.strip_prefix('&').unwrap(),
+                    name.strip_prefix('&').expect("valid puzzle input"),
                     Module::Conjunction(HashMap::new(), targets),
                 ),
                 _ => unreachable!(),
@@ -177,7 +177,7 @@ fn part_2(input: &str) -> usize {
             break;
         }
     }
-    lcm(cycles.iter().map(|o| o.unwrap()))
+    lcm(cycles.iter().map(|o| o.expect("valid puzzle input")))
 }
 
 #[cfg(test)]

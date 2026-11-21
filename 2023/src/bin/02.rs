@@ -30,8 +30,8 @@ struct Block {
 
 impl From<&str> for Block {
     fn from(s: &str) -> Self {
-        let (num, c) = s.trim().split_once(' ').unwrap();
-        let num = num.parse::<i32>().unwrap();
+        let (num, c) = s.trim().split_once(' ').expect("valid puzzle input");
+        let num = num.parse::<i32>().expect("valid puzzle input");
         let colour = Colour::from(c);
         Self { num, colour }
     }
@@ -44,8 +44,12 @@ struct Game {
 
 impl From<&str> for Game {
     fn from(s: &str) -> Self {
-        let (game, blocks_str) = s.split_once(':').unwrap();
-        let id = game.strip_prefix("Game ").unwrap().parse::<i32>().unwrap();
+        let (game, blocks_str) = s.split_once(':').expect("valid puzzle input");
+        let id = game
+            .strip_prefix("Game ")
+            .expect("valid puzzle input")
+            .parse::<i32>()
+            .expect("valid puzzle input");
         let blocks = blocks_str
             .split(';')
             .map(|selection| selection.trim().split(',').map(Block::from).collect())

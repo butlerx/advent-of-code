@@ -25,10 +25,10 @@ impl Star {
 
 fn star_distance(stars: &[Star], expansion_factor: i64) -> i64 {
     let expansion_factor = expansion_factor - 1;
-    let empty_columns = (0..stars.iter().map(|c| c.x).max().unwrap())
+    let empty_columns = (0..stars.iter().map(|c| c.x).max().expect("valid puzzle input"))
         .filter(|x| stars.iter().all(|c| c.x != *x))
         .collect::<Vec<_>>();
-    let empty_rows = (0..stars.iter().map(|c| c.y).max().unwrap())
+    let empty_rows = (0..stars.iter().map(|c| c.y).max().expect("valid puzzle input"))
         .filter(|y| stars.iter().all(|c| c.y != *y))
         .collect::<Vec<_>>();
 
@@ -50,7 +50,8 @@ fn star_distance(stars: &[Star], expansion_factor: i64) -> i64 {
                 .count();
             total
                 + left_star.manhattan_distance(right_star)
-                + i64::try_from(empty_cols_count + empty_rows_count).unwrap() * expansion_factor
+                + i64::try_from(empty_cols_count + empty_rows_count).expect("valid puzzle input")
+                    * expansion_factor
         })
     })
 }

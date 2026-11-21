@@ -32,12 +32,12 @@ fn parse_input(input: &str) -> Elves {
 fn bounds(elves: &Elves) -> (Point, Point) {
     (
         (
-            elves.iter().map(|e| e.0).min().unwrap(),
-            elves.iter().map(|e| e.0).max().unwrap(),
+            elves.iter().map(|e| e.0).min().expect("valid puzzle input"),
+            elves.iter().map(|e| e.0).max().expect("valid puzzle input"),
         ),
         (
-            elves.iter().map(|e| e.1).min().unwrap(),
-            elves.iter().map(|e| e.1).max().unwrap(),
+            elves.iter().map(|e| e.1).min().expect("valid puzzle input"),
+            elves.iter().map(|e| e.1).max().expect("valid puzzle input"),
         ),
     )
 }
@@ -56,7 +56,7 @@ fn move_elves(round: usize, elves: &Elves) -> Option<Elves> {
             elves
                 .iter()
                 .map(|&e| match check_and_propose(round, e, elves) {
-                    Some(p) if *proposals.get(&p).unwrap() == 1 => p,
+                    Some(p) if *proposals.get(&p).expect("valid puzzle input") == 1 => p,
                     _ => e,
                 })
                 .collect(),

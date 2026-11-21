@@ -7,10 +7,10 @@ fn main() {
 }
 
 fn parse_line(line: &str) -> (String, Vec<usize>) {
-    let (springs, groups_str) = line.split_once(' ').unwrap();
+    let (springs, groups_str) = line.split_once(' ').expect("valid puzzle input");
     let groups = groups_str
         .split(',')
-        .map(|g| g.parse::<usize>().unwrap())
+        .map(|g| g.parse::<usize>().expect("valid puzzle input"))
         .collect::<Vec<_>>();
     (springs.to_string(), groups)
 }

@@ -31,7 +31,7 @@ fn part_1(input: &str) -> usize {
     let mut queue = find_start_positions(&grid);
     let mut max_path = 0;
     while !queue.is_empty() {
-        let (x, y, mut visited) = queue.pop_front().unwrap();
+        let (x, y, mut visited) = queue.pop_front().expect("valid puzzle input");
         if !visited.insert((x, y)) {
             continue;
         }

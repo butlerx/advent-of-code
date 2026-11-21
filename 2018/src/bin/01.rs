@@ -14,8 +14,8 @@ fn parse_input(input: &str) -> Vec<i64> {
         .map(|num| {
             let mut chars = num.chars();
             match chars.next() {
-                Some('-') => -(chars.as_str().parse::<i64>().unwrap()),
-                Some('+') => chars.as_str().parse::<i64>().unwrap(),
+                Some('-') => -(chars.as_str().parse::<i64>().expect("valid puzzle input")),
+                Some('+') => chars.as_str().parse::<i64>().expect("valid puzzle input"),
                 _ => unreachable!(),
             }
         })

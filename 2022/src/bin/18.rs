@@ -44,11 +44,13 @@ impl FromStr for Cube {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut nums = s.split(',').map(|s| s.parse::<i64>().unwrap());
+        let mut nums = s
+            .split(',')
+            .map(|s| s.parse::<i64>().expect("valid puzzle input"));
         let position = (
-            nums.next().unwrap(),
-            nums.next().unwrap(),
-            nums.next().unwrap(),
+            nums.next().expect("valid puzzle input"),
+            nums.next().expect("valid puzzle input"),
+            nums.next().expect("valid puzzle input"),
         );
 
         Ok(Self::new(position))
@@ -59,7 +61,7 @@ fn part_1(input: &str) -> usize {
     let sides = input
         .trim()
         .lines()
-        .map(|l| l.parse::<Cube>().unwrap())
+        .map(|l| l.parse::<Cube>().expect("valid puzzle input"))
         .collect::<HashSet<_>>()
         .into_iter()
         .flat_map(|c| c.sides.into_iter().collect::<Vec<_>>())
@@ -72,7 +74,7 @@ fn part_2(input: &str) -> i64 {
     let cubes = input
         .trim()
         .lines()
-        .map(|l| l.parse::<Cube>().unwrap())
+        .map(|l| l.parse::<Cube>().expect("valid puzzle input"))
         .collect::<HashSet<_>>();
 
     let (x, y, z) = cubes.iter().fold(

@@ -8,7 +8,7 @@ fn main() {
 }
 
 fn parse_input(input: &str) -> (BTreeMap<usize, VecDeque<char>>, &str) {
-    let (crates, moves) = input.split_once("\n\n").unwrap();
+    let (crates, moves) = input.split_once("\n\n").expect("valid puzzle input");
     let stacks: BTreeMap<usize, VecDeque<char>> =
         crates.lines().fold(BTreeMap::new(), |mut stacks, line| {
             if !line.contains('[') {
@@ -34,9 +34,14 @@ fn parse_move(line: &str) -> (usize, usize, usize) {
     line.split_whitespace()
         .chunks(2)
         .into_iter()
-        .map(|mut s| s.nth(1).unwrap().parse::<usize>().unwrap())
+        .map(|mut s| {
+            s.nth(1)
+                .expect("valid puzzle input")
+                .parse::<usize>()
+                .expect("valid puzzle input")
+        })
         .collect_tuple()
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 fn part_1(input: &str) -> String {
@@ -44,11 +49,21 @@ fn part_1(input: &str) -> String {
     for line in moves.lines() {
         let (num_to_move, source, dest) = parse_move(line);
         for _ in 0..num_to_move {
-            let v = stacks.get_mut(&source).unwrap().pop_back().unwrap();
-            stacks.get_mut(&dest).unwrap().push_back(v);
+            let v = stacks
+                .get_mut(&source)
+                .expect("valid puzzle input")
+                .pop_back()
+                .expect("valid puzzle input");
+            stacks
+                .get_mut(&dest)
+                .expect("valid puzzle input")
+                .push_back(v);
         }
     }
-    stacks.values().map(|v| v.back().unwrap()).collect()
+    stacks
+        .values()
+        .map(|v| v.back().expect("valid puzzle input"))
+        .collect()
 }
 
 fn part_2(input: &str) -> String {
@@ -56,13 +71,25 @@ fn part_2(input: &str) -> String {
     for line in moves.trim().lines() {
         let (num_to_move, source, dest) = parse_move(line);
         let crates = (0..num_to_move)
-            .map(|_| stacks.get_mut(&source).unwrap().pop_back().unwrap())
+            .map(|_| {
+                stacks
+                    .get_mut(&source)
+                    .expect("valid puzzle input")
+                    .pop_back()
+                    .expect("valid puzzle input")
+            })
             .collect::<Vec<_>>()
             .into_iter()
             .rev();
-        stacks.get_mut(&dest).unwrap().extend(crates);
+        stacks
+            .get_mut(&dest)
+            .expect("valid puzzle input")
+            .extend(crates);
     }
-    stacks.values().map(|v| v.back().unwrap()).collect()
+    stacks
+        .values()
+        .map(|v| v.back().expect("valid puzzle input"))
+        .collect()
 }
 
 #[cfg(test)]

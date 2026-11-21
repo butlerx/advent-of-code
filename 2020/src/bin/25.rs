@@ -24,9 +24,9 @@ fn run(input: &str) -> i64 {
     let (card_key, door_key) = input
         .trim()
         .lines()
-        .map(|n| n.parse::<i64>().unwrap())
+        .map(|n| n.parse::<i64>().expect("valid puzzle input"))
         .collect_tuple()
-        .unwrap();
+        .expect("valid puzzle input");
     (0..find_loop(7, door_key)).fold(1, |value, _| transform(value, card_key))
 }
 

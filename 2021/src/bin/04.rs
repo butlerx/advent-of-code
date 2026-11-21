@@ -13,9 +13,9 @@ fn run(input: &str) -> (i64, i64) {
     let numbers: Vec<i64> = input
         .lines()
         .next()
-        .unwrap()
+        .expect("valid puzzle input")
         .split(',')
-        .map(|num| num.trim().parse::<i64>().unwrap())
+        .map(|num| num.trim().parse::<i64>().expect("valid puzzle input"))
         .collect();
 
     let boards: Vec<Vec<i64>> = input
@@ -28,7 +28,7 @@ fn run(input: &str) -> (i64, i64) {
             board
                 .iter()
                 .flat_map(|&row| row.split_whitespace())
-                .map(|tile| tile.parse().unwrap())
+                .map(|tile| tile.parse().expect("valid puzzle input"))
                 .collect::<Vec<i64>>()
         })
         .collect();
@@ -42,8 +42,8 @@ fn run(input: &str) -> (i64, i64) {
         })
         .sorted_by(|(_, x), (_, y)| x.len().cmp(&y.len()));
     (
-        checksum(scoreboard.next().unwrap()),
-        checksum(scoreboard.next_back().unwrap()),
+        checksum(scoreboard.next().expect("valid puzzle input")),
+        checksum(scoreboard.next_back().expect("valid puzzle input")),
     )
 }
 
@@ -69,7 +69,7 @@ fn checksum((board, numbers): (&Vec<i64>, &[i64])) -> i64 {
         .iter()
         .filter(|tile| !numbers.contains(tile))
         .sum::<i64>()
-        * numbers.last().unwrap()
+        * numbers.last().expect("valid puzzle input")
 }
 
 #[cfg(test)]

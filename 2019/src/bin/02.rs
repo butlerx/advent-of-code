@@ -31,7 +31,7 @@ fn run(input: &str, part_two: bool) -> i64 {
     if part_two {
         let mem: Vec<usize> = input
             .split(',')
-            .map(|num| num.trim().parse().unwrap())
+            .map(|num| num.trim().parse().expect("valid puzzle input"))
             .collect();
         let goal = 19_690_720;
         let (mut noun, mut verb) = (0, 0);
@@ -50,7 +50,7 @@ fn run(input: &str, part_two: bool) -> i64 {
         execute(
             input
                 .split(',')
-                .map(|num| num.trim().parse().unwrap())
+                .map(|num| num.trim().parse().expect("valid puzzle input"))
                 .collect(),
             12,
             2,

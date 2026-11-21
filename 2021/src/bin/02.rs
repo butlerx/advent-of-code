@@ -9,7 +9,10 @@ fn run(input: &str) -> (i64, i64) {
         .lines()
         .map(|line| {
             let i: Vec<&str> = line.split_whitespace().collect();
-            (i[0], i[1].trim().parse::<i64>().unwrap())
+            (
+                i[0],
+                i[1].trim().parse::<i64>().expect("valid puzzle input"),
+            )
         })
         .fold((0, 0, 0), |pos, (dir, dis)| match dir {
             "forward" => (pos.0 + pos.2 * dis, pos.1 + dis, pos.2),

@@ -38,7 +38,13 @@ mod part_1 {
             }
             match chars[i] {
                 '+' | '*' => op = chars[i],
-                '0'..='9' => res = oper(op, res, i64::from(chars[i].to_digit(10).unwrap())),
+                '0'..='9' => {
+                    res = oper(
+                        op,
+                        res,
+                        i64::from(chars[i].to_digit(10).expect("valid puzzle input")),
+                    );
+                }
                 '(' => {
                     let end = i + find_matching_par(&chars[i..]);
                     res = oper(op, res, eval(&chars[i + 1..end]));
@@ -60,7 +66,10 @@ mod part_2 {
                 let j = find_matching_par(&chars[i..]);
                 (eval(&chars[i + 1..i + j]), j)
             }
-            _ => (i64::from(chars[i].to_digit(10).unwrap()), 0),
+            _ => (
+                i64::from(chars[i].to_digit(10).expect("valid puzzle input")),
+                0,
+            ),
         }
     }
 

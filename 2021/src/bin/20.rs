@@ -15,7 +15,7 @@ fn part_2(input: &str) -> usize {
 }
 
 fn parse_input(input: &str, iterations: usize) -> (ImageMap, Vec<bool>) {
-    let (r, img) = input.split_once("\n\n").unwrap();
+    let (r, img) = input.split_once("\n\n").expect("valid puzzle input");
     let first_line = r.replace('\n', "");
     let rules = first_line.chars().map(|c| c == '#').collect();
 

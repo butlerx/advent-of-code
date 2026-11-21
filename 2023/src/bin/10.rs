@@ -54,8 +54,10 @@ impl Point {
 
     fn minus(&self, other: &Self) -> (i32, i32) {
         (
-            i32::try_from(self.x).unwrap() - i32::try_from(other.x).unwrap(),
-            i32::try_from(self.y).unwrap() - i32::try_from(other.y).unwrap(),
+            i32::try_from(self.x).expect("valid puzzle input")
+                - i32::try_from(other.x).expect("valid puzzle input"),
+            i32::try_from(self.y).expect("valid puzzle input")
+                - i32::try_from(other.y).expect("valid puzzle input"),
         )
     }
 
@@ -148,11 +150,15 @@ fn get_pipes(grid: &[Vec<char>], start: Point) -> Vec<Point> {
                 false
             }
         })
-        .unwrap();
+        .expect("valid puzzle input");
     let mut pipes: Vec<Point> = vec![start];
     while grid[curr.y][curr.x] != 'S' {
-        let (c1, c2) = curr.connects_to(grid).unwrap();
-        let next = if c1 == *pipes.last().unwrap() { c2 } else { c1 };
+        let (c1, c2) = curr.connects_to(grid).expect("valid puzzle input");
+        let next = if c1 == *pipes.last().expect("valid puzzle input") {
+            c2
+        } else {
+            c1
+        };
         pipes.push(curr);
         curr = next;
     }

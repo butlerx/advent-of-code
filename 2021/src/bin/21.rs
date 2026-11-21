@@ -66,11 +66,11 @@ fn parse_input(input: &str) -> (usize, usize) {
         .lines()
         .map(|line| {
             line.split_once(':')
-                .unwrap()
+                .expect("valid puzzle input")
                 .1
                 .trim()
                 .parse::<usize>()
-                .unwrap()
+                .expect("valid puzzle input")
         })
         .collect();
 

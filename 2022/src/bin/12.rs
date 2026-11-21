@@ -42,18 +42,18 @@ fn parse_input(input: &str) -> (Vec<Vec<u8>>, Point, Point) {
     let start = (0..grid.len())
         .cartesian_product(0..grid[0].len())
         .find(|&(x, y)| grid[x][y] == b'S')
-        .unwrap();
+        .expect("valid puzzle input");
     let goal = (0..grid.len())
         .cartesian_product(0..grid[0].len())
         .find(|&(x, y)| grid[x][y] == b'E')
-        .unwrap();
+        .expect("valid puzzle input");
     grid[start.0][start.1] = b'a';
     grid[goal.0][goal.1] = b'z';
     (grid, start, goal)
 }
 fn part_1(input: &str) -> usize {
     let (grid, start, goal) = parse_input(input);
-    find_path(&grid, start, goal).unwrap()
+    find_path(&grid, start, goal).expect("valid puzzle input")
 }
 
 fn part_2(input: &str) -> usize {
@@ -63,7 +63,7 @@ fn part_2(input: &str) -> usize {
         .filter(|&(x, y)| grid[x][y] == b'a')
         .filter_map(|start| find_path(&grid, start, goal))
         .min()
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 #[cfg(test)]

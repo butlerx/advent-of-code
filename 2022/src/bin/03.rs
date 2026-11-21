@@ -25,7 +25,7 @@ fn part_1(input: &str) -> i64 {
             .into_iter()
             .map(std::iter::Iterator::collect::<HashSet<char>>)
             .collect_tuple()
-            .unwrap();
+            .expect("valid puzzle input");
         start.intersection(&end).copied().fold(0, priority) + score
     })
 }
@@ -38,11 +38,11 @@ fn part_2(input: &str) -> i64 {
         .into_iter()
         .fold(0, |score, lines| {
             let mut set_lines = lines.map(|line| line.chars().collect::<HashSet<char>>());
-            let mut s = set_lines.next().unwrap();
+            let mut s = set_lines.next().expect("valid puzzle input");
             for line in set_lines {
                 s = s.intersection(&line).copied().collect();
             }
-            priority(score, *s.iter().next().unwrap())
+            priority(score, *s.iter().next().expect("valid puzzle input"))
         })
 }
 

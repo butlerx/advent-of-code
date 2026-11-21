@@ -28,7 +28,7 @@ fn part_1(input: &str) -> i64 {
         .lines()
         .map(Num::new)
         .reduce(|l, r| l + r)
-        .unwrap()
+        .expect("valid puzzle input")
         .magnitude()
 }
 
@@ -41,11 +41,11 @@ fn part_2(input: &str) -> i64 {
             permutation
                 .into_iter()
                 .reduce(|l, r| l + r)
-                .unwrap()
+                .expect("valid puzzle input")
                 .magnitude()
         })
         .max()
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 impl Num {

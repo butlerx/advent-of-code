@@ -25,7 +25,7 @@ fn moves(maze: &[Vec<char>]) -> Vec<(i64, Vec<Vec<char>>)> {
                 'D' => Some((9, 1000)),
                 _ => None,
             }
-            .unwrap();
+            .expect("valid puzzle input");
             let mut cost = if y > room && (room..y).all(|c| maze[1][c] == '.') {
                 y - room
             } else if y < room && (y + 1..=room).all(|c| maze[1][c] == '.') {
@@ -58,7 +58,7 @@ fn moves(maze: &[Vec<char>]) -> Vec<(i64, Vec<Vec<char>>)> {
                 'D' => Some(1000),
                 _ => None,
             }
-            .unwrap();
+            .expect("valid puzzle input");
             for i in y..maze[0].len() {
                 if maze[1][i] != '.' {
                     break;
@@ -119,14 +119,14 @@ fn part_1(input: &str) -> i64 {
         .lines()
         .map(|l| l.chars().collect())
         .collect::<Vec<_>>();
-    shortest_path(&map).unwrap()
+    shortest_path(&map).expect("valid puzzle input")
 }
 
 fn part_2(input: &str) -> i64 {
     let mut map: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
     map.insert(3, "  #D#B#A#C#".chars().collect());
     map.insert(3, "  #D#C#B#A#".chars().collect());
-    shortest_path(&map).unwrap()
+    shortest_path(&map).expect("valid puzzle input")
 }
 
 #[cfg(test)]

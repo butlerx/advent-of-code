@@ -12,7 +12,12 @@ fn part_1(input: &str) -> i64 {
             cycles
         } else {
             cycles.push(cycles[cycles.len() - 1]);
-            let num = line.split(' ').nth(1).unwrap().parse::<i64>().unwrap();
+            let num = line
+                .split(' ')
+                .nth(1)
+                .expect("valid puzzle input")
+                .parse::<i64>()
+                .expect("valid puzzle input");
             cycles.push(cycles[cycles.len() - 1] + num);
             cycles
         }
@@ -37,7 +42,12 @@ fn part_2(input: &str) -> String {
                 } else {
                     output_to_display(&mut display, register, cycle);
                     output_to_display(&mut display, register, cycle + 1);
-                    let num = line.split(' ').nth(1).unwrap().parse::<i64>().unwrap();
+                    let num = line
+                        .split(' ')
+                        .nth(1)
+                        .expect("valid puzzle input")
+                        .parse::<i64>()
+                        .expect("valid puzzle input");
                     (cycle + 2, register + num, display)
                 }
             },

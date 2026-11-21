@@ -11,7 +11,7 @@ fn find_next_bus(current_time: i64, bus_ids: &[i64]) -> i64 {
     (current_time..)
         .find_map(|i| bus_ids.iter().find(|&b| i % b == 0).map(|b| (i, b)))
         .map(|(i, b)| b * (i - current_time))
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 fn egcd(divisor: i64, dividend: i64) -> (i64, i64, i64) {
@@ -46,7 +46,7 @@ fn chinese_remainder(residues: &[i64], modulii: &[i64]) -> Option<i64> {
 }
 
 fn run(input: &str, part_two: bool) -> i64 {
-    let inputs: (&str, &str) = input.lines().collect_tuple().unwrap();
+    let inputs: (&str, &str) = input.lines().collect_tuple().expect("valid puzzle input");
     let ids: Vec<(i64, i64)> = inputs
         .1
         .split(',')
@@ -55,15 +55,15 @@ fn run(input: &str, part_two: bool) -> i64 {
         .map(|(i, n)| {
             (
                 i64::try_from(i).expect("cast within range"),
-                n.trim().parse::<i64>().unwrap(),
+                n.trim().parse::<i64>().expect("valid puzzle input"),
             )
         })
         .collect();
-    let goal = inputs.0.trim().parse::<i64>().unwrap();
+    let goal = inputs.0.trim().parse::<i64>().expect("valid puzzle input");
     let busses = ids.iter().map(|&(_, b)| b).collect::<Vec<_>>();
     if part_two {
         let res = ids.iter().map(|&(i, b)| b - i).collect::<Vec<_>>();
-        chinese_remainder(&res, &busses).unwrap()
+        chinese_remainder(&res, &busses).expect("valid puzzle input")
     } else {
         find_next_bus(goal, &busses)
     }

@@ -34,7 +34,10 @@ fn register(s: &str) -> Option<usize> {
 
 impl Source {
     fn from_str(s: &str) -> Self {
-        register(s).map_or_else(|| Self::Val(s.parse().unwrap()), Self::Reg)
+        register(s).map_or_else(
+            || Self::Val(s.parse().expect("valid puzzle input")),
+            Self::Reg,
+        )
     }
 
     fn val(&self, regs: &[i64; 4]) -> i64 {
@@ -128,13 +131,13 @@ fn run(instrunctions: &[Instruction], biggest: bool) -> i64 {
         (1..=9).collect()
     };
     find_model_num(&mut Cache::new(), instrunctions, 1, 0, &range)
-        .unwrap()
+        .expect("valid puzzle input")
         .to_string()
         .chars()
         .rev()
         .collect::<String>()
         .parse::<i64>()
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 #[cfg(test)]

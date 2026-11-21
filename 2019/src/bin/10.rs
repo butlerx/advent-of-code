@@ -61,7 +61,7 @@ pub fn part_1(input: &str) -> usize {
                 .len()
         })
         .max()
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 #[must_use]

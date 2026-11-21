@@ -15,7 +15,10 @@ fn parse_input(input: &str) -> HashMap<char, Vec<char>> {
         .lines()
         .map(|line| {
             let mut chars = line.chars().skip(5);
-            (chars.next().unwrap(), chars.nth(30).unwrap())
+            (
+                chars.next().expect("valid puzzle input"),
+                chars.nth(30).expect("valid puzzle input"),
+            )
         })
         .into_group_map()
 }

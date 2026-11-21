@@ -35,26 +35,26 @@ fn parse_input(s: &str) -> VecDeque<char> {
 
 fn part_1(input: &str) -> i64 {
     let mut queue = parse_input(input);
-    let (res, _) = run(&mut queue).unwrap();
+    let (res, _) = run(&mut queue).expect("valid puzzle input");
     res
 }
 
 fn part_2(input: &str) -> i64 {
     let mut queue = parse_input(input);
-    let (_, res) = run(&mut queue).unwrap();
+    let (_, res) = run(&mut queue).expect("valid puzzle input");
     res
 }
 
 fn pop_string(queue: &mut VecDeque<char>, length: usize) -> String {
     String::from_iter(
         (0..length)
-            .map(|_| queue.pop_front().unwrap())
+            .map(|_| queue.pop_front().expect("valid puzzle input"))
             .collect::<Vec<char>>(),
     )
 }
 
 fn run(queue: &mut VecDeque<char>) -> Option<(i64, i64)> {
-    let version_sum = i64::from_str_radix(&pop_string(queue, 3), 2).unwrap();
+    let version_sum = i64::from_str_radix(&pop_string(queue, 3), 2).expect("valid puzzle input");
 
     match pop_string(queue, 3).as_ref() {
         "100" => Some((version_sum, solve_literal(queue))),
@@ -68,11 +68,17 @@ fn run(queue: &mut VecDeque<char>) -> Option<(i64, i64)> {
         }
         "010" => {
             let (version, numbers) = solve_operator(queue);
-            Some((version_sum + version, *numbers.iter().min().unwrap()))
+            Some((
+                version_sum + version,
+                *numbers.iter().min().expect("valid puzzle input"),
+            ))
         }
         "011" => {
             let (version, numbers) = solve_operator(queue);
-            Some((version_sum + version, *numbers.iter().max().unwrap()))
+            Some((
+                version_sum + version,
+                *numbers.iter().max().expect("valid puzzle input"),
+            ))
         }
         "101" => {
             let (version, numbers) = solve_operator(queue);
@@ -96,14 +102,14 @@ fn solve_literal(queue: &mut VecDeque<char>) -> i64 {
     loop {
         let group_header = queue.pop_front();
         for _ in 0..4 {
-            number_bits.push(queue.pop_front().unwrap());
+            number_bits.push(queue.pop_front().expect("valid puzzle input"));
         }
         if group_header == Some('0') {
             break;
         }
     }
 
-    i64::from_str_radix(&String::from_iter(number_bits), 2).unwrap()
+    i64::from_str_radix(&String::from_iter(number_bits), 2).expect("valid puzzle input")
 }
 
 fn solve_operator(queue: &mut VecDeque<char>) -> (i64, Vec<i64>) {
@@ -112,10 +118,11 @@ fn solve_operator(queue: &mut VecDeque<char>) -> (i64, Vec<i64>) {
 
     match queue.pop_front() {
         Some('0') => {
-            let length = usize::from_str_radix(&pop_string(queue, 15), 2).unwrap();
+            let length =
+                usize::from_str_radix(&pop_string(queue, 15), 2).expect("valid puzzle input");
             let start = queue.len();
             loop {
-                let (version, value) = run(queue).unwrap();
+                let (version, value) = run(queue).expect("valid puzzle input");
                 version_sum += version;
                 values.push(value);
 
@@ -125,8 +132,10 @@ fn solve_operator(queue: &mut VecDeque<char>) -> (i64, Vec<i64>) {
             }
         }
         Some('1') => {
-            for _ in 0..usize::from_str_radix(&pop_string(queue, 11), 2).unwrap() {
-                let (version, value) = run(queue).unwrap();
+            for _ in
+                0..usize::from_str_radix(&pop_string(queue, 11), 2).expect("valid puzzle input")
+            {
+                let (version, value) = run(queue).expect("valid puzzle input");
                 version_sum += version;
                 values.push(value);
             }

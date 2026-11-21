@@ -9,13 +9,13 @@ fn main() {
 
 fn parse_policy(policy: &str) -> (usize, usize, char, String) {
     let cap = Regex::new(r"(\d+)-(\d+) (\w): (\w+)")
-        .unwrap()
+        .expect("valid puzzle input")
         .captures(policy)
-        .unwrap();
+        .expect("valid puzzle input");
     (
-        cap[1].parse().unwrap(),
-        cap[2].parse().unwrap(),
-        cap[3].chars().next().unwrap(),
+        cap[1].parse().expect("valid puzzle input"),
+        cap[2].parse().expect("valid puzzle input"),
+        cap[3].chars().next().expect("valid puzzle input"),
         cap[4].to_string(),
     )
 }

@@ -15,19 +15,19 @@ fn parse_input(input: &str) -> HashMap<PathBuf, i64> {
             .split('$')
             .skip(1)
             .fold(HashMap::new(), |mut fs, command| {
-                match command.trim().lines().next().unwrap() {
+                match command.trim().lines().next().expect("valid puzzle input") {
                     "cd .." => {
                         pwd.pop();
                     }
                     "ls" => {
                         let entries = command.lines().skip(1).map(|output| {
-                            let (size, file) = output.split_once(' ').unwrap();
+                            let (size, file) = output.split_once(' ').expect("valid puzzle input");
                             (size.parse::<i64>().unwrap_or(-1), file)
                         });
                         fs.entry(pwd.clone()).or_default().extend(entries);
                     }
                     cd_dir => {
-                        pwd.push(cd_dir.split_once(' ').unwrap().1);
+                        pwd.push(cd_dir.split_once(' ').expect("valid puzzle input").1);
                     }
                 }
                 fs
@@ -46,13 +46,13 @@ fn dir_size(
 ) {
     let size = fs
         .get(dir)
-        .unwrap()
+        .expect("valid puzzle input")
         .iter()
         .map(|&(s, d)| match s {
             -1 => {
                 let dir = dir.join(d);
                 dir_size(fs, dir_sizes, &dir);
-                *dir_sizes.get(&dir).unwrap()
+                *dir_sizes.get(&dir).expect("valid puzzle input")
             }
             s => s,
         })
@@ -66,12 +66,12 @@ fn part_1(input: &str) -> i64 {
 
 fn part_2(input: &str) -> i64 {
     let sizes = parse_input(input);
-    let total_size = sizes.get(&PathBuf::from("/")).unwrap();
+    let total_size = sizes.get(&PathBuf::from("/")).expect("valid puzzle input");
     *sizes
         .values()
         .filter(|&s| 40_000_000 + s >= *total_size)
         .min()
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 #[cfg(test)]

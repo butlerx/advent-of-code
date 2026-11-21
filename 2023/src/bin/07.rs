@@ -55,7 +55,7 @@ impl HandType {
         }
 
         if jacks_wild {
-            let add = *freq.get(&'J').unwrap();
+            let add = *freq.get(&'J').expect("valid puzzle input");
             let count = freq.entry(max_char).or_insert(0);
             *count += add;
             freq.remove(&'J');
@@ -106,8 +106,8 @@ impl Ord for Hand {
 
 impl Hand {
     fn new(line: &str, jacks_wild: bool) -> Self {
-        let (cards, bid) = line.split_once(' ').unwrap();
-        let bid = bid.parse::<u32>().unwrap();
+        let (cards, bid) = line.split_once(' ').expect("valid puzzle input");
+        let bid = bid.parse::<u32>().expect("valid puzzle input");
         let hand_type = HandType::new(cards, jacks_wild);
         let cards = cards
             .chars()

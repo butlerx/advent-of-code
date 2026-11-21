@@ -179,8 +179,16 @@ fn parse_input(input: &str) -> (Grid<char>, Point, Point) {
             .map(|line| line.chars().collect())
             .collect::<Vec<_>>(),
     );
-    let start = grid.iter().find(|(_, c)| **c == 'S').unwrap().0;
-    let end = grid.iter().find(|(_, c)| **c == 'E').unwrap().0;
+    let start = grid
+        .iter()
+        .find(|(_, c)| **c == 'S')
+        .expect("valid puzzle input")
+        .0;
+    let end = grid
+        .iter()
+        .find(|(_, c)| **c == 'E')
+        .expect("valid puzzle input")
+        .0;
     (grid, start, end)
 }
 

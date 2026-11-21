@@ -10,11 +10,11 @@ fn main() {
 fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
         .lines()
-        .map(|num| num.trim().parse::<i64>().unwrap())
+        .map(|num| num.trim().parse::<i64>().expect("valid puzzle input"))
         .sorted();
     if part_two {
         let mut points = HashMap::new();
-        let end = nums.clone().next_back().unwrap();
+        let end = nums.clone().next_back().expect("valid puzzle input");
         points.insert(0, 1);
         for num in nums {
             let value = points.get(&(num - 1)).unwrap_or(&0)

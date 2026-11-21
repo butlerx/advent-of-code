@@ -35,7 +35,8 @@ fn run(input: &str, part_two: bool) -> i64 {
             &input
                 .lines()
                 .map(|line| {
-                    let l: (&str, &str) = line.split(')').collect_tuple().unwrap();
+                    let l: (&str, &str) =
+                        line.split(')').collect_tuple().expect("valid puzzle input");
                     (l.1, l.0)
                 })
                 .collect(),
@@ -46,7 +47,7 @@ fn run(input: &str, part_two: bool) -> i64 {
         calculate(
             &input
                 .lines()
-                .map(|line| line.split(')').collect_tuple().unwrap())
+                .map(|line| line.split(')').collect_tuple().expect("valid puzzle input"))
                 .into_group_map(),
             "COM",
             0,

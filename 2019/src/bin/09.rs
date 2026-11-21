@@ -1,8 +1,18 @@
 use std::convert::TryFrom;
 fn main() {
     let input = include_str!("../../input/09.txt");
-    println!("Part 1: {}", Computer::new(input).execute(&[1]).unwrap());
-    println!("Part 2: {}", Computer::new(input).execute(&[2]).unwrap());
+    println!(
+        "Part 1: {}",
+        Computer::new(input)
+            .execute(&[1])
+            .expect("valid puzzle input")
+    );
+    println!(
+        "Part 2: {}",
+        Computer::new(input)
+            .execute(&[2])
+            .expect("valid puzzle input")
+    );
 }
 
 #[derive(Clone)]
@@ -16,7 +26,7 @@ impl Computer {
     fn new(input: &str) -> Self {
         let mut mem: Vec<i64> = input
             .split(',')
-            .map(|num| num.trim().parse().unwrap())
+            .map(|num| num.trim().parse().expect("valid puzzle input"))
             .collect();
         mem.resize(10 * 1024, 0);
         Computer {
@@ -62,7 +72,7 @@ impl Computer {
             match op {
                 1 => *self.read(3) = *self.read(1) + *self.read(2),
                 2 => *self.read(3) = *self.read(1) * *self.read(2),
-                3 => *self.read(1) = *input.next().unwrap(),
+                3 => *self.read(1) = *input.next().expect("valid puzzle input"),
                 4 => break Some(*self.read(1)),
                 5 if *self.read(1) != 0 => {
                     self.pointer = usize::try_from(*self.read(2)).expect("cast within range");
@@ -95,17 +105,36 @@ mod tests {
     #[test]
     fn test_small_input() {
         let mut c0 = Computer::new(INPUT[0]);
-        assert_eq!(c0.execute(&[1]).unwrap(), 109);
+        assert_eq!(c0.execute(&[1]).expect("valid puzzle input"), 109);
         let mut c1 = Computer::new(INPUT[1]);
-        assert_eq!(c1.execute(&[1]).unwrap().to_string().len(), 16);
+        assert_eq!(
+            c1.execute(&[1])
+                .expect("valid puzzle input")
+                .to_string()
+                .len(),
+            16
+        );
         let mut c2 = Computer::new(INPUT[2]);
-        assert_eq!(c2.execute(&[1]).unwrap(), 1_125_899_906_842_624);
+        assert_eq!(
+            c2.execute(&[1]).expect("valid puzzle input"),
+            1_125_899_906_842_624
+        );
     }
 
     #[test]
     fn test_large_input() {
         let input = include_str!("../../input/09.txt");
-        assert_eq!(Computer::new(input).execute(&[1]).unwrap(), 3_454_977_209);
-        assert_eq!(Computer::new(input).execute(&[2]).unwrap(), 50120);
+        assert_eq!(
+            Computer::new(input)
+                .execute(&[1])
+                .expect("valid puzzle input"),
+            3_454_977_209
+        );
+        assert_eq!(
+            Computer::new(input)
+                .execute(&[2])
+                .expect("valid puzzle input"),
+            50120
+        );
     }
 }

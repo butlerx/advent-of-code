@@ -16,18 +16,18 @@ fn parse_input(input: &str) -> HashMap<i64, Vec<i64>> {
         r"\[\d{4}-(?P<month>\d{2})-(?P<day>\d{2}) \d{2}:(?P<minute>\d{2})] ",
         r"(Guard #(?P<guard>\d+)|(falls asleep)|(?P<wakes>wakes up))",
     ))
-    .unwrap();
+    .expect("valid puzzle input");
 
     input
         .trim()
         .lines()
         .sorted()
         .fold(HashMap::new(), |mut roster, event| {
-            let cap = re.captures(event).unwrap();
-            let now = cap["minute"].parse().unwrap();
+            let cap = re.captures(event).expect("valid puzzle input");
+            let now = cap["minute"].parse().expect("valid puzzle input");
 
             if let Some(id) = cap.name("guard") {
-                guard = id.as_str().parse().unwrap();
+                guard = id.as_str().parse().expect("valid puzzle input");
             } else if cap.name("wakes").is_some() {
                 let timetable = roster.entry(guard).or_insert_with(|| vec![0; 60]);
                 for time in &mut timetable[timer..now] {
@@ -44,19 +44,29 @@ fn part_1(input: &str) -> i64 {
     let (&id, timetable): (&i64, &Vec<i64>) = timetables
         .iter()
         .max_by_key(|(_, v)| v.iter().sum::<i64>())
-        .unwrap();
-    id * i64::try_from(enumerate(timetable).max_by_key(|&(_, c)| c).unwrap().0)
-        .expect("cast within range")
+        .expect("valid puzzle input");
+    id * i64::try_from(
+        enumerate(timetable)
+            .max_by_key(|&(_, c)| c)
+            .expect("valid puzzle input")
+            .0,
+    )
+    .expect("cast within range")
 }
 
 fn part_2(input: &str) -> i64 {
     let timetables = parse_input(input);
     let (&id, timetable): (&i64, &Vec<i64>) = timetables
         .iter()
-        .max_by_key(|(_, v)| *v.iter().max().unwrap())
-        .unwrap();
-    id * i64::try_from(enumerate(timetable).max_by_key(|&(_, c)| c).unwrap().0)
-        .expect("cast within range")
+        .max_by_key(|(_, v)| *v.iter().max().expect("valid puzzle input"))
+        .expect("valid puzzle input");
+    id * i64::try_from(
+        enumerate(timetable)
+            .max_by_key(|&(_, c)| c)
+            .expect("valid puzzle input")
+            .0,
+    )
+    .expect("cast within range")
 }
 
 #[cfg(test)]

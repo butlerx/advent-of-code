@@ -20,9 +20,9 @@ impl std::str::FromStr for Operation {
         Ok(if ops[4] == "*" && ops[5] == "old" {
             Self::MultiplySelf
         } else if ops[4] == "+" {
-            Self::Add(ops[5].parse().unwrap())
+            Self::Add(ops[5].parse().expect("valid puzzle input"))
         } else {
-            Self::Multiply(ops[5].parse().unwrap())
+            Self::Multiply(ops[5].parse().expect("valid puzzle input"))
         })
     }
 }
@@ -54,27 +54,32 @@ impl std::str::FromStr for Monkey {
         let lines: Vec<_> = input.lines().map(str::trim).collect();
         let items: Vec<i64> = lines[1]
             .split_once(": ")
-            .unwrap()
+            .expect("valid puzzle input")
             .1
             .split(", ")
-            .map(|x| x.parse().unwrap())
+            .map(|x| x.parse().expect("valid puzzle input"))
             .collect();
 
         let operation = lines[2].parse()?;
 
-        let test = lines[3].split(' ').nth(3).unwrap().parse::<i64>().unwrap();
+        let test = lines[3]
+            .split(' ')
+            .nth(3)
+            .expect("valid puzzle input")
+            .parse::<i64>()
+            .expect("valid puzzle input");
         let on_true = lines[4]
             .split(' ')
             .nth(5)
-            .unwrap()
+            .expect("valid puzzle input")
             .parse::<usize>()
-            .unwrap();
+            .expect("valid puzzle input");
         let on_false = lines[5]
             .split(' ')
             .nth(5)
-            .unwrap()
+            .expect("valid puzzle input")
             .parse::<usize>()
-            .unwrap();
+            .expect("valid puzzle input");
 
         Ok(Self {
             items,
@@ -121,7 +126,7 @@ fn part_1(input: &str) -> i64 {
     let monkeys: Vec<Monkey> = input
         .trim()
         .split("\n\n")
-        .map(|monkey| monkey.parse().unwrap())
+        .map(|monkey| monkey.parse().expect("valid puzzle input"))
         .collect();
     calculate(monkeys, 20, &Divisor::Three)
 }
@@ -130,7 +135,7 @@ fn part_2(input: &str) -> i64 {
     let monkeys: Vec<Monkey> = input
         .trim()
         .split("\n\n")
-        .map(|monkey| monkey.parse().unwrap())
+        .map(|monkey| monkey.parse().expect("valid puzzle input"))
         .collect();
     let mod_product = monkeys.iter().map(|x| x.test).product::<i64>();
     calculate(monkeys, 10_000, &Divisor::Custom(mod_product))

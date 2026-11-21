@@ -32,7 +32,7 @@ fn part_1(input: &str) -> u64 {
         .map(|line| {
             line.split_whitespace()
                 .skip(1)
-                .map(|x| x.parse::<f64>().unwrap())
+                .map(|x| x.parse::<f64>().expect("valid puzzle input"))
                 .collect::<Vec<_>>()
         })
         .collect();
@@ -52,7 +52,7 @@ fn part_2(input: &str) -> u64 {
                 .skip(1)
                 .collect::<String>()
                 .parse::<f64>()
-                .unwrap()
+                .expect("valid puzzle input")
         })
         .collect();
     possible_wins(nums[0], nums[1])

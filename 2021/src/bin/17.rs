@@ -27,17 +27,17 @@ fn find_max_height(target_x: Targets, target_y: Targets, mut point: Targets) -> 
 }
 
 fn parse_range(input: &str) -> Targets {
-    let (_, range) = input.trim().split_once('=').unwrap();
-    let (low, high) = range.trim().split_once("..").unwrap();
+    let (_, range) = input.trim().split_once('=').expect("valid puzzle input");
+    let (low, high) = range.trim().split_once("..").expect("valid puzzle input");
     (
-        low.trim().parse::<i64>().unwrap(),
-        high.trim().parse::<i64>().unwrap(),
+        low.trim().parse::<i64>().expect("valid puzzle input"),
+        high.trim().parse::<i64>().expect("valid puzzle input"),
     )
 }
 
 fn parse_input(input: &str) -> (Targets, Targets) {
     let args = input.replace("target area:", "");
-    let (x, y) = args.trim().split_once(',').unwrap();
+    let (x, y) = args.trim().split_once(',').expect("valid puzzle input");
     (parse_range(x), parse_range(y))
 }
 
@@ -45,13 +45,13 @@ fn heights(input: &str) -> impl Iterator<Item = i64> {
     let (x, y) = parse_input(input);
     let min_x = (0..=x.0.max(0))
         .find(|&vx| vx * (vx + 1) / 2 >= x.0)
-        .unwrap();
+        .expect("valid puzzle input");
     (min_x..=x.1)
         .flat_map(move |vx| (y.0..=-y.0).filter_map(move |vy| find_max_height(x, y, (vx, vy))))
 }
 
 fn part_1(input: &str) -> i64 {
-    heights(input).max().unwrap()
+    heights(input).max().expect("valid puzzle input")
 }
 
 fn part_2(input: &str) -> usize {

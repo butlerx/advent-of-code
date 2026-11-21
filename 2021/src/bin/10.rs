@@ -67,7 +67,7 @@ fn part_2(input: &str) -> i64 {
         })
         .collect();
     scores.sort_unstable();
-    *scores.get(scores.len() / 2).unwrap()
+    *scores.get(scores.len() / 2).expect("valid puzzle input")
 }
 
 #[cfg(test)]

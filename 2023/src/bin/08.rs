@@ -24,7 +24,7 @@ impl From<char> for Choice {
 }
 
 fn parse_input(input: &str) -> (Vec<Choice>, HashMap<&str, (&str, &str)>) {
-    let (dir_str, map_str) = input.trim().split_once("\n\n").unwrap();
+    let (dir_str, map_str) = input.trim().split_once("\n\n").expect("valid puzzle input");
     let directions = dir_str.trim().chars().map(Choice::from).collect::<Vec<_>>();
     let map = map_str
         .lines()
@@ -52,7 +52,7 @@ fn traverse(
     let mut pos = start_position;
     let mut count = 0;
     for choice in directions.iter().cycle() {
-        let next = map.get(pos).unwrap();
+        let next = map.get(pos).expect("valid puzzle input");
         count += 1;
         pos = match choice {
             Choice::Left => next.0,

@@ -35,8 +35,8 @@ fn parse(path: &str) -> Vec<(char, usize)> {
     path.split(',')
         .map(|direction| {
             (
-                direction.chars().next().unwrap(),
-                direction[1..].parse().unwrap(),
+                direction.chars().next().expect("valid puzzle input"),
+                direction[1..].parse().expect("valid puzzle input"),
             )
         })
         .collect()
@@ -49,7 +49,7 @@ fn run(input: &str, part_two: bool) -> i64 {
             .iter()
             .filter_map(|(cell, steps)| paths[1].get(cell).map(|s| steps + s))
             .min()
-            .unwrap()
+            .expect("valid puzzle input")
     } else {
         let path_1: HashSet<&(i64, i64)> = HashSet::from_iter(paths[0].keys());
         let path_2: HashSet<&(i64, i64)> = HashSet::from_iter(paths[1].keys());
@@ -57,7 +57,7 @@ fn run(input: &str, part_two: bool) -> i64 {
             .intersection(&path_2)
             .map(|(x, y)| x.abs() + y.abs())
             .min()
-            .unwrap()
+            .expect("valid puzzle input")
     }
 }
 

@@ -7,7 +7,7 @@ fn main() {
 fn parse_input(input: &str) -> [usize; 9] {
     let mut counts: [usize; 9] = [0; 9];
     for age in input.split(',') {
-        counts[age.trim().parse::<usize>().unwrap()] += 1;
+        counts[age.trim().parse::<usize>().expect("valid puzzle input")] += 1;
     }
     counts
 }

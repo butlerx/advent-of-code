@@ -17,9 +17,9 @@ fn parse_input(input: &str) -> Vec<(i64, i64)> {
         .map(|line| {
             line.trim()
                 .split(", ")
-                .map(|s| s.parse().unwrap())
+                .map(|s| s.parse().expect("valid puzzle input"))
                 .collect_tuple()
-                .unwrap()
+                .expect("valid puzzle input")
         })
         .collect()
 }
@@ -69,7 +69,7 @@ fn part_1(input: &str) -> i64 {
         })
         .values()
         .max()
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 fn part_2(input: &str) -> usize {

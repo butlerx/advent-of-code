@@ -49,8 +49,12 @@ fn run(input: &str, part_two: bool) -> i64 {
     let instruction_set = input
         .lines()
         .map(|line| {
-            let (code, arg) = line.trim().split(' ').collect_tuple().unwrap();
-            (code.trim(), arg.parse::<i64>().unwrap())
+            let (code, arg) = line
+                .trim()
+                .split(' ')
+                .collect_tuple()
+                .expect("valid puzzle input");
+            (code.trim(), arg.parse::<i64>().expect("valid puzzle input"))
         })
         .collect::<Vec<(&str, i64)>>();
 

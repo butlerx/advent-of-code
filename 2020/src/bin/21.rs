@@ -17,7 +17,7 @@ fn parse_input(input: &str) -> Ingredients {
     let mut allergen_map = HashMap::<String, HashSet<String>>::new();
     let mut occurrences = HashMap::<String, usize>::new();
     input.lines().for_each(|line| {
-        let contains = line.find(" (contains ").unwrap();
+        let contains = line.find(" (contains ").expect("valid puzzle input");
         let ingredients = line[..contains]
             .split(' ')
             .map(String::from)
@@ -62,7 +62,7 @@ fn find_danderous_ingrediants(mut allergens: Allergens) -> Vec<String> {
         }
         for (allergen, ingredient_set) in &allergens {
             if ingredient_set.len() == 1 {
-                let ingredient = ingredient_set.iter().next().unwrap();
+                let ingredient = ingredient_set.iter().next().expect("valid puzzle input");
                 danger_list.push((allergen.clone(), ingredient.clone()));
             }
         }

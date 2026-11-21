@@ -12,12 +12,12 @@ fn main() {
 
 fn parse_input(input: &str) -> (usize, u64) {
     let cap = Regex::new(r"mem\[(\d+)\] = (\d+)")
-        .unwrap()
+        .expect("valid puzzle input")
         .captures(input)
-        .unwrap();
+        .expect("valid puzzle input");
     (
-        cap[1].parse::<usize>().unwrap(),
-        cap[2].trim().parse::<u64>().unwrap(),
+        cap[1].parse::<usize>().expect("valid puzzle input"),
+        cap[2].trim().parse::<u64>().expect("valid puzzle input"),
     )
 }
 
@@ -80,12 +80,13 @@ fn write(
 
 fn part_one(instructions: &str) -> i64 {
     let mut mem: HashMap<usize, u64> = HashMap::new();
-    let re = Regex::new(r"mask = ([10X]+)").unwrap();
+    let re = Regex::new(r"mask = ([10X]+)").expect("valid puzzle input");
     let mut zeroes_mask = MASK_36_BIT;
     let mut ones_mask = 0u64;
     for instruction in instructions.lines() {
         if re.is_match(instruction) {
-            let (zeroes, ones) = parse_mask(&re.captures(instruction).unwrap()[1]);
+            let (zeroes, ones) =
+                parse_mask(&re.captures(instruction).expect("valid puzzle input")[1]);
             zeroes_mask = MASK_36_BIT & !zeroes;
             ones_mask = ones;
         } else {
@@ -97,12 +98,12 @@ fn part_one(instructions: &str) -> i64 {
 }
 
 fn part_two(instructions: &str) -> i64 {
-    let re = Regex::new(r"mask = ([10X]+)").unwrap();
+    let re = Regex::new(r"mask = ([10X]+)").expect("valid puzzle input");
     let mut mem: HashMap<usize, u64> = HashMap::new();
     let mut mask: Vec<u64> = Vec::new();
     for instruction in instructions.lines() {
         if re.is_match(instruction) {
-            mask = parse_mask_floating(&re.captures(instruction).unwrap()[1]);
+            mask = parse_mask_floating(&re.captures(instruction).expect("valid puzzle input")[1]);
         } else {
             let (pos, value) = parse_input(instruction);
             // assume re_mem matches

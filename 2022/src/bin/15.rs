@@ -15,7 +15,7 @@ fn parse_input(input: &str) -> Vec<(i64, i64, i64)> {
                 .filter_map(|w| w.parse::<i64>().ok())
                 .collect_tuple()
                 .map(|(x, y, dx, dy)| (x, y, (x - dx).abs() + (y - dy).abs()))
-                .unwrap()
+                .expect("valid puzzle input")
         })
         .collect()
 }

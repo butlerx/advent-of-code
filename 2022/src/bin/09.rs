@@ -14,7 +14,7 @@ fn rope_sim(input: &str, followers: usize) -> usize {
         .fold(
             vec![(0, 0)].into_iter().collect::<HashSet<_>>(),
             |visited, line| {
-                let (d, moves) = line.split_once(' ').unwrap();
+                let (d, moves) = line.split_once(' ').expect("valid puzzle input");
                 let (dx, dy) = match d.chars().next() {
                     Some('U') => (0, 1),
                     Some('D') => (0, -1),
@@ -22,18 +22,21 @@ fn rope_sim(input: &str, followers: usize) -> usize {
                     Some('L') => (-1, 0),
                     _ => unreachable!(),
                 };
-                (0..moves.parse::<usize>().unwrap()).fold(visited, |mut visited, _| {
-                    rope[0] = (rope[0].0 + dx, rope[0].1 + dy);
-                    for i in 1..rope.len() {
-                        let (x, y) = rope[i - 1];
-                        if (x - rope[i].0).abs() > 1 || (y - rope[i].1).abs() > 1 {
-                            rope[i].0 += (x - rope[i].0).signum();
-                            rope[i].1 += (y - rope[i].1).signum();
+                (0..moves.parse::<usize>().expect("valid puzzle input")).fold(
+                    visited,
+                    |mut visited, _| {
+                        rope[0] = (rope[0].0 + dx, rope[0].1 + dy);
+                        for i in 1..rope.len() {
+                            let (x, y) = rope[i - 1];
+                            if (x - rope[i].0).abs() > 1 || (y - rope[i].1).abs() > 1 {
+                                rope[i].0 += (x - rope[i].0).signum();
+                                rope[i].1 += (y - rope[i].1).signum();
+                            }
                         }
-                    }
-                    visited.insert(rope[followers]);
-                    visited
-                })
+                        visited.insert(rope[followers]);
+                        visited
+                    },
+                )
             },
         )
         .len()

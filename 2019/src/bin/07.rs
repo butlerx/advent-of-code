@@ -19,7 +19,7 @@ impl Computer {
         Computer {
             memory: input
                 .split(',')
-                .map(|num| num.trim().parse().unwrap())
+                .map(|num| num.trim().parse().expect("valid puzzle input"))
                 .collect(),
             pointer: 0,
             output: 0,
@@ -61,7 +61,7 @@ impl Computer {
             match op {
                 1 => *self.read(3) = *self.read(1) + *self.read(2),
                 2 => *self.read(3) = *self.read(1) * *self.read(2),
-                3 => *self.read(1) = *input.next().unwrap(),
+                3 => *self.read(1) = *input.next().expect("valid puzzle input"),
                 4 => {
                     let output = *self.read(1);
                     self.output = output;
@@ -89,21 +89,22 @@ impl Computer {
 fn feedback(comp: &Computer, phases: &[i64]) -> i64 {
     let mut amplifiers: Vec<_> = phases.iter().map(|_| comp.clone()).collect();
 
-    let init = phases
-        .iter()
-        .zip(&mut amplifiers)
-        .fold(0, |input, (p, a)| a.execute(&[*p, input]).unwrap());
+    let init = phases.iter().zip(&mut amplifiers).fold(0, |input, (p, a)| {
+        a.execute(&[*p, input]).expect("valid puzzle input")
+    });
 
     (0..amplifiers.len())
         .cycle()
         .try_fold(init, |input, i| amplifiers[i].execute(&[input]));
 
-    amplifiers.last().unwrap().output
+    amplifiers.last().expect("valid puzzle input").output
 }
 
 fn applify(comp: &Computer, phases: &[i64]) -> i64 {
     phases.iter().fold(0, |input, phase| {
-        comp.clone().execute(&[*phase, input]).unwrap()
+        comp.clone()
+            .execute(&[*phase, input])
+            .expect("valid puzzle input")
     })
 }
 
@@ -120,7 +121,7 @@ fn run(input: &str, part_two: bool) -> i64 {
             .permutations(5)
             .map(|args| applify(&comp, &args))
             .max()
-            .unwrap()
+            .expect("valid puzzle input")
     }
 }
 

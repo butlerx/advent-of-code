@@ -70,7 +70,7 @@ fn run(input: &str, part_two: bool) -> i64 {
     let nums: Vec<i64> = input
         .trim()
         .chars()
-        .map(|n| i64::from(n.to_digit(10).unwrap()))
+        .map(|n| i64::from(n.to_digit(10).expect("valid puzzle input")))
         .collect();
     if part_two {
         let res = move_cups(&nums, 10_000_000);
@@ -81,7 +81,7 @@ fn run(input: &str, part_two: bool) -> i64 {
             .map(std::string::ToString::to_string)
             .collect::<String>()
             .parse::<i64>()
-            .unwrap()
+            .expect("valid puzzle input")
     }
 }
 

@@ -12,14 +12,17 @@ fn parse_input(input: &str) -> Vec<i64> {
         .split("\n\n")
         .map(|elf| {
             elf.lines()
-                .map(|num| num.trim().parse::<i64>().unwrap())
+                .map(|num| num.trim().parse::<i64>().expect("valid puzzle input"))
                 .sum()
         })
         .collect()
 }
 
 fn part_1(input: &str) -> i64 {
-    parse_input(input).into_iter().max().unwrap()
+    parse_input(input)
+        .into_iter()
+        .max()
+        .expect("valid puzzle input")
 }
 
 fn part_2(input: &str) -> i64 {

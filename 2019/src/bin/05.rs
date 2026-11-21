@@ -78,7 +78,7 @@ fn execute(memory: Vec<i64>, input: i64) -> i64 {
 fn run(input: &str, part_two: bool) -> i64 {
     let nums = input
         .split(',')
-        .map(|num| num.trim().parse().unwrap())
+        .map(|num| num.trim().parse().expect("valid puzzle input"))
         .collect();
     if part_two {
         execute(nums, 5)

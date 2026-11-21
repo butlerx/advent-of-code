@@ -118,7 +118,7 @@ pub struct Machine {
 /// Parses the input string into a vector of Machines.
 ///
 /// # Panics
-/// Panics if the input format is invalid or if parsing fails (e.g., `.unwrap()` on missing parts).
+/// Panics if the input format is invalid or if parsing fails (e.g., `.expect("valid puzzle input")` on missing parts).
 #[must_use]
 pub fn parse(input: &str) -> Vec<Machine> {
     input
@@ -134,11 +134,11 @@ pub fn parse(input: &str) -> Vec<Machine> {
                 }
             }
 
-            let last_part = parts.last().unwrap();
+            let last_part = parts.last().expect("valid puzzle input");
             let counter_str = &last_part[1..last_part.len() - 1];
             let goal_counters = counter_str
                 .split(',')
-                .map(|s| s.parse::<i64>().unwrap())
+                .map(|s| s.parse::<i64>().expect("valid puzzle input"))
                 .collect();
 
             let mut button_masks = Vec::new();

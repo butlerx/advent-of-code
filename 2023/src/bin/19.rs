@@ -40,21 +40,25 @@ impl Part {
 }
 
 fn get_value(s: &str) -> u32 {
-    s.split('=').nth(1).unwrap().parse().unwrap()
+    s.split('=')
+        .nth(1)
+        .expect("valid puzzle input")
+        .parse()
+        .expect("valid puzzle input")
 }
 
 impl From<&str> for Part {
     fn from(s: &str) -> Self {
         let mut parts = s
             .strip_prefix('{')
-            .unwrap()
+            .expect("valid puzzle input")
             .strip_suffix('}')
-            .unwrap()
+            .expect("valid puzzle input")
             .split(',');
-        let x = get_value(parts.next().unwrap());
-        let m = get_value(parts.next().unwrap());
-        let a = get_value(parts.next().unwrap());
-        let s = get_value(parts.next().unwrap());
+        let x = get_value(parts.next().expect("valid puzzle input"));
+        let m = get_value(parts.next().expect("valid puzzle input"));
+        let a = get_value(parts.next().expect("valid puzzle input"));
+        let s = get_value(parts.next().expect("valid puzzle input"));
         Self { x, m, a, s }
     }
 }
@@ -65,21 +69,23 @@ fn parse_workflows(input: &str) -> WorkFlows<'_> {
     input
         .lines()
         .map(|l| {
-            let (name, rest) = l.split_once('{').unwrap();
+            let (name, rest) = l.split_once('{').expect("valid puzzle input");
             let (rest, label) = rest
                 .strip_suffix('}')
-                .unwrap()
-                .split_at(rest.rfind(',').unwrap());
+                .expect("valid puzzle input")
+                .split_at(rest.rfind(',').expect("valid puzzle input"));
             let rules = rest
                 .split(',')
                 .map(|rule| {
-                    let (rest, label) = rule.split_once(':').unwrap();
+                    let (rest, label) = rule.split_once(':').expect("valid puzzle input");
                     let lt = rest.contains('<');
-                    let (name, n) = rest.split_once(if lt { '<' } else { '>' }).unwrap();
+                    let (name, n) = rest
+                        .split_once(if lt { '<' } else { '>' })
+                        .expect("valid puzzle input");
                     (
-                        name.chars().next().unwrap(),
+                        name.chars().next().expect("valid puzzle input"),
                         lt,
-                        n.parse::<u32>().unwrap(),
+                        n.parse::<u32>().expect("valid puzzle input"),
                         label,
                     )
                 })
@@ -90,7 +96,7 @@ fn parse_workflows(input: &str) -> WorkFlows<'_> {
 }
 
 fn part_1(input: &str) -> u32 {
-    let (workflows_str, parts_str) = input.trim().split_once("\n\n").unwrap();
+    let (workflows_str, parts_str) = input.trim().split_once("\n\n").expect("valid puzzle input");
     let workflows = parse_workflows(workflows_str);
     parts_str
         .lines()
@@ -147,7 +153,7 @@ fn possible_accepted(workflows: &WorkFlows<'_>, curr: &str, mut ranges: [Vec<usi
 }
 
 fn part_2(input: &str) -> usize {
-    let (workflows_str, _) = input.trim().split_once("\n\n").unwrap();
+    let (workflows_str, _) = input.trim().split_once("\n\n").expect("valid puzzle input");
     let workflows = parse_workflows(workflows_str);
     possible_accepted(
         &workflows,

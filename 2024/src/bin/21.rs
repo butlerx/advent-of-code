@@ -51,8 +51,8 @@ impl From<Grid<char>> for State {
 impl State {
     fn get_all_encodings(&self, code: &str, start: Point) -> Vec<String> {
         let bounds = Point::new(
-            i64::try_from(self.pad.width).unwrap() - 1,
-            i64::try_from(self.pad.height).unwrap() - 1,
+            i64::try_from(self.pad.width).expect("valid puzzle input") - 1,
+            i64::try_from(self.pad.height).expect("valid puzzle input") - 1,
         );
 
         get_permutations(&self.moves)
@@ -94,7 +94,7 @@ impl State {
                         && self.pad.get(next).is_some_and(|c| c != ' ')
                         && current.manhattan_distance(target) > next.manhattan_distance(target)
                     {
-                        path.push(*self.move_to_dir.get(&delta).unwrap());
+                        path.push(*self.move_to_dir.get(&delta).expect("valid puzzle input"));
                         *current = next;
                         Some(true)
                     } else {

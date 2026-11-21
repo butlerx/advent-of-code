@@ -68,7 +68,7 @@ fn part_2(input: &str) -> i64 {
         })
         .values()
         .max()
-        .unwrap()
+        .expect("valid puzzle input")
 }
 
 #[cfg(test)]

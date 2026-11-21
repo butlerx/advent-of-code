@@ -66,11 +66,11 @@ impl FromStr for Map {
             let mut points = line.split(" -> ").map(|s| {
                 let parts = s
                     .split(',')
-                    .map(|p| p.parse::<i64>().unwrap())
+                    .map(|p| p.parse::<i64>().expect("valid puzzle input"))
                     .collect::<Vec<_>>();
                 (parts[0], parts[1])
             });
-            let mut xy = points.next().unwrap();
+            let mut xy = points.next().expect("valid puzzle input");
             for new in points {
                 depth = depth.max(new.1);
                 result.set(xy);
@@ -95,11 +95,17 @@ impl FromStr for Map {
 }
 
 fn part_1(input: &str) -> i64 {
-    input.parse::<Map>().unwrap().drop_sand_floor(false)
+    input
+        .parse::<Map>()
+        .expect("valid puzzle input")
+        .drop_sand_floor(false)
 }
 
 fn part_2(input: &str) -> i64 {
-    input.parse::<Map>().unwrap().drop_sand_floor(true)
+    input
+        .parse::<Map>()
+        .expect("valid puzzle input")
+        .drop_sand_floor(true)
 }
 
 #[cfg(test)]

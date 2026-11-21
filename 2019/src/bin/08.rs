@@ -64,7 +64,7 @@ fn part_1(input: &str) -> usize {
             let zeros = &"0".to_string();
             x.matches(zeros).count().cmp(&y.matches(zeros).count())
         })
-        .unwrap();
+        .expect("valid puzzle input");
     layer.matches(&"1").count() * layer.matches(&"2").count()
 }
 

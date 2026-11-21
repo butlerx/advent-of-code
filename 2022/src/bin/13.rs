@@ -9,9 +9,10 @@ fn main() {
 
 fn compare(left: &Value, right: &Value) -> Ordering {
     match (left, right) {
-        (Value::Number(lhs), Value::Number(rhs)) => {
-            lhs.as_i64().unwrap().cmp(&rhs.as_i64().unwrap())
-        }
+        (Value::Number(lhs), Value::Number(rhs)) => lhs
+            .as_i64()
+            .expect("valid puzzle input")
+            .cmp(&rhs.as_i64().expect("valid puzzle input")),
         (Value::Array(lhs), Value::Array(rhs)) => (0..std::cmp::max(lhs.len(), rhs.len()))
             .find_map(|idx| match (lhs.get(idx), rhs.get(idx)) {
                 (None, _) => Some(Ordering::Less),
@@ -35,7 +36,7 @@ fn part_1(input: &str) -> i64 {
         .filter(|(_, lines)| {
             let packets = lines
                 .lines()
-                .map(|l| serde_json::from_str::<Value>(l).unwrap())
+                .map(|l| serde_json::from_str::<Value>(l).expect("valid puzzle input"))
                 .collect::<Vec<_>>();
             compare(&packets[0], &packets[1]) != Ordering::Greater
         })
@@ -48,11 +49,11 @@ fn part_2(input: &str) -> i64 {
         .trim()
         .lines()
         .filter(|line| !line.is_empty())
-        .map(|line| serde_json::from_str::<Value>(line).unwrap())
+        .map(|line| serde_json::from_str::<Value>(line).expect("valid puzzle input"))
         .collect::<Vec<_>>();
     let divider_packets = [
-        serde_json::from_str::<Value>("[[2]]").unwrap(),
-        serde_json::from_str::<Value>("[[6]]").unwrap(),
+        serde_json::from_str::<Value>("[[2]]").expect("valid puzzle input"),
+        serde_json::from_str::<Value>("[[6]]").expect("valid puzzle input"),
     ];
     packets.extend(divider_packets.iter().cloned());
     packets.sort_by(compare);

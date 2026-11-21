@@ -19,20 +19,32 @@ fn parse_rules(rules: &str) -> HashMap<usize, Rule> {
     rules
         .lines()
         .map(|line| {
-            let (key, value) = line.split(": ").collect_tuple().unwrap();
+            let (key, value) = line
+                .split(": ")
+                .collect_tuple()
+                .expect("valid puzzle input");
             let rule = if value.contains('"') {
-                Rule::Char(value.chars().nth(1).unwrap())
+                Rule::Char(value.chars().nth(1).expect("valid puzzle input"))
             } else if value.contains('|') {
                 let (seq_1, seq_2) = value
                     .split(" | ")
-                    .map(|seg| seg.split(' ').map(|n| n.parse().unwrap()).collect())
+                    .map(|seg| {
+                        seg.split(' ')
+                            .map(|n| n.parse().expect("valid puzzle input"))
+                            .collect()
+                    })
                     .collect_tuple()
-                    .unwrap();
+                    .expect("valid puzzle input");
                 Rule::Alt(seq_1, seq_2)
             } else {
-                Rule::Seq(value.split(' ').map(|n| n.parse().unwrap()).collect())
+                Rule::Seq(
+                    value
+                        .split(' ')
+                        .map(|n| n.parse().expect("valid puzzle input"))
+                        .collect(),
+                )
             };
-            (key.parse::<usize>().unwrap(), rule)
+            (key.parse::<usize>().expect("valid puzzle input"), rule)
         })
         .collect()
 }
@@ -48,7 +60,7 @@ fn validate_msg(rules: &HashMap<usize, Rule>, msg: &str, mut queue: VecDeque<usi
         validate_msg(rules, msg, buf)
     };
 
-    match rules.get(&queue.pop_front().unwrap()) {
+    match rules.get(&queue.pop_front().expect("valid puzzle input")) {
         Some(Rule::Char(c)) => match msg.chars().next() {
             Some(ch) if &ch == c => validate_msg(rules, &msg[1..], queue),
             _ => false,
@@ -62,7 +74,10 @@ fn validate_msg(rules: &HashMap<usize, Rule>, msg: &str, mut queue: VecDeque<usi
 }
 
 fn run(input: &str, part_two: bool) -> i64 {
-    let (rules, messages): (&str, &str) = input.split("\n\n").collect_tuple().unwrap();
+    let (rules, messages): (&str, &str) = input
+        .split("\n\n")
+        .collect_tuple()
+        .expect("valid puzzle input");
     let mut schema = parse_rules(rules);
     if part_two {
         schema.insert(8, Rule::Alt(vec![42], vec![42, 8]));

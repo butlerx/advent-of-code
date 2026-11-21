@@ -15,17 +15,23 @@ fn main() {
 }
 
 fn parse_schema(input: &str) -> Schema {
-    let re = Regex::new(r"^([a-zA-Z\s]+): (\d+)-(\d+) or (\d+)-(\d+)").unwrap();
+    let re = Regex::new(r"^([a-zA-Z\s]+): (\d+)-(\d+) or (\d+)-(\d+)").expect("valid puzzle input");
     input
         .trim()
         .lines()
         .map(|line| {
-            let cap = re.captures(line).unwrap();
+            let cap = re.captures(line).expect("valid puzzle input");
             (
                 cap[1].trim().to_string(),
                 (
-                    RangeInclusive::new(cap[2].parse().unwrap(), cap[3].parse().unwrap()),
-                    RangeInclusive::new(cap[4].parse().unwrap(), cap[5].parse().unwrap()),
+                    RangeInclusive::new(
+                        cap[2].parse().expect("valid puzzle input"),
+                        cap[3].parse().expect("valid puzzle input"),
+                    ),
+                    RangeInclusive::new(
+                        cap[4].parse().expect("valid puzzle input"),
+                        cap[5].parse().expect("valid puzzle input"),
+                    ),
                 ),
             )
         })
@@ -40,7 +46,7 @@ fn parse_tickets(input: &str) -> Vec<Ticket> {
         .map(|line| {
             line.trim()
                 .split(',')
-                .map(|n| n.trim().parse::<i64>().unwrap())
+                .map(|n| n.trim().parse::<i64>().expect("valid puzzle input"))
                 .collect()
         })
         .collect()
@@ -61,7 +67,10 @@ fn generate_name_index(mut map: HashMap<String, HashSet<usize>>) -> HashMap<Stri
     let mut name_index = HashMap::new();
     while !map.is_empty() {
         for (k, v) in map.iter().filter(|(_, v)| v.len() == 1) {
-            name_index.insert(k.clone(), v.clone().into_iter().next().unwrap());
+            name_index.insert(
+                k.clone(),
+                v.clone().into_iter().next().expect("valid puzzle input"),
+            );
         }
         map.retain(|_, v| v.len() != 1);
         for indexes in map.values_mut() {

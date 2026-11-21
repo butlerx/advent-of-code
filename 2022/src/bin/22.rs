@@ -28,7 +28,10 @@ impl Position {
                 if map[self.y].len() - 1 > self.x {
                     self.x + 1
                 } else {
-                    map[self.y].iter().position(|c| *c != ' ').unwrap()
+                    map[self.y]
+                        .iter()
+                        .position(|c| *c != ' ')
+                        .expect("valid puzzle input")
                 },
                 self.y,
             ),
@@ -42,7 +45,7 @@ impl Position {
                 } else {
                     map.iter()
                         .position(|l| l.len() > self.x && l[self.x] != ' ')
-                        .unwrap()
+                        .expect("valid puzzle input")
                 },
             ),
             2 => (
@@ -58,7 +61,7 @@ impl Position {
                 if self.y == 0 || map[self.y - 1][self.x] == ' ' {
                     map.iter()
                         .rposition(|l| l.len() > self.x && l[self.x] != ' ')
-                        .unwrap()
+                        .expect("valid puzzle input")
                 } else {
                     self.y - 1
                 },
@@ -211,7 +214,10 @@ impl Position {
 }
 
 fn walk(map: &[Vec<char>], mut path: &str, cube: bool) -> i64 {
-    let x = map[0].iter().position(|c| *c == '.').unwrap();
+    let x = map[0]
+        .iter()
+        .position(|c| *c == '.')
+        .expect("valid puzzle input");
     let mut pos = Position { x, y: 0, facing: 0 };
     loop {
         if path.is_empty() {
@@ -230,7 +236,7 @@ fn walk(map: &[Vec<char>], mut path: &str, cube: bool) -> i64 {
             }
             _ => {
                 let len = path.find(|c: char| !c.is_numeric()).unwrap_or(path.len());
-                let steps = path[..len].parse::<usize>().unwrap();
+                let steps = path[..len].parse::<usize>().expect("valid puzzle input");
                 path = &path[len..];
                 pos = (0..steps).fold(pos, |pos, _| {
                     let next = if cube {
@@ -250,7 +256,7 @@ fn walk(map: &[Vec<char>], mut path: &str, cube: bool) -> i64 {
 }
 
 fn part_1(input: &str) -> i64 {
-    let (map, directions) = input.split_once("\n\n").unwrap();
+    let (map, directions) = input.split_once("\n\n").expect("valid puzzle input");
     walk(
         &map.lines()
             .map(|l| l.chars().collect::<Vec<char>>())
@@ -261,7 +267,7 @@ fn part_1(input: &str) -> i64 {
 }
 
 fn part_2(input: &str) -> i64 {
-    let (map, directions) = input.split_once("\n\n").unwrap();
+    let (map, directions) = input.split_once("\n\n").expect("valid puzzle input");
     walk(
         &map.lines()
             .map(|l| l.chars().collect::<Vec<char>>())

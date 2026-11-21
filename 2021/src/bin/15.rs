@@ -12,7 +12,7 @@ fn shortest_path(map: &[Vec<i64>]) -> i64 {
     let mut to_see = BinaryHeap::new();
     to_see.push((0, 0, 0));
     loop {
-        let (cost, x, y) = to_see.pop().unwrap();
+        let (cost, x, y) = to_see.pop().expect("valid puzzle input");
         if (x, y) == success {
             break -cost;
         }

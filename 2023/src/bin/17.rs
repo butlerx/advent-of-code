@@ -41,8 +41,10 @@ fn dijkstra(grid: &[Vec<i32>], min_step: isize, max_step: isize) -> i32 {
             }
             let mut next_cost = -cost;
             for steps in 1..=max_step {
-                let next_row = isize::try_from(row).unwrap() + delta_row * steps;
-                let next_col = isize::try_from(col).unwrap() + delta_col * steps;
+                let next_row =
+                    isize::try_from(row).expect("valid puzzle input") + delta_row * steps;
+                let next_col =
+                    isize::try_from(col).expect("valid puzzle input") + delta_col * steps;
                 // Signed coordinates: a negative value must leave the grid, not wrap back into it.
                 let (Ok(next_row), Ok(next_col)) =
                     (usize::try_from(next_row), usize::try_from(next_col))
